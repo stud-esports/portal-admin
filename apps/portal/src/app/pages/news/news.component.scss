@@ -1,0 +1,42 @@
+.news {
+  &__articles-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  &__article {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 49.5%;
+    margin-bottom: 10px;
+  }
+
+  &__title {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__article-image {
+    display: flex;
+  }
+
+  &__article-image {
+    margin-right: 5px;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    &-label {
+      display: block;
+    }
+
+    &__btn--upload {
+      margin-top: 8px
+    }
+  }
+}

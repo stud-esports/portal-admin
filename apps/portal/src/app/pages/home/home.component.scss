@@ -1,0 +1,17 @@
+:host {
+  .content {
+    display: flex;
+    height: 100%;
+  }
+
+  .results {
+    flex: 5;
+    margin-left: 20px;
+
+    &__container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  }
+}

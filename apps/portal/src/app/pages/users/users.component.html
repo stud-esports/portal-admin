@@ -1,0 +1,70 @@
+<nz-table #basicTable
+          [nzData]="listOfData"
+          nzShowSizeChanger>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Address</th>
+            <th>Роли</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of basicTable.data">
+            <td>{{ data.name }}</td>
+            <td>{{ data.age }}</td>
+            <td>{{ data.address }}</td>
+            <td>{{ data.roles }}</td>
+            <td>
+                <a (click)="showChangeRoleModal(data)"
+                   style="margin-right: 10px;">Изменить права</a>
+                <a (click)="showBlockModal(data)">{{ data?.blocked ? 'Разблокировать' :
+                    'Заблокировать'}}</a>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+
+<nz-modal [(nzVisible)]="isChangeRoleModalVisible"
+          nzTitle="Изменение прав"
+          (nzOnCancel)="handleCancel()"
+          (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+        <form [formGroup]="rolesForm">
+            <label nz-checkbox
+                   nzValue="true"
+                   formControlName="user">
+                Пользователь
+            </label>
+            <label nz-checkbox
+                   nzValue="true"
+                   formControlName="moderator">
+                Модератор
+            </label>
+            <label nz-checkbox
+                   nzValue="true"
+                   formControlName="admin">
+                Администратор
+            </label>
+        </form>
+    </ng-container>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isBlockModalVisible"
+          [nzTitle]="selectedUser?.blocked ? 'Разблокировка' : 'Блокировка'"
+          (nzOnCancel)="handleCancel()"
+          [nzCancelText]="'Разблокировать'"
+          [nzOkText]="'Блокировать'"
+          [nzCancelDisabled]="!selectedUser?.blocked"
+          (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+        Даты начала и окончания блокировки
+        <nz-range-picker [nzAutoFocus]="true"
+                         [nzDefaultPickerValue]="selectedUser?.blocked"
+                         [nzShowTime]="true"
+                         [(ngModel)]="blockDates"
+                         (ngModelChange)="onChange($event)">
+        </nz-range-picker>
+    </ng-container>
+</nz-modal>
