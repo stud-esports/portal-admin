@@ -1,12 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { NzModalModule } from 'ng-zorro-antd/modal';
+
 import { EventsRoutingModule } from './events-routing.module';
 import { EventsComponent } from './events.component';
 import { InDevelopmentModule } from '../../in-development/in-development.module';
 
 @NgModule({
   declarations: [EventsComponent],
-  imports: [CommonModule, EventsRoutingModule, InDevelopmentModule],
+  imports: [
+    CommonModule,
+    EventsRoutingModule,
+    InDevelopmentModule,
+    NzModalModule,
+  ],
 })
 export class EventsModule {}
