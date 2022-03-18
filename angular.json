@@ -1,10 +1,66 @@
 {
-  "version": 2,
+  "version": 1,
   "projects": {
-    "portal": "apps/portal",
-    "portal-e2e": "apps/portal-e2e"
-  },
-  "styles": [
-    "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
-  ]
+    "portal":{
+      "root": "./apps/portal",
+      "sourceRoot": "./apps/portal/src",
+      "projectType": "application",
+      "architect":{
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "portal:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "portal:build:production"
+            }
+          }
+        },
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist",
+            "index": "./apps/portal/src/index.html",
+            "main": "./apps/portal/src/main.ts",
+            "polyfills": "./apps/portal/src/polyfills.ts",
+            "tsConfig": "./apps/portal/tsconfig.app.json",
+            "styles": [
+              "./apps/portal/src/styles.scss",
+              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
+            ],
+            "assets": [
+              "./apps/portal/src/favicon.ico",
+              "./apps/portal/src/assets"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "buildOptimizer": true,
+              "optimization": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "./apps/portal/src/environments/environment.ts",
+                  "with": "./apps/portal/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "portal-e2e": "apps/portal-e2e",
+  }
 }
