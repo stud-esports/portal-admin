@@ -20,6 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "baseHref": "/admin/",
             "outputPath": "dist",
             "index": "./apps/portal/src/index.html",
             "main": "./apps/portal/src/main.ts",
