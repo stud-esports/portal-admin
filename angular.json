@@ -22,6 +22,7 @@
           "options": {
             "baseHref": "/admin/",
             "outputPath": "dist",
+            "resourcesOutputPath": "/admin/",
             "index": "./apps/portal/src/index.html",
             "main": "./apps/portal/src/main.ts",
             "polyfills": "./apps/portal/src/polyfills.ts",
