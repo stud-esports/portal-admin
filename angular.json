@@ -20,9 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "baseHref": "/admin/",
             "outputPath": "dist",
-            "resourcesOutputPath": "/admin/",
             "index": "./apps/portal/src/index.html",
             "main": "./apps/portal/src/main.ts",
             "polyfills": "./apps/portal/src/polyfills.ts",
@@ -33,7 +31,12 @@
             ],
             "assets": [
               "./apps/portal/src/favicon.ico",
-              "./apps/portal/src/assets"
+              "./apps/portal/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "output": "/assets/"
+              }
             ]
           },
           "configurations": {
