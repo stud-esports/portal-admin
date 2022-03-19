@@ -1,0 +1,31 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+    - name: Setup key
+      run: |
+        set -eu
+        mkdir "$HOME/.ssh"
+        echo "${{ secrets.SSH_KEY }}" > "$HOME/.ssh/key"
+        chmod 600 "$HOME/.ssh/key"
+    - name: Npm install
+      run: npm install --save --legacy-peer-deps
+    - name: Build app
+      run: npm run build
+    - name: Deploy dist to server
+      run: cd dist && rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.SERVER_FOLDER }}
