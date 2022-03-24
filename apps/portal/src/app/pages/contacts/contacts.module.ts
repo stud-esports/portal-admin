@@ -10,6 +10,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 import { ContactsRoutingModule } from './contacts-routing.module';
 import { ContactsComponent } from './contacts.component';
@@ -29,6 +30,7 @@ import { ContactsComponent } from './contacts.component';
     NzInputModule,
     NzUploadModule,
     NzSelectModule,
+    NzPopconfirmModule
   ],
 })
 export class ContactsModule {}

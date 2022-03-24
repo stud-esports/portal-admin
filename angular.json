@@ -66,6 +66,6 @@
         }
       }
     },
-    "portal-e2e": "apps/portal-e2e",
+    "portal-e2e": "apps/portal-e2e"
   }
 }

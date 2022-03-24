@@ -6,7 +6,7 @@
 </h1>
 
 <div style="display: flex; align-items: flex-start">
-  <ng-container *ngFor="let contact of mockUsers">
+  <ng-container *ngFor="let contact of contacts">
     <nz-card
       style="width: 200px; margin-right: 15px"
       [nzCover]="coverTemplate"
@@ -14,19 +14,19 @@
     >
       <nz-card-meta
         [nzTitle]="
-          contact.user.last_name +
-          ' ' +
-          contact.user.first_name +
-          ' ' +
-          contact.user.patronyc
+          getFullName(
+            contact.user.first_name,
+            contact.user.last_name,
+            contact.user.patronymic
+          )
         "
-        [nzDescription]="contact.user.position"
+        [nzDescription]="contact.position"
         [title]="
-          contact.user.last_name +
-          ' ' +
-          contact.user.first_name +
-          ' ' +
-          contact.user.patronyc
+          getFullName(
+            contact.user.first_name,
+            contact.user.last_name,
+            contact.user.patronymic
+          )
         "
       ></nz-card-meta>
       <nz-divider></nz-divider>
@@ -38,14 +38,22 @@
       <p>{{ contact.user.email || '-' }}</p>
     </nz-card>
     <ng-template #coverTemplate>
-      <img width="50" alt="example" [src]="contact.user.photo" />
+      <img
+        *ngIf="contact.user.photo_url"
+        width="50"
+        alt="example"
+        [src]="contact.user.photo_url"
+      />
     </ng-template>
     <ng-template #actionEdit>
       <i (click)="showEditModal(contact)" nz-icon nzType="edit"></i>
     </ng-template>
     <ng-template #actionEllipsis>
       <i
-        (click)="showDeleteConfirmationModal(contact)"
+        nz-popconfirm
+        nzPopconfirmTitle="Вы уверены, что хотите удалить этот контакт?"
+        nzPopconfirmPlacement="bottom"
+        (nzOnConfirm)="confirmDelete(contact._id)"
         nz-icon
         nzType="delete"
       ></i>
@@ -64,39 +72,41 @@
 >
   <ng-container *nzModalContent>
     <form nz-form [formGroup]="form" (ngSubmit)="create()" class="news__form">
-      <!-- dropdown with with search users -->
       <label> Пользователь </label>
       <nz-select
         style="display: block"
         nzShowSearch
         nzServerSearch
-        [(ngModel)]="selectedValue"
+        formControlName="userId"
         [nzShowArrow]="false"
         [nzFilterOption]="nzFilterOption"
         (nzOnSearch)="search($event)"
       >
         <nz-option
-          *ngFor="let o of listOfOption"
-          [nzLabel]="o.text"
-          [nzValue]="o.value"
+          *ngFor="let user of users"
+          [nzLabel]="user?.first_name + ' ' + user?.last_name"
+          [nzValue]="user?._id"
         ></nz-option>
       </nz-select>
+
+      <label for="position"> Позиция </label>
+      <input nz-input id="position" formControlName="position" />
 
       <label for="questions"> Компетенции </label>
       <nz-textarea-count [nzMaxCharacterCount]="100">
         <textarea id="questions" rows="4" nz-input formControlName="questions">
         </textarea>
       </nz-textarea-count>
-      <div
+      <!-- <div
         *ngIf="
           !selectedItem?._id ||
-            !selectedItem?.main_image_url ||
-            isMarkMainImageForDelete;
-          else editImage
+          !selectedItem?.user.photo_url ||
+          isMarkMainImageForDelete
         "
         class="clearfix"
-      >
-        Заглавное фото
+      > -->
+      <!-- else editImage -->
+      <!-- Заглавное фото
         <nz-upload
           nzListType="picture-card"
           [(nzFileList)]="fileList"
@@ -108,8 +118,8 @@
             <i nz-icon nzType="plus"></i>
             <div class="news__btn--upload">Выбрать</div>
           </div>
-        </nz-upload>
-        <nz-modal
+        </nz-upload> -->
+      <!-- <nz-modal
           [nzVisible]="previewVisible"
           [nzContent]="modalContent"
           [nzFooter]="null"
@@ -118,9 +128,9 @@
           <ng-template #modalContent>
             <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
           </ng-template>
-        </nz-modal>
-      </div>
-      <ng-template #editImage>
+        </nz-modal> -->
+      <!-- </div> -->
+      <!-- <ng-template #editImage>
         <span>Заглавное фото:</span>
         <div nz-space nzAlign="center">
           <img
@@ -134,21 +144,7 @@
             <i nz-icon nzType="delete"></i>
           </button>
         </div>
-      </ng-template>
+      </ng-template> -->
     </form>
-  </ng-container>
-</nz-modal>
-
-<nz-modal
-  [(nzVisible)]="isDeleteModalVisible"
-  nzTitle="Подтвердите удаление новости"
-  (nzOnCancel)="handleCancel()"
-  (nzOnOk)="confirmDelete()"
-  [nzOkLoading]="isLoading"
-  nzCancelText="Нет"
-  nzOkText="Да"
->
-  <ng-container *nzModalContent>
-    Вы действительно хотите удалить контакт {{ selectedItem.user.first_name }}?
   </ng-container>
 </nz-modal>
