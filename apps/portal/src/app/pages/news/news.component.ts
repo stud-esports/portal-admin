@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { untilDestroyed } from '@ngneat/until-destroy';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 import { NzUploadFile } from 'ng-zorro-antd/upload';
-import { map, pipe, switchMap, tap } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs';
 import { NewsService } from './news.service';
 
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
@@ -41,7 +42,8 @@ export class NewsComponent implements OnInit {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _newsService: NewsService
+    private _newsService: NewsService,
+    private _messageService: NzMessageService
   ) {
     this.newsForm = this._formBuilder.group({
       title: ['', Validators.required],
@@ -90,6 +92,7 @@ export class NewsComponent implements OnInit {
         tap(() => {
           this.newsForm.reset();
           this.fileList = [];
+          this._messageService.create('success', `Новость успешно создана`);
         }),
         switchMap(() => this.getNewsList()),
         untilDestroyed(this)
@@ -140,6 +143,7 @@ export class NewsComponent implements OnInit {
           this.isLoading = false;
           this.isEditVisible = false;
           this.newsForm.reset();
+          this._messageService.create('success', `Новость успешно обновлена`);
         }),
         switchMap(() => this.getNewsList()),
         untilDestroyed(this)
@@ -160,7 +164,10 @@ export class NewsComponent implements OnInit {
     this._newsService
       .deleteNewsById(id)
       .pipe(
-        tap(() => (this.isLoading = false)),
+        tap(() => {
+          this.isLoading = false;
+          this._messageService.create('success', `Новость успешно удалена`);
+        }),
         switchMap(() => this.getNewsList()),
         switchMap(() =>
           this._newsService.deleteImageByName(this.selectedNews.main_image_url)
