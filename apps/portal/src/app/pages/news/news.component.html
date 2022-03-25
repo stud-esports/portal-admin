@@ -24,7 +24,10 @@
           nz-button
           nzType="default"
           nzShape="circle"
-          (click)="showDeleteConfirmationModal(news)"
+          nz-popconfirm
+          nzPopconfirmTitle="Вы уверены, что хотите удалить эту новость?"
+          nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="confirmDelete(news._id)"
         >
           <i nz-icon nzType="delete"></i>
         </button>
@@ -144,19 +147,5 @@
         </div>
       </ng-template>
     </form>
-  </ng-container>
-</nz-modal>
-
-<nz-modal
-  [(nzVisible)]="isDeleteModalVisible"
-  nzTitle="Подтвердите удаление новости"
-  (nzOnCancel)="handleCancel()"
-  (nzOnOk)="confirmDelete()"
-  [nzOkLoading]="isLoading"
-  nzCancelText="Нет"
-  nzOkText="Да"
->
-  <ng-container *nzModalContent>
-    Вы действительно хотите удалить новость {{ selectedNews.title }}?
   </ng-container>
 </nz-modal>

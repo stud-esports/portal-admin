@@ -21,7 +21,6 @@ const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
 export class NewsComponent implements OnInit {
   newsForm: FormGroup;
   isEditVisible = false;
-  isDeleteModalVisible = false;
 
   fileList: NzUploadFile[] = [];
   previewImage: string | undefined = '';
@@ -32,7 +31,7 @@ export class NewsComponent implements OnInit {
   isMarkMainImageForDelete = false;
 
   newsList: {
-    _id: string;
+    _id: number;
     title: string;
     description: string;
     main_image_url: string;
@@ -73,11 +72,6 @@ export class NewsComponent implements OnInit {
     this.newsForm.patchValue(this.selectedNews);
     this.isEditVisible = true;
     this.isMarkMainImageForDelete = false;
-  }
-
-  showDeleteConfirmationModal(news: any): void {
-    this.isDeleteModalVisible = true;
-    this.selectedNews = news;
   }
 
   createNews() {
@@ -157,15 +151,12 @@ export class NewsComponent implements OnInit {
     return formData;
   }
 
-  confirmDelete() {
+  confirmDelete(id: number) {
     this.isLoading = true;
     this._newsService
-      .deleteNewsById(this.selectedNews._id)
+      .deleteNewsById(id)
       .pipe(
-        tap(() => {
-          this.isLoading = false;
-          this.isDeleteModalVisible = false;
-        }),
+        tap(() => (this.isLoading = false)),
         switchMap(() => this.getNewsList()),
         switchMap(() =>
           this._newsService.deleteImageByName(this.selectedNews.main_image_url)
@@ -175,7 +166,6 @@ export class NewsComponent implements OnInit {
   }
 
   handleCancel(): void {
-    this.isDeleteModalVisible = false;
     this.isEditVisible = false;
     this.newsForm.reset();
   }
