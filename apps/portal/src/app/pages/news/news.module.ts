@@ -10,6 +10,7 @@ import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 import { NewsRoutingModule } from './news-routing.module';
 import { NewsComponent } from './news.component';
@@ -27,7 +28,8 @@ import { NewsComponent } from './news.component';
     NzModalModule,
     NzImageModule,
     NzIconModule,
-    NzSpaceModule
+    NzSpaceModule,
+    NzPopconfirmModule
   ],
   exports: [NewsComponent],
 })
