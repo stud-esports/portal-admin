@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { untilDestroyed } from '@ngneat/until-destroy';
 
 import { NzUploadFile } from 'ng-zorro-antd/upload';
-import { map, switchMap, tap } from 'rxjs';
+import { map, pipe, switchMap, tap } from 'rxjs';
 import { NewsService } from './news.service';
 
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
@@ -50,7 +51,7 @@ export class NewsComponent implements OnInit {
 
   ngOnInit() {
     //  здесь будем доставать новости из store
-    this.getNewsList().subscribe();
+    this.getNewsList().pipe(untilDestroyed(this)).subscribe();
   }
 
   getNewsList() {
@@ -90,7 +91,8 @@ export class NewsComponent implements OnInit {
           this.newsForm.reset();
           this.fileList = [];
         }),
-        switchMap(() => this.getNewsList())
+        switchMap(() => this.getNewsList()),
+        untilDestroyed(this)
       )
       .subscribe();
   }
@@ -113,7 +115,8 @@ export class NewsComponent implements OnInit {
   //         this.newsForm.reset();
   //         this.fileList = [];
   //       }),
-  //       switchMap(() => this.getNewsList())
+  //       switchMap(() => this.getNewsList()),
+  // untilDestroyed(this)
   //     )
   //     .subscribe();
   // }
@@ -138,7 +141,8 @@ export class NewsComponent implements OnInit {
           this.isEditVisible = false;
           this.newsForm.reset();
         }),
-        switchMap(() => this.getNewsList())
+        switchMap(() => this.getNewsList()),
+        untilDestroyed(this)
       )
       .subscribe();
   }
@@ -160,7 +164,8 @@ export class NewsComponent implements OnInit {
         switchMap(() => this.getNewsList()),
         switchMap(() =>
           this._newsService.deleteImageByName(this.selectedNews.main_image_url)
-        )
+        ),
+        untilDestroyed(this)
       )
       .subscribe();
   }

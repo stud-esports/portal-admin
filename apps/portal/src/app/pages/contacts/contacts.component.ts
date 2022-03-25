@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { untilDestroyed } from '@ngneat/until-destroy';
 
 import { tap, switchMap, map, Observable } from 'rxjs';
 
@@ -25,7 +26,6 @@ export class ContactsComponent implements OnInit {
   contacts: Contact[] = [];
   nzFilterOption = (): boolean => true;
 
-
   constructor(
     private _formBuilder: FormBuilder,
     private _contactsService: ContactsService
@@ -38,7 +38,7 @@ export class ContactsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getContactsList().subscribe();
+    this.getContactsList().pipe(untilDestroyed(this)).subscribe();
   }
 
   getContactsList(): Observable<Contact[]> {
@@ -53,7 +53,10 @@ export class ContactsComponent implements OnInit {
     }
     this._contactsService
       .searchUsers(value)
-      .pipe(map((users: User[]) => (this.users = users)))
+      .pipe(
+        map((users: User[]) => (this.users = users)),
+        untilDestroyed(this)
+      )
       .subscribe();
   }
 
@@ -67,7 +70,8 @@ export class ContactsComponent implements OnInit {
           this.isEditVisible = false;
           this.form.reset();
         }),
-        switchMap(() => this.getContactsList())
+        switchMap(() => this.getContactsList()),
+        untilDestroyed(this)
       )
       .subscribe();
   }
@@ -77,7 +81,7 @@ export class ContactsComponent implements OnInit {
     this._contactsService
       .updateContact(this.selectedItem?._id, {
         ...this.form.value,
-        user_id: this.form.value.userId
+        user_id: this.form.value.userId,
       })
       .pipe(
         tap(() => {
@@ -85,7 +89,8 @@ export class ContactsComponent implements OnInit {
           this.isEditVisible = false;
           this.form.reset();
         }),
-        switchMap(() => this.getContactsList())
+        switchMap(() => this.getContactsList()),
+        untilDestroyed(this)
       )
       .subscribe();
   }
@@ -135,7 +140,8 @@ export class ContactsComponent implements OnInit {
         switchMap(() => {
           this.isLoading = false;
           return this.getContactsList();
-        })
+        }),
+        untilDestroyed(this)
       )
       .subscribe();
   }
