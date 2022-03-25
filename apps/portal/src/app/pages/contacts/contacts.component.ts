@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { untilDestroyed } from '@ngneat/until-destroy';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
-import { tap, switchMap, map, Observable } from 'rxjs';
+import { tap, switchMap, map, Observable, catchError, EMPTY } from 'rxjs';
 
 import { Contact, User } from '../../models/index';
 import { ContactsService } from './contacts.service';
@@ -28,7 +29,8 @@ export class ContactsComponent implements OnInit {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _contactsService: ContactsService
+    private _contactsService: ContactsService,
+    private _messageService: NzMessageService
   ) {
     this.form = this._formBuilder.group({
       questions: ['', Validators.required],
@@ -69,8 +71,13 @@ export class ContactsComponent implements OnInit {
           this.isLoading = false;
           this.isEditVisible = false;
           this.form.reset();
+          this._messageService.create('success', `Контакт успешно создан`);
         }),
         switchMap(() => this.getContactsList()),
+        catchError(() => {
+          this._messageService.create('error', `Контакт с этим пользователем уже существует`);
+          return EMPTY;
+        }),
         untilDestroyed(this)
       )
       .subscribe();
@@ -88,6 +95,11 @@ export class ContactsComponent implements OnInit {
           this.isLoading = false;
           this.isEditVisible = false;
           this.form.reset();
+          this._messageService.create('success', `Контакт успешно обновлен`);
+        }),
+        catchError(() => {
+          this._messageService.create('error', `Контакт с этим пользователем уже существует`);
+          return EMPTY;
         }),
         switchMap(() => this.getContactsList()),
         untilDestroyed(this)
@@ -139,6 +151,7 @@ export class ContactsComponent implements OnInit {
       .pipe(
         switchMap(() => {
           this.isLoading = false;
+          this._messageService.create('success', `Контакт успешно удален`);
           return this.getContactsList();
         }),
         untilDestroyed(this)
