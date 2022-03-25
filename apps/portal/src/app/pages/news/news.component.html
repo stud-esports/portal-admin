@@ -27,7 +27,7 @@
           nz-popconfirm
           nzPopconfirmTitle="Вы уверены, что хотите удалить эту новость?"
           nzPopconfirmPlacement="bottom"
-          (nzOnConfirm)="confirmDelete(news._id)"
+          (nzOnConfirm)="confirmDelete(news)"
         >
           <i nz-icon nzType="delete"></i>
         </button>
@@ -36,6 +36,7 @@
     <p>{{ news.description }}</p>
     <span>Заглавное фото:</span>
     <img
+      *ngIf="news.main_image_url; else noPhoto"
       [nzSrc]="'http://localhost:5000' + news.main_image_url"
       nz-image
       width="100px"
@@ -43,7 +44,10 @@
       class="news__article-image"
       alt="main news image"
     />
-    <div class="news__article-image">
+    <ng-template #noPhoto>
+      <small>Фото отсутствует</small>
+    </ng-template>
+    <!-- <div class="news__article-image">
       <img
         *ngFor="let url of news.images"
         [nzSrc]="url"
@@ -53,7 +57,7 @@
         class="news__article-image"
         alt=""
       />
-    </div>
+    </div> -->
   </article>
 </section>
 
@@ -129,7 +133,7 @@
         <span>Заглавное фото:</span>
         <div nz-space nzAlign="center">
           <img
-            [nzSrc]="'http://localhost:5000' + selectedNews.main_image_url"
+            [nzSrc]="'http://localhost:5000' + selectedNews?.main_image_url"
             nz-image
             width="100px"
             height="100px"

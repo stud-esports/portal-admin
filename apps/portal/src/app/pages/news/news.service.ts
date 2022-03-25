@@ -5,6 +5,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError, EMPTY, of } from 'rxjs';
+import { News } from '../../models';
 
 @Injectable({
   providedIn: 'root',
@@ -15,32 +16,61 @@ export class NewsService {
 
   constructor(private http: HttpClient) {}
 
-  // Create
-  createNews(data: any): Observable<any> {
+  createNews(data: { title: string; description: string }): Observable<News> {
     const API_URL = `${this.apiUrl}`;
-    return this.http.post(API_URL, data).pipe(catchError(this.handleError));
-  }
-
-  // Read
-  getAllNews() {
-    return this.http.get(`${this.apiUrl}`);
-  }
-
-  // Update
-  updateNewsById(id: any, data: any): Observable<any> {
-    const API_URL = `${this.apiUrl}/${id}`;
     return this.http
-      .patch(API_URL, data, { headers: this.headers })
+      .post<News>(API_URL, data)
       .pipe(catchError(this.handleError));
   }
 
-  // Delete
-  deleteNewsById(id: any): Observable<any> {
-    const API_URL = `${this.apiUrl}/${id}`;
-    return this.http.delete(API_URL).pipe(catchError(this.handleError));
+  getAllNews() {
+    return this.http.get<News[]>(`${this.apiUrl}`);
   }
 
-  // Handle API errors
+  updateNewsById(
+    id: number | undefined,
+    data: { title: string; description: string; main_image_url: string }
+  ): Observable<News> {
+    const API_URL = `${this.apiUrl}/${id}`;
+    return this.http
+      .patch<News>(API_URL, data, { headers: this.headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteNewsById(id: number): Observable<boolean> {
+    const API_URL = `${this.apiUrl}/${id}`;
+    return this.http
+      .delete<boolean>(API_URL)
+      .pipe(catchError(this.handleError));
+  }
+
+  saveImage(data: FormData | null): Observable<{ path: string | null }> {
+    if (!data) {
+      return of({ path: null });
+    }
+    const API_URL = `http://localhost:5000/api/v1/files`;
+    return this.http.post<{ path: string | null }>(API_URL, data, {});
+  }
+
+  saveImages(data: FormData): Observable<{ path: string }> {
+    const API_URL = 'http://localhost:5000/api/v1/files/multiple';
+    return this.http
+      .post<{ path: string }>(API_URL, data, {})
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteImageByName(fname: string | null | undefined): Observable<any> {
+    if (!fname) {
+      console.log(fname);
+      return of();
+    }
+    const API_URL = `http://localhost:5000/api/v1/files`;
+    const name = fname.split('/')[fname.split('/').length - 1];
+    return this.http
+      .delete(API_URL, { body: { fileName: name, folder: 'photos' } })
+      .pipe(catchError(this.handleError));
+  }
+
   handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
@@ -50,26 +80,5 @@ export class NewsService {
       );
     }
     return throwError('Something bad happened; please try again later.');
-  }
-
-  saveImage(data: any): Observable<any> {
-    const API_URL = `http://localhost:5000/api/v1/files`;
-    return this.http.post(API_URL, data, {});
-  }
-
-  saveImages(data: any): Observable<any> {
-    const API_URL = 'http://localhost:5000/api/v1/files/multiple';
-    return this.http.post(API_URL, data, {}).pipe(catchError(this.handleError));
-  }
-
-  deleteImageByName(fname: string): Observable<any> {
-    if (!fname) {
-      return of();
-    }
-    const API_URL = `http://localhost:5000/api/v1/files`;
-    const name = fname.split('/')[fname.split('/').length - 1];
-    return this.http
-      .delete(API_URL, { body: { fileName: name, folder: 'photos' } })
-      .pipe(catchError(this.handleError));
   }
 }

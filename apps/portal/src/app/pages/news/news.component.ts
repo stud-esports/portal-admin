@@ -3,8 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { untilDestroyed } from '@ngneat/until-destroy';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
+import { map, Observable, switchMap, tap } from 'rxjs';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
-import { map, switchMap, tap } from 'rxjs';
+
+import { News } from '../../models';
 import { NewsService } from './news.service';
 
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
@@ -28,17 +30,11 @@ export class NewsComponent implements OnInit {
   previewImage: string | undefined = '';
   previewVisible = false;
 
-  selectedNews: any;
+  selectedNews: News | null | undefined = null;
   isLoading = false;
   isMarkMainImageForDelete = false;
 
-  newsList: {
-    _id: number;
-    title: string;
-    description: string;
-    main_image_url: string;
-    images: any;
-  }[] = [];
+  newsList: News[] = [];
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -51,15 +47,15 @@ export class NewsComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     //  здесь будем доставать новости из store
     this.getNewsList().pipe(untilDestroyed(this)).subscribe();
   }
 
-  getNewsList() {
+  getNewsList(): Observable<News[]> {
     return this._newsService
       .getAllNews()
-      .pipe(map((news: any) => (this.newsList = news)));
+      .pipe(map((news: News[]) => (this.newsList = news)));
   }
 
   handlePreview = async (file: any): Promise<void> => {
@@ -70,23 +66,28 @@ export class NewsComponent implements OnInit {
     this.previewVisible = true;
   };
 
-  showEditModal(news?: any): void {
+  showEditModal(news?: News | null | undefined): void {
     this.selectedNews = news;
-    this.newsForm.patchValue(this.selectedNews);
+    if (this.selectedNews?._id) {
+      this.newsForm.patchValue(this.selectedNews);
+    }
     this.isEditVisible = true;
     this.isMarkMainImageForDelete = false;
   }
 
-  createNews() {
+  createNews(): void {
     this.isEditVisible = false;
-    const formData = this.constructFormDataImage();
+    const formData = this.fileList.length
+      ? this.constructFormDataImage()
+      : null;
+
     this._newsService
       .saveImage(formData)
       .pipe(
         switchMap((image) =>
           this._newsService.createNews({
             ...this.newsForm.value,
-            main_image_url: image.path,
+            main_image_url: image.path ?? null,
           })
         ),
         tap(() => {
@@ -124,17 +125,17 @@ export class NewsComponent implements OnInit {
   //     .subscribe();
   // }
 
-  editNews() {
+  editNews(): void {
     this.isLoading = true;
     this._newsService
-      .deleteImageByName(this.selectedNews.main_image_url)
+      .deleteImageByName(this.selectedNews?.main_image_url)
       .pipe(
         switchMap(() => {
           const formData = this.constructFormDataImage();
           return this._newsService.saveImage(formData);
         }),
         switchMap((image) => {
-          return this._newsService.updateNewsById(this.selectedNews._id, {
+          return this._newsService.updateNewsById(this.selectedNews?._id, {
             ...this.newsForm.value,
             main_image_url: image.path,
           });
@@ -151,7 +152,7 @@ export class NewsComponent implements OnInit {
       .subscribe();
   }
 
-  constructFormDataImage() {
+  constructFormDataImage(): FormData {
     const formData = new FormData();
     this.fileList.forEach((file: any) => {
       formData.append('file', file);
@@ -159,10 +160,10 @@ export class NewsComponent implements OnInit {
     return formData;
   }
 
-  confirmDelete(id: number) {
+  confirmDelete(news: News): void {
     this.isLoading = true;
     this._newsService
-      .deleteNewsById(id)
+      .deleteNewsById(news._id)
       .pipe(
         tap(() => {
           this.isLoading = false;
@@ -170,7 +171,7 @@ export class NewsComponent implements OnInit {
         }),
         switchMap(() => this.getNewsList()),
         switchMap(() =>
-          this._newsService.deleteImageByName(this.selectedNews.main_image_url)
+          this._newsService.deleteImageByName(news?.main_image_url)
         ),
         untilDestroyed(this)
       )
@@ -187,7 +188,7 @@ export class NewsComponent implements OnInit {
     return false;
   };
 
-  checkIsMarkMainImageForDelete(event: Event) {
+  checkIsMarkMainImageForDelete(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
     this.isMarkMainImageForDelete = true;
