@@ -97,8 +97,4 @@ export class UsersComponent implements OnInit {
     this.selectedUser = null;
     this.rolesForm.reset();
   }
-
-  onChange(result: Date[]): void {
-    console.log('onChange: ', result);
-  }
 }
