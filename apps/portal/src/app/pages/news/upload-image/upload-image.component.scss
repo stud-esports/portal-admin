@@ -1,0 +1,12 @@
+.upload {
+  &__article-image {
+    display: flex;
+    margin-right: 5px;
+  }
+
+  &__form {
+    &__btn--upload {
+      margin-top: 8px;
+    }
+  }
+}

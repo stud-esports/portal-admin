@@ -95,61 +95,12 @@
         >
         </textarea>
       </nz-textarea-count>
-      <div
-        *ngIf="
-          !selectedNews?._id ||
-            !selectedNews?.main_image_url ||
-            isMarkMainImageForDelete;
-          else editImage
-        "
-        class="clearfix"
+      <portal-upload-image
+        [selectedItem]="selectedNews"
+        [isClearFileList]="isClearFileList"
+        (formData)="onConstructFormData($event)"
       >
-        Заглавное фото новости
-        <nz-upload
-          nzListType="picture-card"
-          [(nzFileList)]="fileList"
-          [nzShowButton]="fileList.length < 1"
-          [nzPreview]="handlePreview"
-          [nzBeforeUpload]="beforeUpload"
-          [nzAccept]="'image/png, image/jpeg'"
-        >
-          <div>
-            <i nz-icon nzType="plus"></i>
-            <div class="news__btn--upload">Выбрать</div>
-          </div>
-        </nz-upload>
-        <nz-modal
-          [nzVisible]="previewVisible"
-          [nzContent]="modalContent"
-          [nzFooter]="null"
-          (nzOnCancel)="previewVisible = false"
-        >
-          <ng-template #modalContent>
-            <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
-          </ng-template>
-        </nz-modal>
-      </div>
-      <ng-template #editImage>
-        <span>Заглавное фото:</span>
-        <div nz-space nzAlign="center">
-          <img
-            [nzSrc]="'http://localhost:5000' + selectedNews?.main_image_url"
-            nz-image
-            width="100px"
-            height="100px"
-            class="news__article-image"
-            alt="main news image"
-          />
-          <button
-            nz-button
-            nzType="default"
-            nzShape="circle"
-            (click)="checkIsMarkMainImageForDelete($event)"
-          >
-            <i nz-icon nzType="delete"></i>
-          </button>
-        </div>
-      </ng-template>
+      </portal-upload-image>
     </form>
   </ng-container>
 </nz-modal>
