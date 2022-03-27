@@ -61,8 +61,7 @@ export class NewsService {
 
   deleteImageByName(fname: string | null | undefined): Observable<any> {
     if (!fname) {
-      console.log(fname);
-      return of();
+      return of({});
     }
     const API_URL = `http://localhost:5000/api/v1/files`;
     const name = fname.split('/')[fname.split('/').length - 1];

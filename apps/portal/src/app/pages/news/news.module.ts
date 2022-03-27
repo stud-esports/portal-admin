@@ -15,9 +15,10 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
 
 import { NewsRoutingModule } from './news-routing.module';
 import { NewsComponent } from './news.component';
+import { UploadImageComponent } from './upload-image/upload-image.component';
 
 @NgModule({
-  declarations: [NewsComponent],
+  declarations: [NewsComponent, UploadImageComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

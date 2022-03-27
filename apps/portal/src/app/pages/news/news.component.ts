@@ -4,18 +4,9 @@ import { untilDestroyed } from '@ngneat/until-destroy';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 import { map, Observable, switchMap, tap } from 'rxjs';
-import { NzUploadFile } from 'ng-zorro-antd/upload';
 
 import { News } from '../../models';
 import { NewsService } from './news.service';
-
-const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
 
 @Component({
   selector: 'portal-news',
@@ -26,13 +17,11 @@ export class NewsComponent implements OnInit {
   newsForm: FormGroup;
   isEditVisible = false;
 
-  fileList: NzUploadFile[] = [];
-  previewImage: string | undefined = '';
-  previewVisible = false;
+  uploadFormData: any;
+  isClearFileList = false;
 
   selectedNews: News | null | undefined = null;
   isLoading = false;
-  isMarkMainImageForDelete = false;
 
   newsList: News[] = [];
 
@@ -58,31 +47,18 @@ export class NewsComponent implements OnInit {
       .pipe(map((news: News[]) => (this.newsList = news)));
   }
 
-  handlePreview = async (file: any): Promise<void> => {
-    if (!file.url && !file['preview']) {
-      file['preview'] = await getBase64(file.originFileObj);
-    }
-    this.previewImage = file.url || file['preview'];
-    this.previewVisible = true;
-  };
-
   showEditModal(news?: News | null | undefined): void {
     this.selectedNews = news;
     if (this.selectedNews?._id) {
       this.newsForm.patchValue(this.selectedNews);
     }
     this.isEditVisible = true;
-    this.isMarkMainImageForDelete = false;
   }
 
   createNews(): void {
     this.isEditVisible = false;
-    const formData = this.fileList.length
-      ? this.constructFormDataImage()
-      : null;
-
     this._newsService
-      .saveImage(formData)
+      .saveImage(this.uploadFormData)
       .pipe(
         switchMap((image) =>
           this._newsService.createNews({
@@ -92,13 +68,20 @@ export class NewsComponent implements OnInit {
         ),
         tap(() => {
           this.newsForm.reset();
-          this.fileList = [];
+          this.isClearFileList = true;
           this._messageService.create('success', `Новость успешно создана`);
         }),
         switchMap(() => this.getNewsList()),
         untilDestroyed(this)
       )
-      .subscribe();
+      .subscribe(() => {
+        this.isClearFileList = false;
+        this.uploadFormData = null;
+      });
+  }
+
+  onConstructFormData(event: FormData) {
+    this.uploadFormData = event;
   }
 
   // example for multiple images
@@ -120,7 +103,7 @@ export class NewsComponent implements OnInit {
   //         this.fileList = [];
   //       }),
   //       switchMap(() => this.getNewsList()),
-  // untilDestroyed(this)
+  //       untilDestroyed(this)
   //     )
   //     .subscribe();
   // }
@@ -130,10 +113,7 @@ export class NewsComponent implements OnInit {
     this._newsService
       .deleteImageByName(this.selectedNews?.main_image_url)
       .pipe(
-        switchMap(() => {
-          const formData = this.constructFormDataImage();
-          return this._newsService.saveImage(formData);
-        }),
+        switchMap(() => this._newsService.saveImage(this.uploadFormData)),
         switchMap((image) => {
           return this._newsService.updateNewsById(this.selectedNews?._id, {
             ...this.newsForm.value,
@@ -144,20 +124,16 @@ export class NewsComponent implements OnInit {
           this.isLoading = false;
           this.isEditVisible = false;
           this.newsForm.reset();
+          this.isClearFileList = true;
           this._messageService.create('success', `Новость успешно обновлена`);
         }),
         switchMap(() => this.getNewsList()),
         untilDestroyed(this)
       )
-      .subscribe();
-  }
-
-  constructFormDataImage(): FormData {
-    const formData = new FormData();
-    this.fileList.forEach((file: any) => {
-      formData.append('file', file);
-    });
-    return formData;
+      .subscribe(() => {
+        this.isClearFileList = false;
+        this.uploadFormData = null;
+      });
   }
 
   confirmDelete(news: News): void {
@@ -181,16 +157,5 @@ export class NewsComponent implements OnInit {
   handleCancel(): void {
     this.isEditVisible = false;
     this.newsForm.reset();
-  }
-
-  beforeUpload = (file: NzUploadFile): boolean => {
-    this.fileList = this.fileList.concat(file);
-    return false;
-  };
-
-  checkIsMarkMainImageForDelete(event: Event): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isMarkMainImageForDelete = true;
   }
 }
