@@ -1,2 +1,101 @@
 <h1>Дисциплины (игры)</h1>
-<portal-in-development></portal-in-development>
+<h2>
+  Список дисциплин (игр)
+  <button nz-button nzType="primary" (click)="showEditModal()">
+    <i nz-icon nzType="plus"></i>
+  </button>
+</h2>
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start">
+  <ng-container *ngFor="let game of gamesList">
+    <nz-card
+      style="width: calc(25% - 15px); margin: 0 15px 15px 0"
+      [nzCover]="coverTemplate"
+      [nzActions]="[actionEdit, actionEllipsis]"
+    >
+      <nz-card-meta
+        [nzTitle]="game.title"
+        [nzDescription]="game.description"
+        [title]="game.title"
+      ></nz-card-meta>
+      <nz-divider></nz-divider>
+      <h3>Жанр</h3>
+      <p>{{ game.genre || '-' }}</p>
+      <h3>Описание</h3>
+      <p>{{ game.description || '-' }}</p>
+    </nz-card>
+    <ng-template #coverTemplate>
+      <img
+        *ngIf="game.main_image_url"
+        width="50"
+        alt="example"
+        [src]="'http://localhost:5000' + game.main_image_url"
+      />
+    </ng-template>
+    <ng-template #actionEdit>
+      <i nz-icon nzType="edit" (click)="showEditModal(game)"></i>
+    </ng-template>
+    <ng-template #actionEllipsis>
+      <i
+        nz-popconfirm
+        nzPopconfirmTitle="Вы уверены, что хотите удалить эту дисциплину (игру)?"
+        nzPopconfirmPlacement="bottom"
+        nz-icon
+        nzType="delete"
+        (nzOnConfirm)="confirmDelete(game)"
+      ></i>
+    </ng-template>
+  </ng-container>
+</div>
+
+<nz-modal
+  [(nzVisible)]="isEditVisible"
+  [nzTitle]="selectedItem?._id ? 'Редактирование' : 'Создание'"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="selectedItem?._id ? edit() : create()"
+  [nzOkDisabled]="form.invalid"
+  nzCancelText="Отмена"
+  nzOkText="Сохранить"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="create()" class="games__form">
+      <label for="title"> Название </label>
+      <input nz-input id="title" formControlName="title" />
+
+      <label for="description"> Описание </label>
+      <nz-textarea-count [nzMaxCharacterCount]="100">
+        <textarea
+          id="description"
+          rows="4"
+          nz-input
+          formControlName="description"
+        >
+        </textarea>
+      </nz-textarea-count>
+
+      <label for="genre"> Жанр </label>
+      <br />
+      <nz-select
+        style="width: 100%"
+        nzShowSearch
+        id="genre"
+        nzAllowClear
+        nzPlaceHolder="Выберите жанр"
+        formControlName="genre"
+      >
+        <nz-option
+          *ngFor="let genre of genres"
+          [nzLabel]="genre.title_eng"
+          [nzValue]="genre.title_eng"
+        ></nz-option>
+      </nz-select>
+
+      <portal-upload-image
+        [selectedItem]="selectedItem"
+        [isClearFileList]="isClearFileList"
+        (formData)="onConstructFormData($event)"
+      >
+      </portal-upload-image>
+    </form>
+  </ng-container>
+</nz-modal>
