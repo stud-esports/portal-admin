@@ -7,7 +7,7 @@
   "
   class="clearfix"
 >
-  Заглавное фото новости
+  Заглавное фото
   <nz-upload
     nzListType="picture-card"
     [(nzFileList)]="fileList"
@@ -35,7 +35,11 @@
 <ng-template #editImage>
   <div nz-space nzDirection="vertical">
     <span>Заглавное фото:</span>
-    <div nz-space nzAlign="center">
+    <div
+      nz-space
+      nzAlign="center"
+      style="display: flex; flex-direction: row; align-items: center"
+    >
       <img
         [nzSrc]="'http://localhost:5000' + selectedItem?.main_image_url"
         nz-image

@@ -80,7 +80,7 @@ export class NewsComponent implements OnInit {
       });
   }
 
-  onConstructFormData(event: FormData) {
+  onConstructFormData(event: any) {
     this.uploadFormData = event;
   }
 
