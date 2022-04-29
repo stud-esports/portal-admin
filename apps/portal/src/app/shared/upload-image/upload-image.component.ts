@@ -31,6 +31,7 @@ export class UploadImageComponent implements OnChanges {
   @Input() isClearFileList = false;
   @Input() selectedItem: any;
   @Output() formData: EventEmitter<FormData> = new EventEmitter();
+  @Output() deleteFormData: EventEmitter<FormData> = new EventEmitter();
 
   constructor() {}
 
@@ -69,5 +70,6 @@ export class UploadImageComponent implements OnChanges {
     event.preventDefault();
     event.stopPropagation();
     this.isMarkMainImageForDelete = true;
+    this.deleteFormData.emit();
   }
 }

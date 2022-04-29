@@ -19,6 +19,7 @@ export class NewsComponent implements OnInit {
 
   uploadFormData: any;
   isClearFileList = false;
+  isDeleteFormData = false;
 
   selectedNews: News | null | undefined = null;
   isLoading = false;
@@ -77,11 +78,13 @@ export class NewsComponent implements OnInit {
       .subscribe(() => {
         this.isClearFileList = false;
         this.uploadFormData = null;
+        this.isDeleteFormData = false;
       });
   }
 
   onConstructFormData(event: any) {
     this.uploadFormData = event;
+    this.isDeleteFormData = false;
   }
 
   // example for multiple images
@@ -111,13 +114,21 @@ export class NewsComponent implements OnInit {
   editNews(): void {
     this.isLoading = true;
     this._newsService
-      .deleteImageByName(this.selectedNews?.main_image_url)
+      .deleteImageByName(
+        this.uploadFormData,
+        this.selectedNews?.main_image_url,
+        true,
+        this.isDeleteFormData
+      )
       .pipe(
         switchMap(() => this._newsService.saveImage(this.uploadFormData)),
         switchMap((image) => {
           return this._newsService.updateNewsById(this.selectedNews?._id, {
             ...this.newsForm.value,
-            main_image_url: image.path,
+            main_image_url:
+              !this.uploadFormData && !this.isDeleteFormData
+                ? this.selectedNews?.main_image_url
+                : image.path,
           });
         }),
         tap(() => {
@@ -133,6 +144,7 @@ export class NewsComponent implements OnInit {
       .subscribe(() => {
         this.isClearFileList = false;
         this.uploadFormData = null;
+        this.isDeleteFormData = false;
       });
   }
 
@@ -147,7 +159,11 @@ export class NewsComponent implements OnInit {
         }),
         switchMap(() => this.getNewsList()),
         switchMap(() =>
-          this._newsService.deleteImageByName(news?.main_image_url)
+          this._newsService.deleteImageByName(
+            this.uploadFormData,
+            news?.main_image_url,
+            false
+          )
         ),
         untilDestroyed(this)
       )
@@ -157,5 +173,9 @@ export class NewsComponent implements OnInit {
   handleCancel(): void {
     this.isEditVisible = false;
     this.newsForm.reset();
+  }
+
+  onDeleteFormData() {
+    this.isDeleteFormData = true;
   }
 }
