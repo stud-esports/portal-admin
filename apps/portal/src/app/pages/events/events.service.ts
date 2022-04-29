@@ -1,17 +1,16 @@
 import {
+  HttpHeaders,
   HttpClient,
   HttpErrorResponse,
-  HttpHeaders,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, of, throwError } from 'rxjs';
-import { Game } from '../../models/Game';
 
 @Injectable({
   providedIn: 'root',
 })
-export class GamesService {
-  API_URL = 'http://localhost:5000/api/v1/games';
+export class EventsService {
+  API_URL = 'http://localhost:5000/api/v1/events';
   FILES_API_URL = 'http://localhost:5000/api/v1/files';
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
@@ -20,7 +19,7 @@ export class GamesService {
   create(data: {
     title: string;
     description: string;
-    genre: string;
+    date: Date;
   }): Observable<any> {
     return this.http
       .post<any>(this.API_URL, data)
@@ -44,11 +43,15 @@ export class GamesService {
     isEdit = false,
     isDeletedImage = false
   ): Observable<any> {
+    // если нет пути фото, то не удаляем
     if (!fname) {
       return of({});
     }
 
     if (isEdit) {
+      // если есть путь, но нет новой картинки
+      // 1) картинка уже есть и она не меняется fname !newImage
+      // 2) картинка была, но удалена и не вставлена новая !fname !newImage
       if (isDeletedImage) {
         return this._deleteImage(fname);
       } else if (fname && !newImage) {
@@ -67,9 +70,9 @@ export class GamesService {
       .pipe(catchError(this.handleError));
   }
 
-  getAll(): Observable<Game[]> {
+  getAll(): Observable<any[]> {
     return this.http
-      .get<Game[]>(this.API_URL)
+      .get<any[]>(this.API_URL)
       .pipe(catchError(this.handleError));
   }
 

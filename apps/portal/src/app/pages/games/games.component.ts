@@ -21,6 +21,7 @@ export class GamesComponent implements OnInit {
 
   uploadFormData: any;
   isClearFileList = false;
+  isDeleteFormData = false;
 
   gamesList: Game[] = [];
 
@@ -42,6 +43,7 @@ export class GamesComponent implements OnInit {
 
   onConstructFormData(event: any): void {
     this.uploadFormData = event;
+    this.isDeleteFormData = false;
   }
 
   showEditModal(item?: Game): void {
@@ -55,13 +57,21 @@ export class GamesComponent implements OnInit {
   edit(): void {
     this.isLoading = true;
     this._gamesService
-      .deleteImageByName(this.selectedItem?.main_image_url)
+      .deleteImageByName(
+        this.uploadFormData,
+        this.selectedItem?.main_image_url,
+        true,
+        this.isDeleteFormData
+      )
       .pipe(
         switchMap(() => this._gamesService.saveImage(this.uploadFormData)),
         switchMap((image) => {
           return this._gamesService.update(this.selectedItem?._id, {
             ...this.form.value,
-            main_image_url: image.path,
+            main_image_url:
+              !this.uploadFormData && !this.isDeleteFormData
+                ? this.selectedItem?.main_image_url
+                : image.path,
           });
         }),
         tap(() => {
@@ -77,6 +87,7 @@ export class GamesComponent implements OnInit {
       .subscribe(() => {
         this.isClearFileList = false;
         this.uploadFormData = null;
+        this.isDeleteFormData = false;
       });
   }
 
@@ -94,7 +105,11 @@ export class GamesComponent implements OnInit {
           return this.getList();
         }),
         switchMap(() =>
-          this._gamesService.deleteImageByName(game?.main_image_url)
+          this._gamesService.deleteImageByName(
+            this.uploadFormData,
+            game?.main_image_url,
+            false
+          )
         ),
         untilDestroyed(this)
       )
@@ -126,6 +141,7 @@ export class GamesComponent implements OnInit {
       .subscribe(() => {
         this.isClearFileList = false;
         this.uploadFormData = null;
+        this.isDeleteFormData = false;
       });
   }
 
@@ -138,5 +154,9 @@ export class GamesComponent implements OnInit {
   handleCancel() {
     this.form.reset();
     this.isEditVisible = false;
+  }
+
+  onDeleteFormData() {
+    this.isDeleteFormData = true;
   }
 }

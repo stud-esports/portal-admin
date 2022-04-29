@@ -8,6 +8,8 @@ interface Person {
   address: string;
   blocked: [Date | null | string, Date | null | string] | null;
   roles: string[];
+  blockedFrom: Date | null | string;
+  blockedUntil: Date | null | string;
 }
 
 @Component({
@@ -22,6 +24,8 @@ export class UsersComponent implements OnInit {
       name: 'John Brown',
       age: 32,
       address: 'New York No. 1 Lake Park',
+      blockedFrom: 'Tue Mar 08 2022 17:30:38 GMT+0300 (Moscow Standard Time)',
+      blockedUntil: 'Tue Mar 08 2022 17:30:38 GMT+0300 (Moscow Standard Time)',
       blocked: [
         'Tue Mar 08 2022 17:30:38 GMT+0300 (Moscow Standard Time)',
         'Tue Mar 08 2022 17:30:38 GMT+0300 (Moscow Standard Time)',
@@ -33,6 +37,8 @@ export class UsersComponent implements OnInit {
       name: 'Jim Green',
       age: 42,
       address: 'London No. 1 Lake Park',
+      blockedFrom: '',
+      blockedUntil: '',
       blocked: null,
       roles: ['user', 'moderator'],
     },
@@ -41,6 +47,8 @@ export class UsersComponent implements OnInit {
       name: 'Joe Black',
       age: 32,
       address: 'Sidney No. 1 Lake Park',
+      blockedFrom: '',
+      blockedUntil: '',
       blocked: null,
       roles: ['user', 'admin'],
     },
@@ -49,7 +57,7 @@ export class UsersComponent implements OnInit {
   isBlockModalVisible = false;
   selectedUser: any;
 
-  blockDates = null;
+  blockDates: any = null;
 
   rolesForm: FormGroup;
 
@@ -81,7 +89,10 @@ export class UsersComponent implements OnInit {
   showBlockModal(data: any): void {
     this.isBlockModalVisible = true;
     this.selectedUser = data;
-    this.blockDates = this.selectedUser.blocked;
+    this.blockDates = [
+      this.selectedUser.blockedFrom,
+      this.selectedUser.blockedUntil,
+    ];
   }
 
   handleOk(): void {

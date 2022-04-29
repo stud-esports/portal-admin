@@ -19,7 +19,9 @@
           >Изменить права</a
         >
         <a (click)="showBlockModal(data)">{{
-          data?.blocked ? 'Разблокировать' : 'Заблокировать'
+          data?.blockedFrom && data?.blockedUntil
+            ? 'Разблокировать'
+            : 'Заблокировать'
         }}</a>
       </td>
     </tr>
@@ -49,18 +51,25 @@
 
 <nz-modal
   [(nzVisible)]="isBlockModalVisible"
-  [nzTitle]="selectedUser?.blocked ? 'Разблокировка' : 'Блокировка'"
+  [nzTitle]="
+    selectedUser?.blockedFrom && selectedUser?.blockedUntil
+      ? 'Разблокировка'
+      : 'Блокировка'
+  "
   (nzOnCancel)="handleCancel()"
   [nzCancelText]="'Разблокировать'"
   [nzOkText]="'Блокировать'"
-  [nzCancelDisabled]="!selectedUser?.blocked"
+  [nzCancelDisabled]="!selectedUser?.blockedFrom || !selectedUser?.blockedUntil"
   (nzOnOk)="handleOk()"
 >
   <ng-container *nzModalContent>
     Даты начала и окончания блокировки
     <nz-range-picker
       [nzAutoFocus]="true"
-      [nzDefaultPickerValue]="selectedUser?.blocked"
+      [nzDefaultPickerValue]="[
+        selectedUser?.blockedFrom,
+        selectedUser?.blockedUntil
+      ]"
       [nzShowTime]="true"
       [(ngModel)]="blockDates"
     >

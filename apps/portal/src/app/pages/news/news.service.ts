@@ -59,10 +59,27 @@ export class NewsService {
       .pipe(catchError(this.handleError));
   }
 
-  deleteImageByName(fname: string | null | undefined): Observable<any> {
+  deleteImageByName(
+    newImage: any,
+    fname: string | null | undefined,
+    isEdit = false,
+    isDeletedImage = false
+  ): Observable<any> {
     if (!fname) {
       return of({});
     }
+
+    if (isEdit) {
+      if (isDeletedImage) {
+        return this._deleteImage(fname);
+      } else if (fname && !newImage) {
+        return of({});
+      }
+    }
+    return this._deleteImage(fname);
+  }
+
+  private _deleteImage(fname: string) {
     const API_URL = `http://localhost:5000/api/v1/files`;
     const name = fname.split('/')[fname.split('/').length - 1];
     return this.http
