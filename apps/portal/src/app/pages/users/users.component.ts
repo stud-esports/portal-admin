@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { untilDestroyed } from '@ngneat/until-destroy';
 import { map, Observable, switchMap } from 'rxjs';
 import { User } from '../../models';
 import { UsersService } from './users.service';
@@ -37,9 +38,9 @@ export class UsersComponent implements OnInit {
       .pipe(map((users) => (this.users = users)));
   }
 
-  showChangeRoleModal(data: User): void {
+  showChangeRoleModal(user: User): void {
     this.isChangeRoleModalVisible = true;
-    this.selectedUser = data;
+    this.selectedUser = user;
 
     if (this.selectedUser?.roles.some((role) => role.name === 'user')) {
       this.rolesForm.get('user')?.patchValue(true);
@@ -67,20 +68,40 @@ export class UsersComponent implements OnInit {
         this.selectedUser?._id,
         action === 'block' ? this.blockDates : [null, null]
       )
-      .pipe(switchMap(() => this.getAllUsers()))
-      .subscribe(() => {
-        this.blockDates = null;
-        this.isChangeRoleModalVisible = false;
-        this.isBlockModalVisible = false;
-        this.selectedUser = null;
-      });
+      .pipe(
+        switchMap(() => this.getAllUsers()),
+        untilDestroyed(this)
+      )
+      .subscribe(() => this.handleBlockCancel());
   }
 
-  handleCancel(): void {
-    this.isChangeRoleModalVisible = false;
+  handleBlockCancel(): void {
     this.isBlockModalVisible = false;
     this.selectedUser = null;
     this.blockDates = null;
+  }
+
+  handleRolesCancel(): void {
+    this.isChangeRoleModalVisible = false;
+    this.selectedUser = null;
     this.rolesForm.reset();
+  }
+
+  changeRoles(): void {
+    const rolesToUpdate: { name: string }[] = [];
+    Object.keys(this.rolesForm.controls).forEach((key) => {
+      if (this.rolesForm.get(key)?.value) {
+        rolesToUpdate.push({ name: key });
+      }
+    });
+    const oldRoles = this.selectedUser?.roles;
+
+    this._usersService
+      .updateRoles(this.selectedUser?._id, rolesToUpdate, oldRoles)
+      .pipe(
+        switchMap(() => this.getAllUsers()),
+        untilDestroyed(this)
+      )
+      .subscribe(() => this.handleRolesCancel());
   }
 }

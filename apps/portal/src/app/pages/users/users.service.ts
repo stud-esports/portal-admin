@@ -26,6 +26,19 @@ export class UsersService {
       .pipe(catchError(this.handleError));
   }
 
+  updateRoles(
+    userId: number | undefined,
+    newRoles: { name: string }[],
+    oldRoles: { name: string }[] | undefined
+  ) {
+    return this.http
+      .patch<number>(`${this.API_URL}/${userId}/update-roles`, {
+        newRoles,
+        oldRoles,
+      })
+      .pipe(catchError(this.handleError));
+  }
+
   handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);

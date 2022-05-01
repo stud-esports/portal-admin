@@ -37,9 +37,9 @@
 <nz-modal
   [(nzVisible)]="isChangeRoleModalVisible"
   nzTitle="Изменение прав"
-  (nzOnCancel)="handleCancel()"
+  (nzOnCancel)="handleRolesCancel()"
+  (nzOnOk)="changeRoles()"
 >
-  <!-- (nzOnOk)="handleOk()" -->
   <ng-container *nzModalContent>
     <form [formGroup]="rolesForm">
       <label nz-checkbox nzValue="true" formControlName="user">
@@ -58,7 +58,7 @@
 <nz-modal
   [(nzVisible)]="isBlockModalVisible"
   [nzTitle]="'Блокировка'"
-  (nzOnCancel)="handleCancel()"
+  (nzOnCancel)="handleBlockCancel()"
   [nzCancelText]="'Отмена'"
   [nzOkText]="'Блокировать'"
   (nzOnOk)="blockOrUnblockUser('block')"
