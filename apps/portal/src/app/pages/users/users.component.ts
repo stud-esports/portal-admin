@@ -1,16 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
-interface Person {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  blocked: [Date | null | string, Date | null | string] | null;
-  roles: string[];
-  blockedFrom: Date | null | string;
-  blockedUntil: Date | null | string;
-}
+import { untilDestroyed } from '@ngneat/until-destroy';
+import { map, Observable, switchMap } from 'rxjs';
+import { User } from '../../models';
+import { UsersService } from './users.service';
 
 @Component({
   selector: 'portal-users',
@@ -18,50 +11,16 @@ interface Person {
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit {
-  listOfData: Person[] = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      blockedFrom: 'Tue Mar 08 2022 17:30:38 GMT+0300 (Moscow Standard Time)',
-      blockedUntil: 'Tue Mar 08 2022 17:30:38 GMT+0300 (Moscow Standard Time)',
-      blocked: [
-        'Tue Mar 08 2022 17:30:38 GMT+0300 (Moscow Standard Time)',
-        'Tue Mar 08 2022 17:30:38 GMT+0300 (Moscow Standard Time)',
-      ],
-      roles: ['user'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      blockedFrom: '',
-      blockedUntil: '',
-      blocked: null,
-      roles: ['user', 'moderator'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      blockedFrom: '',
-      blockedUntil: '',
-      blocked: null,
-      roles: ['user', 'admin'],
-    },
-  ];
   isChangeRoleModalVisible = false;
   isBlockModalVisible = false;
-  selectedUser: any;
+  selectedUser: User | null = null;
 
   blockDates: any = null;
 
   rolesForm: FormGroup;
+  users: User[] = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private _usersService: UsersService) {
     this.rolesForm = this.fb.group({
       user: false,
       moderator: false,
@@ -69,43 +28,80 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getAllUsers().subscribe();
+  }
 
-  showChangeRoleModal(data: any): void {
+  getAllUsers(): Observable<any[]> {
+    return this._usersService
+      .getAll()
+      .pipe(map((users) => (this.users = users)));
+  }
+
+  showChangeRoleModal(user: User): void {
     this.isChangeRoleModalVisible = true;
-    this.selectedUser = data;
+    this.selectedUser = user;
 
-    if (this.selectedUser.roles.includes('user')) {
+    if (this.selectedUser?.roles.some((role) => role.name === 'user')) {
       this.rolesForm.get('user')?.patchValue(true);
     }
-    if (this.selectedUser.roles.includes('admin')) {
+    if (this.selectedUser?.roles.some((role) => role.name === 'admin')) {
       this.rolesForm.get('admin')?.patchValue(true);
     }
-    if (this.selectedUser.roles.includes('moderator')) {
+    if (this.selectedUser?.roles.some((role) => role.name === 'moderator')) {
       this.rolesForm.get('moderator')?.patchValue(true);
     }
   }
 
-  showBlockModal(data: any): void {
+  showBlockModal(data: User): void {
     this.isBlockModalVisible = true;
     this.selectedUser = data;
-    this.blockDates = [
-      this.selectedUser.blockedFrom,
-      this.selectedUser.blockedUntil,
-    ];
+    this.blockDates = null;
   }
 
-  handleOk(): void {
-    this.isChangeRoleModalVisible = false;
+  blockOrUnblockUser(action: 'block' | 'unblock', user?: User): void {
+    if (user) {
+      this.selectedUser = user;
+    }
+    this._usersService
+      .blockUser(
+        this.selectedUser?._id,
+        action === 'block' ? this.blockDates : [null, null]
+      )
+      .pipe(
+        switchMap(() => this.getAllUsers()),
+        untilDestroyed(this)
+      )
+      .subscribe(() => this.handleBlockCancel());
+  }
+
+  handleBlockCancel(): void {
     this.isBlockModalVisible = false;
+    this.selectedUser = null;
+    this.blockDates = null;
+  }
+
+  handleRolesCancel(): void {
+    this.isChangeRoleModalVisible = false;
     this.selectedUser = null;
     this.rolesForm.reset();
   }
 
-  handleCancel(): void {
-    this.isChangeRoleModalVisible = false;
-    this.isBlockModalVisible = false;
-    this.selectedUser = null;
-    this.rolesForm.reset();
+  changeRoles(): void {
+    const rolesToUpdate: { name: string }[] = [];
+    Object.keys(this.rolesForm.controls).forEach((key) => {
+      if (this.rolesForm.get(key)?.value) {
+        rolesToUpdate.push({ name: key });
+      }
+    });
+    const oldRoles = this.selectedUser?.roles;
+
+    this._usersService
+      .updateRoles(this.selectedUser?._id, rolesToUpdate, oldRoles)
+      .pipe(
+        switchMap(() => this.getAllUsers()),
+        untilDestroyed(this)
+      )
+      .subscribe(() => this.handleRolesCancel());
   }
 }
