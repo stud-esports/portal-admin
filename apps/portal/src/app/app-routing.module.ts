@@ -52,6 +52,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/contacts/contacts.module').then((m) => m.ContactsModule),
   },
+  {
+    path: 'teams',
+    loadChildren: () =>
+      import('./pages/team/team.module').then((m) => m.TeamModule),
+  },
 ];
 
 @NgModule({
