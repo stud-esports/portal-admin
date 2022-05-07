@@ -1,0 +1,158 @@
+<h1>Команды</h1>
+<h2>
+  Список команд
+  <button nz-button nzType="primary" (click)="showEditModal()">
+    <i nz-icon nzType="plus"></i>
+  </button>
+</h2>
+
+<div style="display: flex; align-items: flex-start">
+  <ng-container *ngFor="let team of teamList">
+    <nz-card
+      style="width: 300px; margin-right: 15px"
+      [nzCover]="coverTemplate"
+      [nzActions]="[actionEdit, actionEllipsis]"
+    >
+      <nz-card-meta
+        [nzTitle]="team.title"
+        [nzDescription]="team.description"
+        [title]="team.title"
+      ></nz-card-meta>
+      <nz-divider></nz-divider>
+      <h3>Количество участников</h3>
+      <p>{{ team.members_count || '-' }}</p>
+      <h3>Название дисциплины (игры)</h3>
+      <p>{{ team.game.title || '-' }}</p>
+      <h3>Капитан команды</h3>
+      <p>
+        {{
+          team.captain.last_name +
+            ' ' +
+            team.captain.first_name +
+            ' ' +
+            team.captain.patronymic || '-'
+        }}
+      </p>
+      <h3>Тип команды</h3>
+      <p>{{ team.team_type || '' }}</p>
+    </nz-card>
+    <ng-template #coverTemplate>
+      <img
+        *ngIf="'http://localhost:5000' + team.logo_url"
+        width="50"
+        alt="example"
+        [src]="'http://localhost:5000' + team.logo_url"
+      />
+    </ng-template>
+    <ng-template #actionEdit>
+      <i (click)="showEditModal(team)" nz-icon nzType="edit"></i>
+    </ng-template>
+    <ng-template #actionEllipsis>
+      <i
+        nz-popconfirm
+        nzPopconfirmTitle="Вы уверены, что хотите удалить эту команду?"
+        nzPopconfirmPlacement="bottom"
+        (nzOnConfirm)="confirmDelete(team)"
+        nz-icon
+        nzType="delete"
+      ></i>
+    </ng-template>
+  </ng-container>
+</div>
+
+<nz-modal
+  [(nzVisible)]="isEditVisible"
+  [nzTitle]="selectedItem?._id ? 'Редактирование' : 'Создание'"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="selectedItem?._id ? edit() : create()"
+  [nzOkDisabled]="form.invalid"
+  nzCancelText="Отмена"
+  nzOkText="Сохранить"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="create()" class="games__form">
+      <label for="title"> Название </label>
+      <input nz-input id="title" formControlName="title" />
+
+      <label for="description"> Описание </label>
+      <nz-textarea-count [nzMaxCharacterCount]="100">
+        <textarea
+          id="description"
+          rows="4"
+          nz-input
+          formControlName="description"
+        >
+        </textarea>
+      </nz-textarea-count>
+
+      <label for="team_type"> Тип команды </label>
+      <br />
+      <nz-select
+        style="width: 100%"
+        nzShowSearch
+        id="team_type"
+        nzAllowClear
+        formControlName="team_type"
+      >
+        <nz-option
+          *ngFor="let type of teamTypes"
+          [nzLabel]="type"
+          [nzValue]="type"
+        ></nz-option>
+      </nz-select>
+
+      <label for="captain_id"> Капитан команды </label>
+      <nz-select
+        id="captain_id"
+        style="display: block"
+        nzShowSearch
+        nzServerSearch
+        formControlName="captain_id"
+        [nzShowArrow]="false"
+        [nzFilterOption]="nzFilterOption"
+        (nzOnSearch)="search($event)"
+      >
+        <nz-option
+          *ngFor="let user of users"
+          [nzLabel]="user?.first_name + ' ' + user?.last_name"
+          [nzValue]="user?._id"
+        ></nz-option>
+      </nz-select>
+
+      <label for="game_id"> Дисциплина (игра) </label>
+      <nz-select
+        id="game_id"
+        style="display: block"
+        nzShowSearch
+        nzServerSearch
+        formControlName="game_id"
+        [nzShowArrow]="false"
+        [nzFilterOption]="nzFilterOption"
+        (nzOnSearch)="searchGame($event)"
+      >
+        <nz-option
+          *ngFor="let game of games"
+          [nzLabel]="game.title"
+          [nzValue]="game._id"
+        ></nz-option>
+      </nz-select>
+
+      <label for="members_count"> Количество участников </label>
+      <nz-input-number
+        style="display: block; width: 100%"
+        formControlName="members_count"
+        [nzMin]="1"
+        [nzMax]="10"
+        [nzStep]="1"
+      ></nz-input-number>
+
+      <portal-upload-image
+        [selectedItem]="selectedItem"
+        [isClearFileList]="isClearFileList"
+        (formData)="onConstructFormData($event)"
+        (deleteFormData)="onDeleteFormData()"
+      >
+      </portal-upload-image>
+    </form>
+  </ng-container>
+</nz-modal>
