@@ -17,6 +17,11 @@ export class GamesService {
 
   constructor(private http: HttpClient) {}
 
+  searchGame(text: string): Observable<Game[]> {
+    const API_URL = `${this.API_URL}/search?text=${text}`;
+    return this.http.get<Game[]>(API_URL);
+  }
+
   create(data: {
     title: string;
     description: string;

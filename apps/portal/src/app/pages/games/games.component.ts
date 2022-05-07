@@ -79,7 +79,7 @@ export class GamesComponent implements OnInit {
           this.isEditVisible = false;
           this.form.reset();
           this.isClearFileList = true;
-          this._messageService.create('success', `Новость успешно обновлена`);
+          this._messageService.create('success', `Дисциплина (игра) успешно обновлена`);
         }),
         switchMap(() => this.getList()),
         untilDestroyed(this)
