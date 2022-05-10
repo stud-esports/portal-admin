@@ -22,6 +22,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
+import { NzListModule } from 'ng-zorro-antd/list';
 
 import { HomeComponent } from './home.component';
 
@@ -49,6 +50,7 @@ import { HomeEffects } from './store/home.effects';
     ReactiveFormsModule,
     NzModalModule,
     NzTagModule,
+    NzListModule,
     StoreModule.forFeature(
       fromHome.homeFeatureKey,
       fromHome.searchPartnersReducer

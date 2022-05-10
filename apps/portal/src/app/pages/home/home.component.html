@@ -1,6 +1,10 @@
-<div>
-    Панель администратора для сайта компьютерного портала внутри университета
-</div>
-<div>
-    Доступный функционал:
-</div>
+<h1>Панель администратора</h1>
+<h2>Доступный функционал</h2>
+
+<nz-list nzBordered>
+  <nz-list-item *ngFor="let item of functionalityList">
+    <span nz-typography>
+      <mark>{{ item }}</mark>
+    </span>
+  </nz-list-item>
+</nz-list>
