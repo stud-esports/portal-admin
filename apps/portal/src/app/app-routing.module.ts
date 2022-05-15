@@ -1,66 +1,26 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from './auth.guard';
+import { NotFoundComponent } from './shared/not-found/not-found.component';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: '/home' },
   {
-    path: 'home',
+    path: 'auth',
     loadChildren: () =>
-      import('./pages/home/home.module').then((m) => m.HomeModule),
+      import('./pages/auth/auth.module').then((m) => m.AuthModule),
   },
   {
-    path: 'profile',
+    path: '',
+    canActivate: [AuthGuard],
     loadChildren: () =>
-      import('./pages/profile/profile.module').then((m) => m.ProfileModule),
+      import('./pages/wrapper/wrapper.module').then((mod) => mod.WrapperModule),
   },
-  {
-    path: 'news',
-    loadChildren: () =>
-      import('./pages/news/news.module').then((m) => m.NewsModule),
-  },
-  {
-    path: 'applications/main-team',
-    loadChildren: () =>
-      import('./pages/application-main-team/application-main-team.module').then(
-        (m) => m.ApplicationMainTeamModule
-      ),
-  },
-  {
-    path: 'applications/team',
-    loadChildren: () =>
-      import('./pages/application-team/application-team.module').then(
-        (m) => m.ApplicationTeamModule
-      ),
-  },
-  {
-    path: 'users',
-    loadChildren: () =>
-      import('./pages/users/users.module').then((m) => m.UsersModule),
-  },
-  {
-    path: 'games',
-    loadChildren: () =>
-      import('./pages/games/games.module').then((m) => m.GamesModule),
-  },
-  {
-    path: 'events',
-    loadChildren: () =>
-      import('./pages/events/events.module').then((m) => m.EventsModule),
-  },
-  {
-    path: 'contacts',
-    loadChildren: () =>
-      import('./pages/contacts/contacts.module').then((m) => m.ContactsModule),
-  },
-  {
-    path: 'teams',
-    loadChildren: () =>
-      import('./pages/team/team.module').then((m) => m.TeamModule),
-  },
+  { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
+  providers: [AuthGuard],
 })
 export class AppRoutingModule {}

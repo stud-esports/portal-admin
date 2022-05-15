@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { Store } from '@ngrx/store';
+import { AuthService } from './pages/auth/auth.service';
 
 @Component({
   selector: 'portal-root',
@@ -10,5 +11,9 @@ import { Store } from '@ngrx/store';
 export class AppComponent {
   isCollapsed = false;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private _authService: AuthService) {}
+
+  logOut(): void {
+    this._authService.logOut();
+  }
 }
