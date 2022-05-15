@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, throwError, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +12,15 @@ export class AuthService {
   constructor(private http: HttpClient, private _router: Router) {}
 
   signIn(data: { email: string; password: string }): Observable<any> {
-    return this.http
-      .post<any>(this.API_URL, data)
-      .pipe(catchError(this.handleError));
+    return this.http.post<any>(this.API_URL, data).pipe(
+      map((response) => {
+        localStorage.setItem('access_token', response.access_token);
+        localStorage.setItem('refresh_token', response.refresh_token);
+
+        this._router.navigate(['']);
+      }),
+      catchError(this.handleError)
+    );
   }
 
   logOut(): void {

@@ -4,14 +4,15 @@
   class="login-form"
   (ngSubmit)="submitForm()"
 >
+  <h1>Авторизация</h1>
   <nz-form-item>
-    <nz-form-control nzErrorTip="Пожалуйста, введите ваш логин!">
+    <nz-form-control nzErrorTip="Пожалуйста, введите вашу почту!">
       <nz-input-group nzPrefixIcon="user">
         <input
           type="text"
           nz-input
           formControlName="email"
-          placeholder="Логин"
+          placeholder="Email"
         />
       </nz-input-group>
     </nz-form-control>

@@ -27,9 +27,6 @@ export class AuthComponent implements OnInit {
     this._authService
       .signIn(this.validateForm.value)
       .pipe(untilDestroyed(this))
-      .subscribe((response) => {
-        localStorage.setItem('access_token', response.access_token);
-        localStorage.setItem('refresh_token', response.refresh_token);
-      });
+      .subscribe();
   }
 }
