@@ -2,7 +2,7 @@ import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import localeRu from '@angular/common/locales/ru';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -14,11 +14,13 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NZ_I18N, ru_RU } from 'ng-zorro-antd/i18n';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { IconsProviderModule } from './icons-provider.module';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
+import { JwtInterceptor } from './jwt.interceptor';
 
 registerLocaleData(localeRu);
 
@@ -34,6 +36,7 @@ registerLocaleData(localeRu);
     NzLayoutModule,
     NzMenuModule,
     NzAvatarModule,
+    NzDropDownModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreModule.forFeature('appRoot', appReducer),
     StoreDevtoolsModule.instrument({
@@ -45,6 +48,11 @@ registerLocaleData(localeRu);
   providers: [
     { provide: LOCALE_ID, useValue: 'ru' },
     { provide: NZ_I18N, useValue: ru_RU },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

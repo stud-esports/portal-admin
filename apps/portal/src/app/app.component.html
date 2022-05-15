@@ -82,8 +82,15 @@
           nzIcon="user"
           nzSrc="https://avatars.githubusercontent.com/u/23119808?v=4"
           [routerLink]="['profile']"
+          nz-dropdown [nzDropdownMenu]="menu"
         >
         </nz-avatar>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu nzSelectable>
+            <li nz-menu-item>Профиль</li>
+            <li nz-menu-item (click)="logOut()">Выйти</li>
+          </ul>
+        </nz-dropdown-menu>
       </div>
     </nz-header>
     <nz-content>
