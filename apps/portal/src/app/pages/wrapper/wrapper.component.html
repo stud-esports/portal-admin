@@ -39,7 +39,7 @@
           </li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Пользователи" nzIcon="user">
+      <li *ngIf="isUserAdmin" nz-submenu nzTitle="Пользователи" nzIcon="user">
         <ul>
           <li nz-menu-item nzMatchRouter [routerLink]="['users']">
             <a>Назначение прав и блокировка</a>
