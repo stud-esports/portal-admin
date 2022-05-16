@@ -7,15 +7,17 @@ import { Observable, catchError, throwError, map } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  API_URL = 'http://localhost:5000/api/v1/auth/admin/sign-in';
+  API_URL = 'http://localhost:5000/api/v1/auth';
 
   constructor(private http: HttpClient, private _router: Router) {}
 
   signIn(data: { email: string; password: string }): Observable<any> {
-    return this.http.post<any>(this.API_URL, data).pipe(
+    return this.http.post<any>(`${this.API_URL}/admin/sign-in`, data).pipe(
       map((response) => {
-        localStorage.setItem('access_token', response.access_token);
-        localStorage.setItem('refresh_token', response.refresh_token);
+        this.setTokensToLocalStorage(
+          response.access_token,
+          response.refresh_token
+        );
 
         this._router.navigate(['']);
       }),
@@ -23,9 +25,30 @@ export class AuthService {
     );
   }
 
-  logOut(): void {
+  refreshToken(): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}/refresh-tokens`).pipe(
+      map((response) =>
+        this.setTokensToLocalStorage(
+          response.access_token,
+          response.refresh_token
+        )
+      ),
+      catchError(this.handleError)
+    );
+  }
+
+  setTokensToLocalStorage(access_token: string, refresh_token: string) {
+    localStorage.setItem('access_token', access_token);
+    localStorage.setItem('refresh_token', refresh_token);
+  }
+
+  logOut(): Observable<any> {
     localStorage.clear();
     this._router.navigate(['auth']);
+
+    return this.http
+      .get<any>(`${this.API_URL}/logout`)
+      .pipe(catchError(this.handleError));
   }
 
   handleError(error: HttpErrorResponse) {

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminGuard } from '../../admin.guard';
 import { WrapperComponent } from './wrapper.component';
 
 const routes: Routes = [
@@ -38,6 +39,7 @@ const routes: Routes = [
       },
       {
         path: 'users',
+        canActivate: [AdminGuard],
         loadChildren: () =>
           import('../users/users.module').then((m) => m.UsersModule),
       },
@@ -68,5 +70,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
+  providers: [AdminGuard],
 })
 export class WrapperRoutingModule {}

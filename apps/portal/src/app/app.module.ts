@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import localeRu from '@angular/common/locales/ru';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +21,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
 import { JwtInterceptor } from './jwt.interceptor';
+import { TokenInterceptor } from './token.interceptor';
+import { UsersService } from './pages/users/users.service';
 
 registerLocaleData(localeRu);
 
@@ -51,6 +53,18 @@ registerLocaleData(localeRu);
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (usersService: UsersService) => () =>
+        Promise.all([usersService.getUserByToken().subscribe()]),
+      deps: [UsersService],
       multi: true,
     },
   ],

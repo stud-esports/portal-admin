@@ -1,2 +1,17 @@
 <h1>Профиль</h1>
-<portal-in-development></portal-in-development>
+
+<ng-container *ngIf="user as user">
+  <div>
+    <nz-avatar [nzSize]="64" nzIcon="user"></nz-avatar>
+    <div>{{ user.last_name }} {{ user.first_name }} {{ user.patronymic }}</div>
+    <div>
+      {{ user.email }}
+    </div>
+    <div>
+      {{ user.phone }}
+    </div>
+    <span *ngFor="let role of user.roles; let last = last">
+      {{ role.name }}{{ last ? '' : ',' }}
+    </span>
+  </div>
+</ng-container>

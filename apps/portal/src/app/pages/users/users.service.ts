@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, throwError, map } from 'rxjs';
 import { User } from '../../models';
 
 @Injectable({
@@ -8,6 +8,7 @@ import { User } from '../../models';
 })
 export class UsersService {
   API_URL = 'http://localhost:5000/api/v1/users';
+  user: User | null = null;
 
   constructor(private http: HttpClient) {}
 
@@ -48,5 +49,21 @@ export class UsersService {
       );
     }
     return throwError('Something bad happened; please try again later.');
+  }
+
+  getUserByToken(): Observable<User> {
+    return this.http.get<User>(`${this.API_URL}/by-token`).pipe(
+      map((user) => (this.user = user)),
+      catchError(this.handleError)
+    );
+  }
+
+  isCurrentUserAdmin(): boolean {
+    if (!this.user) {
+      return false;
+    }
+    return this.user.roles.some(
+      (role: { name: string }) => role.name === 'admin'
+    );
   }
 }
