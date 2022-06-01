@@ -1,14 +1,39 @@
-<nz-table #basicTable [nzData]="users" nzShowSizeChanger>
-  <thead>
+<p-table
+  #dt
+  [value]="users"
+  [rowHover]="true"
+  [rows]="10"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  [paginator]="true"
+  currentPageReportTemplate="{first} по {last} из {totalRecords} пользователей"
+  [globalFilterFields]="['first_name', 'last_name', 'patronymic', 'phone']"
+>
+  <ng-template pTemplate="caption">
+    <div class="table-header flex" style="display: flex; justify-content: space-between;">
+      <h2>Список всех пользователей</h2>
+      <span style="margin-left: auto" class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          (input)="applyFilterGlobal($event, 'contains')" 
+          placeholder="Поиск"
+        />
+      </span>
+    </div>
+    <div><a (click)="exportExcel()">Выгрузить XLS </a></div>
+  </ng-template>
+  <ng-template pTemplate="header">
     <tr>
       <th>ФИО</th>
       <th>Номер</th>
       <th>Роли</th>
       <th>Действия</th>
     </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let user of users">
+  </ng-template>
+  <ng-template pTemplate="body" let-user>
+    <tr>
       <td>{{ user.last_name }} {{ user.first_name }} {{ user.patronymic }}</td>
       <td>{{ user.phone }}</td>
       <td>
@@ -31,8 +56,8 @@
         </a>
       </td>
     </tr>
-  </tbody>
-</nz-table>
+  </ng-template>
+</p-table>
 
 <nz-modal
   [(nzVisible)]="isChangeRoleModalVisible"
