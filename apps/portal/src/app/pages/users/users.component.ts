@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { untilDestroyed } from '@ngneat/until-destroy';
 import { map, Observable, switchMap } from 'rxjs';
 import { User } from '../../models';
 import { UsersService } from './users.service';
+import * as FileSaver from 'file-saver';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'portal-users',
@@ -19,6 +21,8 @@ export class UsersComponent implements OnInit {
 
   rolesForm: FormGroup;
   users: User[] = [];
+
+  @ViewChild(Table) dt: Table | null = null
 
   constructor(private fb: FormBuilder, private _usersService: UsersService) {
     this.rolesForm = this.fb.group({
@@ -104,4 +108,34 @@ export class UsersComponent implements OnInit {
       )
       .subscribe(() => this.handleRolesCancel());
   }
+
+  exportExcel() {
+    import('xlsx').then((xlsx) => {
+      const worksheet = xlsx.utils.json_to_sheet(this.users);
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+      const excelBuffer: any = xlsx.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array',
+      });
+      this.saveAsExcelFile(excelBuffer, 'products');
+    });
+  }
+
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    let EXCEL_TYPE =
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE,
+    });
+    FileSaver.saveAs(
+      data,
+      fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION
+    );
+  }
+
+  applyFilterGlobal($event: any, stringVal: string) {
+    this.dt?.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
+  }
+  
 }

@@ -11,6 +11,13 @@
           "options": {
             "browserTarget": "portal:build"
           },
+          "styles": [
+            "./apps/portal/src/styles.scss",
+            "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+            "node_modules/primeng/resources/themes/saga-blue/theme.css",
+            "node_modules/primeng/resources/primeng.min.css",
+            "node_modules/primeicons/primeicons.css"
+          ],
           "configurations": {
             "production": {
               "browserTarget": "portal:build:production"
@@ -27,7 +34,10 @@
             "tsConfig": "./apps/portal/tsconfig.app.json",
             "styles": [
               "./apps/portal/src/styles.scss",
-              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
+              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+              "node_modules/primeng/resources/themes/saga-blue/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeicons/primeicons.css"
             ],
             "assets": [
               "./apps/portal/src/favicon.ico",
