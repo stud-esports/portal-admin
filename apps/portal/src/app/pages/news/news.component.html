@@ -1,11 +1,26 @@
 <h1>Новости</h1>
-<h2>
-  Список новостей
-  <button nz-button nzType="primary" (click)="showEditModal()">
-    <i nz-icon nzType="plus"></i>
-  </button>
+<h2 class="flex" style="display: flex">
+  <div style="margin-right: auto">
+    Список новостей
+    <button nz-button nzType="primary" (click)="showEditModal()">
+      <i nz-icon nzType="plus"></i>
+    </button>
+  </div>
+  <p-selectButton
+    [options]="modes"
+    [(ngModel)]="selectedMode"
+    optionLabel="icon"
+  >
+    <ng-template let-item>
+      <i [class]="item.icon"></i>
+    </ng-template>
+  </p-selectButton>
 </h2>
-<section class="news__articles-container">
+
+<section
+  class="news__articles-container"
+  *ngIf="selectedMode.value === 'card'; else tableView"
+>
   <article *ngFor="let news of newsList" class="wrapper news__article">
     <h3 class="news__title">
       <span>
@@ -47,6 +62,8 @@
     <ng-template #noPhoto>
       <small>Фото отсутствует</small>
     </ng-template>
+    <p-divider></p-divider>
+    <p>Дата создания: {{ news.createdAt | date: 'medium' }}</p>
     <!-- <div class="news__article-image">
       <img
         *ngFor="let url of news.images"
@@ -105,3 +122,129 @@
     </form>
   </ng-container>
 </nz-modal>
+
+<ng-template #tableView>
+  <div class="card">
+    <p-table
+      #dt
+      [value]="newsList"
+      dataKey="id"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      styleClass="p-datatable-gridlines"
+      [paginator]="true"
+      currentPageReportTemplate="{first} по {last} из {totalRecords} новостей"
+      [globalFilterFields]="['title', 'description']"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex" style="display: flex; justify-content: space-between">
+          <button
+            pButton
+            label="Сбросить фильтры"
+            class="p-button-outlined"
+            icon="pi pi-filter-slash"
+            (click)="clear(dt)"
+          ></button>
+          <span class="p-input-icon-left ml-auto">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              type="text"
+              width="300px"
+              (input)="applyFilterGlobal($event, 'contains')"
+              placeholder="Поиск новости"
+            />
+          </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              Название
+              <p-columnFilter
+                type="text"
+                field="title"
+                display="menu"
+              ></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              Описание
+              <p-columnFilter
+                type="text"
+                field="description"
+                display="menu"
+              ></p-columnFilter>
+            </div>
+          </th>
+          <th>Заглавное фото</th>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              Дата создания
+              <p-columnFilter
+                type="date"
+                field="createdAt"
+                display="menu"
+              ></p-columnFilter>
+            </div>
+          </th>
+          <th>Действия</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-news>
+        <tr>
+          <td>
+            {{ news.title }}
+          </td>
+          <td>
+            {{ news.description }}
+          </td>
+          <td>
+            <img
+              *ngIf="news.main_image_url; else noPhoto"
+              [nzSrc]="'http://localhost:5000' + news.main_image_url"
+              nz-image
+              width="100px"
+              height="100px"
+              class="news__article-image"
+              alt="main news image"
+            />
+            <ng-template #noPhoto>
+              <small>Фото отсутствует</small>
+            </ng-template>
+          </td>
+          <td>{{ news.createdAt | date: 'medium' }}</td>
+          <td>
+            <button
+              nz-button
+              nzType="default"
+              nzShape="circle"
+              (click)="showEditModal(news)"
+            >
+              <i nz-icon nzType="edit"></i>
+            </button>
+            <button
+              nz-button
+              nzType="default"
+              nzShape="circle"
+              nz-popconfirm
+              nzPopconfirmTitle="Вы уверены, что хотите удалить эту новость?"
+              nzPopconfirmPlacement="bottom"
+              (nzOnConfirm)="confirmDelete(news)"
+            >
+              <i nz-icon nzType="delete"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">Новостей не найдено.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</ng-template>

@@ -6,6 +6,9 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { CalendarModule } from 'primeng/calendar';
+
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -46,6 +49,8 @@ registerLocaleData(localeRu);
       logOnly: environment.production,
     }),
     EffectsModule.forRoot([]),
+    FullCalendarModule,
+    CalendarModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'ru' },

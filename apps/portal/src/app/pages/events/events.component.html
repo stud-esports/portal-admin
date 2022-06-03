@@ -1,13 +1,26 @@
 <h1>События</h1>
-<h2>
-  Список событий
-  <button nz-button nzType="primary" (click)="showEditModal()">
-    <i nz-icon nzType="plus"></i>
-  </button>
+<h2 class="flex" style="display: flex">
+  <div style="margin-right: auto">
+    Список событий
+    <button nz-button nzType="primary" (click)="showEditModal()">
+      <i nz-icon nzType="plus"></i>
+    </button>
+  </div>
+  <p-selectButton
+    [options]="modes"
+    [(ngModel)]="selectedMode"
+    optionLabel="icon"
+  >
+    <ng-template let-item>
+      <i [class]="item.icon"></i>
+    </ng-template>
+  </p-selectButton>
 </h2>
 
-<!-- <div *ngFor="let event of eventList">{{ event.date | date : 'yyyy-MM-dd HH:mm:ss' }}</div> -->
-<div style="display: flex; flex-wrap: wrap; align-items: flex-start">
+<div
+  style="display: flex; flex-wrap: wrap; align-items: flex-start"
+  *ngIf="selectedMode.value === 'card'; else calendarView"
+>
   <ng-container *ngFor="let event of eventList">
     <nz-card
       style="width: calc(25% - 15px); margin: 0 15px 15px 0"
@@ -20,8 +33,10 @@
         [title]="event.title"
       ></nz-card-meta>
       <nz-divider></nz-divider>
-      <h3>Дата и время</h3>
-      <p>{{ event.date | date: 'yyyy-MM-dd HH:mm:ss' }}</p>
+      <h3>Дата и время начала</h3>
+      <p>{{ event.start | date: 'yyyy-MM-dd HH:mm' }}</p>
+      <h3>Дата и время окончания</h3>
+      <p>{{ event.end | date: 'yyyy-MM-dd HH:mm' }}</p>
       <h3>Описание</h3>
       <p>{{ event.description || '-' }}</p>
     </nz-card>
@@ -49,6 +64,10 @@
   </ng-container>
 </div>
 
+<ng-template #calendarView>
+  <full-calendar [options]="calendarOptions"></full-calendar>
+</ng-template>
+
 <nz-modal
   [(nzVisible)]="isEditVisible"
   [nzTitle]="selectedItem?._id ? 'Редактирование' : 'Создание'"
@@ -67,19 +86,31 @@
       <nz-textarea-count [nzMaxCharacterCount]="100">
         <textarea
           id="description"
-          rows="4"
+          rows="3"
           nz-input
           formControlName="description"
         >
         </textarea>
       </nz-textarea-count>
 
-      <label for="date"> Дата и время </label>
+      <label for="location"> Место проведения </label>
+      <input nz-input id="location" formControlName="title" />
+
+      <label for="date"> Дата и время начала </label>
       <nz-date-picker
         style="display: block"
         nzShowTime
         nzFormat="yyyy-MM-dd HH:mm"
-        formControlName="date"
+        formControlName="start"
+      >
+      </nz-date-picker>
+
+      <label for="date"> Дата и время окончания </label>
+      <nz-date-picker
+        style="display: block"
+        nzShowTime
+        nzFormat="yyyy-MM-dd HH:mm"
+        formControlName="end"
       >
       </nz-date-picker>
 
@@ -91,5 +122,35 @@
       >
       </portal-upload-image>
     </form>
+  </ng-container>
+  <ng-container>
+    <div *nzModalFooter>
+      <div style="display: flex; justify-content: space-between">
+        <button
+          style="margin-right: auto"
+          *ngIf="selectedMode.value === 'calendar' && selectedItem?._id"
+          nz-button
+          nz-popconfirm
+          nzPopconfirmTitle="Вы уверены, что хотите удалить это событие?"
+          nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="confirmDelete(selectedItem); handleCancel()"
+        >
+          Удалить
+        </button>
+        <div style="margin-left: auto">
+          <button nz-button nzType="default" (click)="handleCancel()">
+            Отменить
+          </button>
+          <button
+            nz-button
+            nzType="primary"
+            [disabled]="form.invalid"
+            (click)="selectedItem?._id ? edit() : create()"
+          >
+            Сохранить
+          </button>
+        </div>
+      </div>
+    </div>
   </ng-container>
 </nz-modal>

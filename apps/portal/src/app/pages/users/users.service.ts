@@ -18,11 +18,16 @@ export class UsersService {
       .pipe(catchError(this.handleError));
   }
 
-  blockUser(userId: number | undefined, dates: any): Observable<number> {
+  blockUser(
+    userId: number | undefined,
+    dates: any,
+    block_reason: string
+  ): Observable<number> {
     return this.http
       .patch<number>(`${this.API_URL}/block/${userId}`, {
         banned_from_date: dates[0],
         banned_to_date: dates[1],
+        block_reason,
       })
       .pipe(catchError(this.handleError));
   }

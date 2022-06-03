@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { untilDestroyed } from '@ngneat/until-destroy';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { Table } from 'primeng/table';
 
 import { map, Observable, switchMap, tap } from 'rxjs';
 
@@ -26,6 +27,14 @@ export class NewsComponent implements OnInit {
 
   newsList: News[] = [];
 
+  modes = [
+    { icon: 'pi pi-list', value: 'card' },
+    { icon: 'pi pi-table', value: 'table' },
+  ];
+  selectedMode = { icon: 'pi pi-list', value: 'card' };
+
+  @ViewChild(Table) dt: Table | null = null;
+
   constructor(
     private _formBuilder: FormBuilder,
     private _newsService: NewsService,
@@ -43,9 +52,14 @@ export class NewsComponent implements OnInit {
   }
 
   getNewsList(): Observable<News[]> {
-    return this._newsService
-      .getAllNews()
-      .pipe(map((news: News[]) => (this.newsList = news)));
+    return this._newsService.getAllNews().pipe(
+      map((news: News[]) => {
+        news.forEach(
+          (newsItem) => (newsItem.createdAt = new Date(newsItem.createdAt))
+        );
+        return (this.newsList = news);
+      })
+    );
   }
 
   showEditModal(news?: News | null | undefined): void {
@@ -177,5 +191,13 @@ export class NewsComponent implements OnInit {
 
   onDeleteFormData() {
     this.isDeleteFormData = true;
+  }
+
+  clear(table: Table) {
+    table.clear();
+  }
+
+  applyFilterGlobal($event: any, stringVal: string) {
+    this.dt?.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 }
