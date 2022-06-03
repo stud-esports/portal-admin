@@ -19,7 +19,9 @@ export class EventsService {
   create(data: {
     title: string;
     description: string;
-    date: Date;
+    start: Date;
+    end: Date;
+    location: string;
   }): Observable<any> {
     return this.http
       .post<any>(this.API_URL, data)

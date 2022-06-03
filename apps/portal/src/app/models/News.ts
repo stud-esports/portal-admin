@@ -3,6 +3,6 @@ export interface News {
   title: string;
   description: string | null;
   main_image_url: string | null;
-  createdAt: string;
+  createdAt: string | Date;
   updatedAt: string;
 }

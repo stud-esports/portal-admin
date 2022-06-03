@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { NzInputModule } from 'ng-zorro-antd/input';
 
@@ -12,6 +12,11 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzMessageModule } from 'ng-zorro-antd/message';
+import { DividerModule } from 'primeng/divider';
+import { TableModule } from 'primeng/table';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 import { NewsRoutingModule } from './news-routing.module';
 import { NewsComponent } from './news.component';
@@ -21,6 +26,7 @@ import { UploadImageModule } from '../../shared/upload-image/upload-image.module
   declarations: [NewsComponent],
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     NewsRoutingModule,
     NzInputModule,
@@ -33,6 +39,11 @@ import { UploadImageModule } from '../../shared/upload-image/upload-image.module
     NzPopconfirmModule,
     NzMessageModule,
     UploadImageModule,
+    DividerModule,
+    TableModule,
+    InputTextModule,
+    ButtonModule,
+    SelectButtonModule,
   ],
   exports: [NewsComponent],
 })

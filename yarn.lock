@@ -231,7 +231,7 @@
     "symbol-observable" "4.0.0"
     "uuid" "8.3.2"
 
-"@angular/common@^13.0.0", "@angular/common@^13.0.0 || ^14.0.0-0", "@angular/common@^13.0.1", "@angular/common@^9.1.7", "@angular/common@~13.2.0", "@angular/common@13.2.6":
+"@angular/common@^13.0.0", "@angular/common@^13.0.0 || ^14.0.0-0", "@angular/common@^13.0.1", "@angular/common@^9.1.7", "@angular/common@~13.2.0", "@angular/common@13.2.6", "@angular/common@9 - 13":
   "integrity" "sha512-t4XRb9db4UeRcPs5aHNtGuXRKSvGBlTEr0zzSeoKzHD9TCaO4dSDISh9obS9hThaPuBmPKRUHN5KE1HFmqnSHg=="
   "resolved" "https://registry.npmjs.org/@angular/common/-/common-13.2.6.tgz"
   "version" "13.2.6"
@@ -261,7 +261,7 @@
   dependencies:
     "tslib" "^2.3.0"
 
-"@angular/core@^13.0.0", "@angular/core@^13.0.0 || ^14.0.0-0", "@angular/core@^13.0.1", "@angular/core@^9.1.7", "@angular/core@>=10.0.0", "@angular/core@>=13", "@angular/core@~13.2.0", "@angular/core@13.2.6":
+"@angular/core@^13.0.0", "@angular/core@^13.0.0 || ^14.0.0-0", "@angular/core@^13.0.1", "@angular/core@^9.1.7", "@angular/core@>=10.0.0", "@angular/core@>=13", "@angular/core@~13.2.0", "@angular/core@13.2.6", "@angular/core@9 - 13":
   "integrity" "sha512-ctWsxuaSO3d3afLW+wkJSyiEIA2uhaTKNps9x5wz/oZJDaUDYVa4PM4x7/UHn2bXzBjXjN9LSW8h9F31iwmcTg=="
   "resolved" "https://registry.npmjs.org/@angular/core/-/core-13.2.6.tgz"
   "version" "13.2.6"
@@ -1358,6 +1358,56 @@
     "js-yaml" "^4.1.0"
     "minimatch" "^3.0.4"
     "strip-json-comments" "^3.1.1"
+
+"@fullcalendar/angular@^5.11.0":
+  "integrity" "sha512-jj/VrtDwWkaCeXM30OYWjgvHtC4HUP4KBBcgctcLu2MNJ2t35MMIwGBA22ATOswpa9vjqRxLa6lrWv9W66bXzA=="
+  "resolved" "https://registry.npmjs.org/@fullcalendar/angular/-/angular-5.11.0.tgz"
+  "version" "5.11.0"
+  dependencies:
+    "@fullcalendar/core" "~5.11.0"
+    "fast-deep-equal" "^3.1.1"
+    "tslib" "^2.0.0"
+
+"@fullcalendar/common@~5.11.0":
+  "integrity" "sha512-gWjbMAnN1u73Oqlgjbyky7i+3bY0hvFSnGT0YBPx44n874AkQa9e9OU12PMLTMOPy0tXPb8DEwRelFQ7CJNbcw=="
+  "resolved" "https://registry.npmjs.org/@fullcalendar/common/-/common-5.11.0.tgz"
+  "version" "5.11.0"
+  dependencies:
+    "tslib" "^2.1.0"
+
+"@fullcalendar/core@~5.11.0":
+  "integrity" "sha512-cF/d9LuJb/6xw14ms0urv1H4BiA70c4jrufe/EuVzLR6qTDpK92IZ3JK7GVtZtzptfTYZ/NQgDV9YCzIaO9Blw=="
+  "resolved" "https://registry.npmjs.org/@fullcalendar/core/-/core-5.11.0.tgz"
+  "version" "5.11.0"
+  dependencies:
+    "@fullcalendar/common" "~5.11.0"
+    "preact" "^10.0.5"
+    "tslib" "^2.1.0"
+
+"@fullcalendar/daygrid@^5.11.0", "@fullcalendar/daygrid@~5.11.0":
+  "integrity" "sha512-Ybh/dfHn/VL0qOVIRVyJc9I8oYiqqHl6xQONk8xXCe456QbPzAQLsAxpLLJLH+3smWNCfoQgvDKzR9e9XTzLMQ=="
+  "resolved" "https://registry.npmjs.org/@fullcalendar/daygrid/-/daygrid-5.11.0.tgz"
+  "version" "5.11.0"
+  dependencies:
+    "@fullcalendar/common" "~5.11.0"
+    "tslib" "^2.1.0"
+
+"@fullcalendar/interaction@^5.11.0":
+  "integrity" "sha512-9XTI5+ydqrSX+IL3iWgKBURXfnPewn57Tmsv9mJZhiqrUEF7/+qtftLoKEAc8ZdWk/+01aBe67PFL16uPXj2Jg=="
+  "resolved" "https://registry.npmjs.org/@fullcalendar/interaction/-/interaction-5.11.0.tgz"
+  "version" "5.11.0"
+  dependencies:
+    "@fullcalendar/common" "~5.11.0"
+    "tslib" "^2.1.0"
+
+"@fullcalendar/timegrid@^5.11.0":
+  "integrity" "sha512-GNy+/PwAj510PS4Fu18Mf/CytNBVftFU7M8XwsUXOCJ6ouyroHZje0a7k5cH/nE5IQ6NJZfH2eAPBlxGath1MQ=="
+  "resolved" "https://registry.npmjs.org/@fullcalendar/timegrid/-/timegrid-5.11.0.tgz"
+  "version" "5.11.0"
+  dependencies:
+    "@fullcalendar/common" "~5.11.0"
+    "@fullcalendar/daygrid" "~5.11.0"
+    "tslib" "^2.1.0"
 
 "@gar/promisify@^1.0.1":
   "integrity" "sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw=="
@@ -8210,6 +8260,11 @@
     "nanoid" "^3.1.30"
     "picocolors" "^1.0.0"
     "source-map-js" "^1.0.1"
+
+"preact@^10.0.5":
+  "integrity" "sha512-giqJXP8VbtA1tyGa3f1n9wiN7PrHtONrDyE3T+ifjr/tTkg+2N4d/6sjC9WyJKv8wM7rOYDveqy5ZoFmYlwo4w=="
+  "resolved" "https://registry.npmjs.org/preact/-/preact-10.7.3.tgz"
+  "version" "10.7.3"
 
 "prelude-ls@^1.2.1":
   "integrity" "sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g=="

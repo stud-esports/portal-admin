@@ -6,6 +6,7 @@ import { User } from '../../models';
 import { UsersService } from './users.service';
 import * as FileSaver from 'file-saver';
 import { Table } from 'primeng/table';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'portal-users',
@@ -18,13 +19,18 @@ export class UsersComponent implements OnInit {
   selectedUser: User | null = null;
 
   blockDates: any = null;
+  block_reason = '';
 
   rolesForm: FormGroup;
   users: User[] = [];
 
-  @ViewChild(Table) dt: Table | null = null
+  @ViewChild(Table) dt: Table | null = null;
 
-  constructor(private fb: FormBuilder, private _usersService: UsersService) {
+  constructor(
+    private fb: FormBuilder,
+    private _usersService: UsersService,
+    private nzMessageService: NzMessageService
+  ) {
     this.rolesForm = this.fb.group({
       user: false,
       moderator: false,
@@ -70,7 +76,8 @@ export class UsersComponent implements OnInit {
     this._usersService
       .blockUser(
         this.selectedUser?._id,
-        action === 'block' ? this.blockDates : [null, null]
+        action === 'block' ? this.blockDates : [null, null],
+        this.block_reason
       )
       .pipe(
         switchMap(() => this.getAllUsers()),
@@ -83,6 +90,7 @@ export class UsersComponent implements OnInit {
     this.isBlockModalVisible = false;
     this.selectedUser = null;
     this.blockDates = null;
+    this.block_reason = '';
   }
 
   handleRolesCancel(): void {
@@ -137,5 +145,4 @@ export class UsersComponent implements OnInit {
   applyFilterGlobal($event: any, stringVal: string) {
     this.dt?.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
-  
 }

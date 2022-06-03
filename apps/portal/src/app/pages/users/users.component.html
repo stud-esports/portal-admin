@@ -10,14 +10,17 @@
   [globalFilterFields]="['first_name', 'last_name', 'patronymic', 'phone']"
 >
   <ng-template pTemplate="caption">
-    <div class="table-header flex" style="display: flex; justify-content: space-between;">
+    <div
+      class="table-header flex"
+      style="display: flex; justify-content: space-between"
+    >
       <h2>Список всех пользователей</h2>
       <span style="margin-left: auto" class="p-input-icon-left">
         <i class="pi pi-search"></i>
         <input
           pInputText
           type="text"
-          (input)="applyFilterGlobal($event, 'contains')" 
+          (input)="applyFilterGlobal($event, 'contains')"
           placeholder="Поиск"
         />
       </span>
@@ -27,20 +30,50 @@
   <ng-template pTemplate="header">
     <tr>
       <th>ФИО</th>
-      <th>Номер</th>
+      <th>Пол</th>
+      <th>Телефон</th>
+      <th>Образовательное учреждение</th>
+      <th>Команды</th>
       <th>Роли</th>
+      <th>
+        <div class="flex justify-content-center align-items-center">
+          Дата начала блокировки
+          <p-columnFilter
+            type="date"
+            field="banned_from_date"
+            display="menu"
+          ></p-columnFilter>
+        </div>
+      </th>
+      <th>
+        <div class="flex justify-content-center align-items-center">
+          Дата окончания блокировки
+          <p-columnFilter
+            type="date"
+            field="banned_to_date"
+            display="menu"
+          ></p-columnFilter>
+        </div>
+      </th>
+      <th>Причина блокировки</th>
       <th>Действия</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-user>
     <tr>
       <td>{{ user.last_name }} {{ user.first_name }} {{ user.patronymic }}</td>
+      <td>{{ user.gender }}</td>
       <td>{{ user.phone }}</td>
+      <td>-</td>
+      <td>-</td>
       <td>
         <span *ngFor="let role of user.roles; let last = last">
           {{ role.name }}{{ last ? '' : ',' }}
         </span>
       </td>
+      <td>{{ user.banned_from_date | date: 'medium' }}</td>
+      <td>{{ user.banned_to_date | date: 'medium' }}</td>
+      <td>{{ user.block_reason }}</td>
       <td>
         <a (click)="showChangeRoleModal(user)" style="margin-right: 10px"
           >Изменить права</a
@@ -49,8 +82,11 @@
           Заблокировать
         </a>
         <a
-          (click)="blockOrUnblockUser('unblock', user)"
           *ngIf="user?.banned_from_date && user?.banned_to_date"
+          nz-popconfirm
+          nzPopconfirmTitle="Вы уверены, что хотите разблокировать этого пользователя?"
+          nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="blockOrUnblockUser('unblock', user)"
         >
           Разблокировать
         </a>
@@ -97,5 +133,17 @@
       [(ngModel)]="blockDates"
     >
     </nz-range-picker>
+    <div>
+      <label for="block_reason"> Причина блокировки </label>
+      <nz-textarea-count [nzMaxCharacterCount]="100">
+        <textarea
+          id="block_reason"
+          rows="4"
+          nz-input
+          [(ngModel)]="block_reason"
+        >
+        </textarea>
+      </nz-textarea-count>
+    </div>
   </ng-container>
 </nz-modal>

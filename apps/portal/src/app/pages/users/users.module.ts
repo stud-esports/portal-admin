@@ -8,6 +8,9 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzMessageModule } from 'ng-zorro-antd/message';
 
 import { UsersRoutingModule } from './users-routing.module';
 import { UsersComponent } from './users.component';
@@ -25,6 +28,9 @@ import { UsersComponent } from './users.component';
     NzDatePickerModule,
     ButtonModule,
     InputTextModule,
+    NzInputModule,
+    NzPopconfirmModule,
+    NzMessageModule,
   ],
 })
 export class UsersModule {}
