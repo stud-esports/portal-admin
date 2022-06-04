@@ -1,7 +1,7 @@
 <div
   *ngIf="
     !selectedItem?._id ||
-      (!selectedItem?.main_image_url && !selectedItem?.logo_url) ||
+      (!selectedItem?.main_image_url && !selectedItem?.main_image_url) ||
       isMarkMainImageForDelete;
     else editImage
   "
@@ -43,7 +43,7 @@
       <img
         [nzSrc]="
           'http://localhost:5000' +
-          (selectedItem?.main_image_url || selectedItem?.logo_url)
+          (selectedItem?.main_image_url)
         "
         nz-image
         width="100px"

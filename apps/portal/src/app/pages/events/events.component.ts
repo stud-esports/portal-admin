@@ -31,7 +31,7 @@ export class EventsComponent {
     { icon: 'pi pi-calendar', value: 'calendar' },
     { icon: 'pi pi-list', value: 'card' },
   ];
-  selectedMode = { icon: 'pi pi-list', value: 'calendar' };
+  selectedMode = { icon: 'pi pi-calendar', value: 'calendar' };
 
   constructor(
     private _formBuilder: FormBuilder,

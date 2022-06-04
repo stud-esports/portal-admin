@@ -26,8 +26,8 @@ const routes: Routes = [
       {
         path: 'applications/main-team',
         loadChildren: () =>
-          import('../application-main-team/application-main-team.module').then(
-            (m) => m.ApplicationMainTeamModule
+          import('../application-team/application-team.module').then(
+            (m) => m.ApplicationTeamModule
           ),
       },
       {

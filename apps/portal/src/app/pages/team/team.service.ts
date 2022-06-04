@@ -23,7 +23,7 @@ export class TeamService {
     team_type: string;
     game_id: string;
     captain_id: string;
-    logo_url: string;
+    main_image_url: string;
     members_count: string;
   }): Observable<any> {
     return this.http
@@ -98,5 +98,23 @@ export class TeamService {
       );
     }
     return throwError('Something bad happened; please try again later.');
+  }
+
+  addMemberToTeam(memberId: number, teamId: number) {
+    return this.http
+      .post<any>(`${this.API_URL}/add-user-to-team`, {
+        user_id: memberId,
+        team_id: teamId,
+      })
+      .pipe(catchError(this.handleError));
+  }
+
+  deleteMemberFromTeam(memberId: number, teamId: number) {
+    return this.http
+      .post<any>(`${this.API_URL}/delete-user-from-team`, {
+        user_id: memberId,
+        team_id: teamId,
+      })
+      .pipe(catchError(this.handleError));
   }
 }
