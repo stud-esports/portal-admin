@@ -1,9 +1,42 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+} from '@angular/animations';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Table } from 'primeng/table';
+import { map, switchMap, tap } from 'rxjs';
+import { UsersService } from '../users/users.service';
+import { ApplicationTeamService } from './application-team.service';
 
+@UntilDestroy()
 @Component({
   selector: 'portal-application-team',
   templateUrl: './application-team.component.html',
   styleUrls: ['./application-team.component.scss'],
+  animations: [
+    trigger('rowExpansionTrigger', [
+      state(
+        'void',
+        style({
+          transform: 'translateX(-10%)',
+          opacity: 0,
+        })
+      ),
+      state(
+        'active',
+        style({
+          transform: 'translateX(0)',
+          opacity: 1,
+        })
+      ),
+      transition('* <=> *', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)')),
+    ]),
+  ],
 })
 export class ApplicationTeamComponent implements OnInit {
   isDeclineModalVisible = false;
@@ -11,41 +44,47 @@ export class ApplicationTeamComponent implements OnInit {
 
   reasonOfDecline = '';
   commentToConfirm = '';
+  selectedApplication: any;
 
   expandSet = new Set<number>();
 
-  listOfData = [
-    {
-      id: 1,
-      name: 'John Brown',
-      age: 32,
-      expand: false,
-      address: 'New York No. 1 Lake Park',
-      reason:
-        'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-    },
-    {
-      id: 2,
-      name: 'Jim Green',
-      age: 42,
-      expand: false,
-      address: 'London No. 1 Lake Park',
-      reason:
-        'My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.',
-    },
-    {
-      id: 3,
-      name: 'Joe Black',
-      age: 32,
-      expand: false,
-      address: 'Sidney No. 1 Lake Park',
-      reason:
-        'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.',
-    },
+  applications: any[] = [];
+
+  applicationsTypes = [
+    { name: 'Активные', value: 'active' },
+    { name: 'Архивные', value: 'archive' },
   ];
+  selectedApplicationsType = 'active';
+
+  @ViewChild(Table) dt: Table | null = null;
+
+  constructor(
+    private _applicationTeamService: ApplicationTeamService,
+    private _route: ActivatedRoute,
+    private _userService: UsersService
+  ) {}
 
   ngOnInit(): void {
-    // из стора брать заявки
+    // if university_id, то подгружаем заявки этого универа
+    this.getApplications().pipe(untilDestroyed(this)).subscribe();
+    // то подгружать по первому университету
+  }
+
+  clear(table: Table) {
+    table.clear();
+  }
+
+  applyFilterGlobal($event: any, stringVal: string) {
+    this.dt?.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
+  }
+
+  getApplications() {
+    return this._applicationTeamService
+      .getAll(
+        this._userService.user?._id,
+        location.href.includes('main-team') ? 'main' : 'general'
+      )
+      .pipe(map((applications: any[]) => (this.applications = applications)));
   }
 
   onExpandChange(id: number, checked: boolean): void {
@@ -56,12 +95,14 @@ export class ApplicationTeamComponent implements OnInit {
     }
   }
 
-  showDeclineModal(): void {
+  showDeclineModal(application: any): void {
     this.isDeclineModalVisible = true;
+    this.selectedApplication = application;
   }
 
-  showConfirmModal(): void {
+  showConfirmModal(application: any): void {
     this.isConfirmModalVisible = true;
+    this.selectedApplication = application;
   }
 
   handleOk(): void {
@@ -74,5 +115,36 @@ export class ApplicationTeamComponent implements OnInit {
     this.isConfirmModalVisible = false;
     this.reasonOfDecline = '';
     this.commentToConfirm = '';
+    this.selectedApplication = null;
+  }
+
+  approveApplication(): void {
+    this._applicationTeamService
+      .approveApplication(this.selectedApplication._id, {
+        user_id: this.selectedApplication.applicant._id,
+        team_id: this.selectedApplication.team._id,
+        commentary: this.commentToConfirm,
+      })
+      .pipe(
+        switchMap(() => this.getApplications()),
+        tap(() => this.handleCancel()),
+        untilDestroyed(this)
+      )
+      .subscribe(() => this.handleCancel());
+  }
+
+  declineApplication(): void {
+    this._applicationTeamService
+      .declineApplication(this.selectedApplication._id, {
+        user_id: this.selectedApplication.applicant._id,
+        team_id: this.selectedApplication.team._id,
+        commentary: this.reasonOfDecline,
+      })
+      .pipe(
+        switchMap(() => this.getApplications()),
+        tap(() => this.handleCancel()),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 }

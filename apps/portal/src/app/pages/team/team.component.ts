@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { map, Observable, switchMap, tap } from 'rxjs';
 import { User } from '../../models';
@@ -10,6 +10,7 @@ import { ContactsService } from '../contacts/contacts.service';
 import { GamesService } from '../games/games.service';
 import { TeamService } from './team.service';
 
+@UntilDestroy()
 @Component({
   selector: 'team',
   templateUrl: './team.component.html',
@@ -26,7 +27,10 @@ export class TeamComponent implements OnInit {
   //   { name: 'Сборная', value: 'main' },
   //   { name: 'Обычная', value: 'simple' },
   // ];
-  teamTypes = ['Сборная', 'Обычная'];
+  teamTypes = [
+    { name: 'Сборная', value: 'main' },
+    { name: 'Обычная', value: 'general' },
+  ];
 
   users: User[] = [];
   games: Game[] = [];
@@ -49,7 +53,7 @@ export class TeamComponent implements OnInit {
       team_type: '',
       game_id: {},
       captain_id: {},
-      logo_url: '',
+      main_image_url: '',
       members_count: ['', Validators.required],
       // university_id: ''
     });
@@ -90,7 +94,7 @@ export class TeamComponent implements OnInit {
             ...this.form.value,
             captain_id: this.form.value.captain_id,
             game_id: this.form.value.game_id,
-            logo_url: image.path ?? null,
+            main_image_url: image.path ?? null,
           })
         ),
         tap(() => {
@@ -113,7 +117,7 @@ export class TeamComponent implements OnInit {
     this._teamService
       .deleteImageByName(
         this.uploadFormData,
-        this.selectedItem?.logo_url,
+        this.selectedItem?.main_image_url,
         true,
         this.isDeleteFormData
       )
@@ -121,7 +125,7 @@ export class TeamComponent implements OnInit {
         switchMap((image) => {
           return this._teamService.update(this.selectedItem?._id, {
             ...this.form.value,
-            logo_url:
+            main_image_url:
               !this.uploadFormData && !this.isDeleteFormData
                 ? this.selectedItem?.main_image_url
                 : image.path,
@@ -157,7 +161,7 @@ export class TeamComponent implements OnInit {
         switchMap(() =>
           this._teamService.deleteImageByName(
             this.uploadFormData,
-            team?.logo_url,
+            team?.main_image_url,
             false
           )
         ),
@@ -203,6 +207,17 @@ export class TeamComponent implements OnInit {
       .searchGame(value)
       .pipe(
         map((games: Game[]) => (this.games = games)),
+        untilDestroyed(this)
+      )
+      .subscribe();
+  }
+
+  deleteMemberFromTeam(teamId: number, userId: number) {
+    this._teamService
+      .deleteMemberFromTeam(userId, teamId)
+      .pipe(
+        switchMap(() => this.getList()),
+        tap(() => this.handleCancel()),
         untilDestroyed(this)
       )
       .subscribe();

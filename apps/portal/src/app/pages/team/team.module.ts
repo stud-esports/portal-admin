@@ -13,6 +13,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzPopoverModule } from 'ng-zorro-antd/popover';
 
 import { TeamComponent } from './team.component';
 import { TeamRoutingModule } from './team-routing.module';
@@ -35,7 +37,9 @@ import { UploadImageModule } from '../../shared/upload-image/upload-image.module
     NzInputNumberModule,
     UploadImageModule,
     NzCardModule,
-    NzDividerModule
+    NzDividerModule,
+    NzListModule,
+    NzPopoverModule
   ],
 })
 export class TeamModule {}

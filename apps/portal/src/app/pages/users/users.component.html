@@ -71,9 +71,9 @@
           {{ role.name }}{{ last ? '' : ',' }}
         </span>
       </td>
-      <td>{{ user.banned_from_date | date: 'medium' }}</td>
-      <td>{{ user.banned_to_date | date: 'medium' }}</td>
-      <td>{{ user.block_reason }}</td>
+      <td>{{ (user.banned_from_date | date: 'medium') || '-' }}</td>
+      <td>{{ (user.banned_to_date | date: 'medium') || '-' }}</td>
+      <td>{{ user.block_reason || '-' }}</td>
       <td>
         <a (click)="showChangeRoleModal(user)" style="margin-right: 10px"
           >Изменить права</a

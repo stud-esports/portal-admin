@@ -1,64 +1,159 @@
 <h1>Рассмотрение заявок в команды</h1>
+<p-selectButton
+  [options]="applicationsTypes"
+  [(ngModel)]="selectedApplicationsType"
+  optionLabel="name"
+  optionValue="value"
+></p-selectButton>
+<br />
 
-<nz-table #nzTable
-          [nzData]="listOfData"
-          nzTableLayout="fixed"
-          nzShowSizeChanger>
-    <thead>
-        <tr>
-            <th nzWidth="110px">Мотивация</th>
-            <th>ФИО</th>
-            <th>Группа</th>
-            <th>Команда</th>
-            <th>Действия</th>
-        </tr>
-    </thead>
-    <tbody>
-        <ng-container *ngFor="let data of nzTable.data">
-            <tr>
-                <td [nzExpand]="expandSet.has(data.id)"
-                    (nzExpandChange)="onExpandChange(data.id, $event)"></td>
-                <td>{{ data.name }}</td>
-                <td>{{ data.age }}</td>
-                <td>{{ data.address }}</td>
-                <td>
-                    <a (click)="showConfirmModal()">Принять</a>
-                    <a (click)="showDeclineModal()"
-                       style="margin-left: 10px">Отклонить</a>
-                </td>
-            </tr>
-            <tr [nzExpand]="expandSet.has(data.id)">
-                <span>{{ data.reason }}</span>
-            </tr>
-        </ng-container>
-    </tbody>
-</nz-table>
+<p-table
+  [value]="applications | formatTable: selectedApplicationsType"
+  dataKey="_id"
+  #dt
+  [rows]="10"
+  responsiveLayout="scroll"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  styleClass="p-datatable-gridlines"
+  [paginator]="true"
+  currentPageReportTemplate="{first} по {last} из {totalRecords} новостей"
+  [globalFilterFields]="[
+    'applicant.first_name',
+    'applicant.last_name',
+    'applicant.patronymic'
+  ]"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex" style="display: flex; justify-content: space-between">
+      <button
+        pButton
+        label="Сбросить фильтры"
+        class="p-button-outlined"
+        icon="pi pi-filter-slash"
+        (click)="clear(dt)"
+      ></button>
+      <span class="p-input-icon-left ml-auto">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          width="300px"
+          (input)="applyFilterGlobal($event, 'contains')"
+          placeholder="Поиск заявления"
+        />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Мотивация</th>
+      <th>ФИО</th>
+      <th>Образовательное учреждение</th>
+      <th>Команда</th>
+      <th>Дата создания заявления</th>
+      <th>Статус</th>
+      <th *ngIf="selectedApplicationsType === 'archive'">
+        Комментарий к решению
+      </th>
+      <th *ngIf="selectedApplicationsType === 'active'">Действия</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-application let-expanded="expanded">
+    <tr>
+      <td>
+        <button
+          type="button"
+          pButton
+          pRipple
+          [pRowToggler]="application"
+          class="p-button-text p-button-rounded p-button-plain"
+          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+        ></button>
+      </td>
+      <td>
+        {{ application.applicant.last_name }}
+        {{ application.applicant.first_name }}
+        {{ application.applicant.patronymic }}
+      </td>
+      <td>-</td>
+      <td>
+        <span
+          nz-popover
+          [nzPopoverTitle]="titleTemplate"
+          [nzPopoverContent]="contentTemplate"
+        >
+          {{ application.team.title }}
+        </span>
+      </td>
+      <ng-template #titleTemplate>
+        {{ application.team.title }}
+      </ng-template>
+      <ng-template #contentTemplate>
+        <div>Описание: {{ application.team.description }}</div>
+        <div>Максимум участников: {{ application.team.members_count }}</div>
+        <div>Тип команды: {{ application.team.team_type }}</div>
+      </ng-template>
+      <td>{{ application.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+      <td>{{ application.status }}</td>
+      <td *ngIf="selectedApplicationsType === 'archive'">
+        {{ application.commentary }}
+      </td>
+      <td *ngIf="selectedApplicationsType === 'active'">
+        <a (click)="showConfirmModal(application)">Принять</a>
+        <a (click)="showDeclineModal(application)" style="margin-left: 10px">
+          Отклонить
+        </a>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="rowexpansion" let-application>
+    <tr>
+      <td colspan="9">
+        <span>{{ application.reason }}</span>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="9">Заявлений не найдено.</td>
+    </tr>
+  </ng-template>
+</p-table>
 
-<nz-modal [(nzVisible)]="isConfirmModalVisible"
-          nzTitle="Принятие заявки"
-          (nzOnCancel)="handleCancel()"
-          (nzOnOk)="handleOk()">
-    <ng-container *nzModalContent>
-        <label for="commentToConfirm">Комментарий</label>
-        <textarea nz-input
-                  id="commentToConfirm"
-                  [(ngModel)]="commentToConfirm"
-                  [nzAutosize]="{ minRows: 3, maxRows: 5 }">
-        </textarea>
-    </ng-container>
+<nz-modal
+  [(nzVisible)]="isConfirmModalVisible"
+  nzTitle="Принятие заявки"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="approveApplication()"
+>
+  <ng-container *nzModalContent>
+    <label for="commentToConfirm">Комментарий</label>
+    <textarea
+      nz-input
+      id="commentToConfirm"
+      [(ngModel)]="commentToConfirm"
+      [nzAutosize]="{ minRows: 3, maxRows: 5 }"
+    >
+    </textarea>
+  </ng-container>
 </nz-modal>
 
-<nz-modal [(nzVisible)]="isDeclineModalVisible"
-          nzTitle="Отклонение заявки"
-          (nzOnCancel)="handleCancel()"
-          (nzOnOk)="handleOk()"
-          [nzOkDisabled]="!reasonOfDecline.length">
-    <ng-container *nzModalContent>
-        <label for="reasonOfDecline">Причина</label>
-        <textarea nz-input
-                  id="reasonOfDecline"
-                  [(ngModel)]="reasonOfDecline"
-                  [nzAutosize]="{ minRows: 3, maxRows: 5 }">
-        </textarea>
-    </ng-container>
+<nz-modal
+  [(nzVisible)]="isDeclineModalVisible"
+  nzTitle="Отклонение заявки"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="declineApplication()"
+  [nzOkDisabled]="!reasonOfDecline.length"
+>
+  <ng-container *nzModalContent>
+    <label for="reasonOfDecline">Причина</label>
+    <textarea
+      nz-input
+      id="reasonOfDecline"
+      [(ngModel)]="reasonOfDecline"
+      [nzAutosize]="{ minRows: 3, maxRows: 5 }"
+    >
+    </textarea>
+  </ng-container>
 </nz-modal>

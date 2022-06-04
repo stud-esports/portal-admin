@@ -35,13 +35,56 @@
       </p>
       <h3>Тип команды</h3>
       <p>{{ team.team_type || '' }}</p>
+
+      <h3>Участники</h3>
+      <nz-list *ngIf="team.members.length; else noMembers">
+        <nz-list-item *ngFor="let member of team.members">
+          <ng-container>
+            <nz-list-item-meta
+              nz-popover
+              [nzAvatar]="'https://localhost:5000' + member.photo_url"
+              [nzPopoverTitle]="titleTemplate"
+              [nzPopoverContent]="contentTemplate"
+              style="cursor: help"
+            >
+              <nz-list-item-meta-title>
+                <div>
+                  {{ member.last_name }} {{ member.first_name }}
+                  {{ member.patronymic }}
+                </div>
+              </nz-list-item-meta-title>
+              <ng-template #titleTemplate>
+                {{ member.last_name }} {{ member.first_name }}
+                {{ member.patronymic }}
+              </ng-template>
+              <ng-template #contentTemplate>
+                {{ member.phone }}
+              </ng-template>
+            </nz-list-item-meta>
+            <ul nz-list-item-actions>
+              <nz-list-item-action>
+                <i
+                  style="cursor: pointer"
+                  nz-popconfirm
+                  nzPopconfirmTitle="Вы уверены, что хотите удалить этого участника из команды?"
+                  nzPopconfirmPlacement="bottom"
+                  (nzOnConfirm)="deleteMemberFromTeam(team._id, member._id)"
+                  nz-icon
+                  nzType="delete"
+                ></i>
+              </nz-list-item-action>
+            </ul>
+          </ng-container>
+        </nz-list-item>
+      </nz-list>
+      <ng-template #noMembers>Нет участников</ng-template>
     </nz-card>
     <ng-template #coverTemplate>
       <img
-        *ngIf="'http://localhost:5000' + team.logo_url"
+        *ngIf="team.main_image_url"
         width="50"
         alt="example"
-        [src]="'http://localhost:5000' + team.logo_url"
+        [src]="'http://localhost:5000' + team.main_image_url"
       />
     </ng-template>
     <ng-template #actionEdit>
@@ -96,8 +139,8 @@
       >
         <nz-option
           *ngFor="let type of teamTypes"
-          [nzLabel]="type"
-          [nzValue]="type"
+          [nzLabel]="type.name"
+          [nzValue]="type.value"
         ></nz-option>
       </nz-select>
 
