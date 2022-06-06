@@ -1,7 +1,7 @@
-<h1>События</h1>
+<h1>Матчи и турниры</h1>
 <h2 class="flex" style="display: flex">
   <div style="margin-right: auto">
-    Список событий
+    Список матчей и турниров
     <button nz-button nzType="primary" (click)="showEditModal()">
       <i nz-icon nzType="plus"></i>
     </button>
@@ -21,6 +21,7 @@
   style="display: flex; flex-wrap: wrap; align-items: flex-start"
   *ngIf="selectedMode.value === 'card'; else calendarView"
 >
+<ng-container *ngIf="eventList.length; else noList">
   <ng-container *ngFor="let event of eventList">
     <nz-card
       style="width: calc(25% - 15px); margin: 0 15px 15px 0"
@@ -62,6 +63,8 @@
       ></i>
     </ng-template>
   </ng-container>
+</ng-container>
+<ng-template #noList> Нет матчей и турниров </ng-template>
 </div>
 
 <ng-template #calendarView>

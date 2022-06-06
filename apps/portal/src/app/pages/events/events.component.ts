@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { switchMap, tap, Observable, map } from 'rxjs';
 import { EventsService } from './events.service';
@@ -12,6 +12,7 @@ import {
 } from '@fullcalendar/angular';
 import ruLocale from '@fullcalendar/core/locales/ru';
 
+@UntilDestroy()
 @Component({
   selector: 'portal-events',
   templateUrl: './events.component.html',

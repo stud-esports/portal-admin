@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError, map } from 'rxjs';
+import { Observable, catchError, throwError, map, BehaviorSubject } from 'rxjs';
 import { User } from '../../models';
 
 @Injectable({
@@ -9,6 +9,9 @@ import { User } from '../../models';
 export class UsersService {
   API_URL = 'http://localhost:5000/api/v1/users';
   user: User | null = null;
+  isLoadingUser$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
 
   constructor(private http: HttpClient) {}
 
@@ -57,8 +60,13 @@ export class UsersService {
   }
 
   getUserByToken(): Observable<User> {
+    this.isLoadingUser$.next(true);
     return this.http.get<User>(`${this.API_URL}/by-token`).pipe(
-      map((user) => (this.user = user)),
+      map((user) => {
+        this.user = user;
+        this.isLoadingUser$.next(false);
+        return user;
+      }),
       catchError(this.handleError)
     );
   }

@@ -21,7 +21,7 @@ export class AuthService {
 
         this._router.navigate(['']);
       }),
-      catchError(this.handleError)
+      // catchError(this.handleError)
     );
   }
 

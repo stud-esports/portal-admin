@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 import { tap, switchMap, map, Observable, catchError, EMPTY } from 'rxjs';
@@ -8,6 +8,7 @@ import { tap, switchMap, map, Observable, catchError, EMPTY } from 'rxjs';
 import { Contact, User } from '../../models/index';
 import { ContactsService } from './contacts.service';
 
+@UntilDestroy()
 @Component({
   selector: 'portal-contacts',
   templateUrl: './contacts.component.html',

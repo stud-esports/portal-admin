@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Table } from 'primeng/table';
 
@@ -9,6 +9,7 @@ import { map, Observable, switchMap, tap } from 'rxjs';
 import { News } from '../../models';
 import { NewsService } from './news.service';
 
+@UntilDestroy()
 @Component({
   selector: 'portal-news',
   templateUrl: './news.component.html',
@@ -28,10 +29,10 @@ export class NewsComponent implements OnInit {
   newsList: News[] = [];
 
   modes = [
-    { icon: 'pi pi-list', value: 'card' },
     { icon: 'pi pi-table', value: 'table' },
+    { icon: 'pi pi-list', value: 'card' },
   ];
-  selectedMode = { icon: 'pi pi-list', value: 'card' };
+  selectedMode = { icon: 'pi pi-table', value: 'table' };
 
   @ViewChild(Table) dt: Table | null = null;
 

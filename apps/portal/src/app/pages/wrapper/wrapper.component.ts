@@ -12,6 +12,8 @@ import { UsersService } from '../users/users.service';
 export class WrapperComponent implements OnInit {
   isCollapsed = false;
   isUserAdmin = false;
+  user: User | null = null;
+  isLoadingUser$: any;
 
   constructor(
     private _authService: AuthService,
@@ -19,7 +21,11 @@ export class WrapperComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.isUserAdmin = this._usersService.isCurrentUserAdmin();
+    this._usersService.getUserByToken().subscribe(() => {
+      this.isUserAdmin = this._usersService.isCurrentUserAdmin();
+      this.user = this._usersService.user;
+      this.isLoadingUser$ = this._usersService.isLoadingUser$;
+    });
   }
 
   logOut(): void {
