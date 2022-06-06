@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { map, Observable, switchMap } from 'rxjs';
 import { User } from '../../models';
 import { UsersService } from './users.service';
@@ -8,6 +8,7 @@ import * as FileSaver from 'file-saver';
 import { Table } from 'primeng/table';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
+@UntilDestroy()
 @Component({
   selector: 'portal-users',
   templateUrl: './users.component.html',

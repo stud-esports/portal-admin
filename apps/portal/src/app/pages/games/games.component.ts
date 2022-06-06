@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, Observable, switchMap, tap } from 'rxjs';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { genres } from 'apps/portal/src/assets/genres';
 import { Game } from '../../models/Game';
 import { GamesService } from './games.service';
 
+@UntilDestroy()
 @Component({
   selector: 'portal-games',
   templateUrl: './games.component.html',

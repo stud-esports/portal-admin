@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzMessageModule } from 'ng-zorro-antd/message';
 
 import { AuthComponent } from './auth.component';
 import { AuthRoutingModule } from './auth-routing.module';
@@ -18,6 +19,7 @@ import { AuthRoutingModule } from './auth-routing.module';
     NzInputModule,
     NzFormModule,
     NzButtonModule,
+    NzMessageModule,
   ],
 })
 export class AuthModule {}

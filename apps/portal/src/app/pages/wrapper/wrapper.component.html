@@ -1,101 +1,111 @@
-<nz-layout class="app-layout">
-  <nz-sider
-    class="menu-sidebar"
-    nzCollapsible
-    nzWidth="256px"
-    nzBreakpoint="md"
-    [(nzCollapsed)]="isCollapsed"
-    [nzTrigger]="null"
-  >
-    <div class="sidebar-logo">
-      <a href="#">
-        <img src="../assets/logo.svg" alt="logo" />
-        <h1>Админка</h1>
-      </a>
-    </div>
-    <!-- Дропдаун выбора университета с поиском -->
-    <ul
-      nz-menu
-      nzTheme="light"
-      nzMode="inline"
-      [nzInlineCollapsed]="isCollapsed"
+<nz-spin *ngIf="isLoadingUser$ | async; else wrapper" nzSimple></nz-spin>
+
+<ng-template #wrapper>
+  <nz-layout class="app-layout">
+    <nz-sider
+      class="menu-sidebar"
+      nzCollapsible
+      nzWidth="256px"
+      nzBreakpoint="md"
+      [(nzCollapsed)]="isCollapsed"
+      [nzTrigger]="null"
     >
-      <li nz-submenu nzTitle="Управление" nzIcon="plus">
-        <ul>
-          <li nz-menu-item nzMatchRouter [routerLink]="['news']">
-            <a>Новостями</a>
-          </li>
-          <li nz-menu-item nzMatchRouter [routerLink]="['events']">
-            <a>Событиями</a>
-          </li>
-          <li nz-menu-item nzMatchRouter [routerLink]="['games']">
-            <a>Дисциплинами (играми)</a>
-          </li>
-          <li nz-menu-item nzMatchRouter [routerLink]="['contacts']">
-            <a>Контактами</a>
-          </li>
-          <li nz-menu-item nzMatchRouter [routerLink]="['teams']">
-            <a>Командами</a>
-          </li>
-        </ul>
-      </li>
-      <li *ngIf="isUserAdmin" nz-submenu nzTitle="Пользователи" nzIcon="user">
-        <ul>
-          <li nz-menu-item nzMatchRouter [routerLink]="['users']">
-            <a>Назначение прав и блокировка</a>
-          </li>
-        </ul>
-      </li>
-      <li nz-submenu nzTitle="Рассмотрение заявок" nzIcon="eye">
-        <ul>
-          <li
-            nz-menu-item
-            nzMatchRouter
-            [routerLink]="['applications', 'main-team']"
-          >
-            <a>В сборную</a>
-          </li>
-          <li
-            nz-menu-item
-            nzMatchRouter
-            [routerLink]="['applications', 'team']"
-          >
-            <a>В команду</a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </nz-sider>
-  <nz-layout>
-    <nz-header>
-      <div class="app-header">
-        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-          <i
-            class="trigger"
-            nz-icon
-            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-          ></i>
-        </span>
-        <nz-avatar
-          class="header-avatar"
-          nzSize="large"
-          nzIcon="user"
-          nzSrc="https://avatars.githubusercontent.com/u/23119808?v=4"
-          [routerLink]="['profile']"
-          nz-dropdown
-          [nzDropdownMenu]="menu"
-        >
-        </nz-avatar>
-        <nz-dropdown-menu #menu="nzDropdownMenu">
-          <ul nz-menu nzSelectable>
-            <li nz-menu-item>Профиль</li>
-            <li nz-menu-item (click)="logOut()">Выйти</li>
-          </ul>
-        </nz-dropdown-menu>
+      <div class="sidebar-logo">
+        <a href="#">
+          <img src="../assets/logo.svg" alt="logo" />
+          <h1>Админка</h1>
+        </a>
       </div>
-    </nz-header>
-    <nz-content>
-      <router-outlet></router-outlet>
-    </nz-content>
+      <!-- Дропдаун выбора университета с поиском -->
+      <ul
+        nz-menu
+        nzTheme="light"
+        nzMode="inline"
+        [nzInlineCollapsed]="isCollapsed"
+      >
+        <li nz-submenu nzTitle="Управление" nzIcon="plus">
+          <ul>
+            <li nz-menu-item nzMatchRouter [routerLink]="['news']">
+              <a>Новостями</a>
+            </li>
+            <li nz-menu-item nzMatchRouter [routerLink]="['events']">
+              <a>Матчами и турнирами</a>
+            </li>
+            <li nz-menu-item nzMatchRouter [routerLink]="['games']">
+              <a>Дисциплинами (играми)</a>
+            </li>
+            <li nz-menu-item nzMatchRouter [routerLink]="['contacts']">
+              <a>Контактами</a>
+            </li>
+            <li nz-menu-item nzMatchRouter [routerLink]="['teams']">
+              <a>Командами</a>
+            </li>
+          </ul>
+        </li>
+        <li *ngIf="isUserAdmin" nz-submenu nzTitle="Пользователи" nzIcon="user">
+          <ul>
+            <li nz-menu-item nzMatchRouter [routerLink]="['users']">
+              <a>Назначение прав и блокировка</a>
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Рассмотрение заявок" nzIcon="eye">
+          <ul>
+            <li
+              nz-menu-item
+              nzMatchRouter
+              [routerLink]="['applications', 'main-team']"
+            >
+              <a>В сборную</a>
+            </li>
+            <li
+              nz-menu-item
+              nzMatchRouter
+              [routerLink]="['applications', 'team']"
+            >
+              <a>В команду</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nz-sider>
+    <nz-layout>
+      <nz-header>
+        <div class="app-header">
+          <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+            <i
+              class="trigger"
+              nz-icon
+              [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+            ></i>
+          </span>
+          <div>
+            <span [routerLink]="['profile']" style="margin-right: 10px">
+              {{ user?.last_name }} {{ user?.first_name }}
+              {{ user?.patronymic }}
+            </span>
+            <nz-avatar
+              class="header-avatar"
+              nzSize="large"
+              nzIcon="user"
+              [nzSrc]="'http://localhost:5000' + user?.photo_url"
+              [routerLink]="['profile']"
+              nz-dropdown
+              [nzDropdownMenu]="menu"
+            >
+            </nz-avatar>
+          </div>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu nzSelectable>
+              <li nz-menu-item [routerLink]="['profile']">Профиль</li>
+              <li nz-menu-item (click)="logOut()">Выйти</li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+      </nz-header>
+      <nz-content>
+        <router-outlet></router-outlet>
+      </nz-content>
+    </nz-layout>
   </nz-layout>
-</nz-layout>
+</ng-template>

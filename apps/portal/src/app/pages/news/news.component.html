@@ -21,50 +21,51 @@
   class="news__articles-container"
   *ngIf="selectedMode.value === 'card'; else tableView"
 >
-  <article *ngFor="let news of newsList" class="wrapper news__article">
-    <h3 class="news__title">
-      <span>
-        {{ news.title }}
-      </span>
-      <div>
-        <button
-          nz-button
-          nzType="default"
-          nzShape="circle"
-          (click)="showEditModal(news)"
-        >
-          <i nz-icon nzType="edit"></i>
-        </button>
-        <button
-          nz-button
-          nzType="default"
-          nzShape="circle"
-          nz-popconfirm
-          nzPopconfirmTitle="Вы уверены, что хотите удалить эту новость?"
-          nzPopconfirmPlacement="bottom"
-          (nzOnConfirm)="confirmDelete(news)"
-        >
-          <i nz-icon nzType="delete"></i>
-        </button>
-      </div>
-    </h3>
-    <p>{{ news.description }}</p>
-    <span>Заглавное фото:</span>
-    <img
-      *ngIf="news.main_image_url; else noPhoto"
-      [nzSrc]="'http://localhost:5000' + news.main_image_url"
-      nz-image
-      width="100px"
-      height="100px"
-      class="news__article-image"
-      alt="main news image"
-    />
-    <ng-template #noPhoto>
-      <small>Фото отсутствует</small>
-    </ng-template>
-    <p-divider></p-divider>
-    <p>Дата создания: {{ news.createdAt | date: 'medium' }}</p>
-    <!-- <div class="news__article-image">
+  <ng-container *ngIf="newsList.length; else noList">
+    <article *ngFor="let news of newsList" class="wrapper news__article">
+      <h3 class="news__title">
+        <span>
+          {{ news.title }}
+        </span>
+        <div>
+          <button
+            nz-button
+            nzType="default"
+            nzShape="circle"
+            (click)="showEditModal(news)"
+          >
+            <i nz-icon nzType="edit"></i>
+          </button>
+          <button
+            nz-button
+            nzType="default"
+            nzShape="circle"
+            nz-popconfirm
+            nzPopconfirmTitle="Вы уверены, что хотите удалить эту новость?"
+            nzPopconfirmPlacement="bottom"
+            (nzOnConfirm)="confirmDelete(news)"
+          >
+            <i nz-icon nzType="delete"></i>
+          </button>
+        </div>
+      </h3>
+      <p>{{ news.description }}</p>
+      <span>Заглавное фото:</span>
+      <img
+        *ngIf="news.main_image_url; else noPhoto"
+        [nzSrc]="'http://localhost:5000' + news.main_image_url"
+        nz-image
+        width="100px"
+        height="100px"
+        class="news__article-image"
+        alt="main news image"
+      />
+      <ng-template #noPhoto>
+        <small>Фото отсутствует</small>
+      </ng-template>
+      <p-divider></p-divider>
+      <p>Дата создания: {{ news.createdAt | date: 'medium' }}</p>
+      <!-- <div class="news__article-image">
       <img
         *ngFor="let url of news.images"
         [nzSrc]="url"
@@ -75,7 +76,9 @@
         alt=""
       />
     </div> -->
-  </article>
+    </article>
+  </ng-container>
+  <ng-template #noList> Нет новостей </ng-template>
 </section>
 
 <nz-modal

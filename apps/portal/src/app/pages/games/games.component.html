@@ -7,45 +7,48 @@
 </h2>
 
 <div style="display: flex; flex-wrap: wrap; align-items: flex-start">
-  <ng-container *ngFor="let game of gamesList">
-    <nz-card
-      style="width: calc(25% - 15px); margin: 0 15px 15px 0"
-      [nzCover]="coverTemplate"
-      [nzActions]="[actionEdit, actionEllipsis]"
-    >
-      <nz-card-meta
-        [nzTitle]="game.title"
-        [nzDescription]="game.description"
-        [title]="game.title"
-      ></nz-card-meta>
-      <nz-divider></nz-divider>
-      <h3>Жанр</h3>
-      <p>{{ game.genre || '-' }}</p>
-      <h3>Описание</h3>
-      <p>{{ game.description || '-' }}</p>
-    </nz-card>
-    <ng-template #coverTemplate>
-      <img
-        *ngIf="game.main_image_url"
-        width="50"
-        alt="example"
-        [src]="'http://localhost:5000' + game.main_image_url"
-      />
-    </ng-template>
-    <ng-template #actionEdit>
-      <i nz-icon nzType="edit" (click)="showEditModal(game)"></i>
-    </ng-template>
-    <ng-template #actionEllipsis>
-      <i
-        nz-popconfirm
-        nzPopconfirmTitle="Вы уверены, что хотите удалить эту дисциплину (игру)?"
-        nzPopconfirmPlacement="bottom"
-        nz-icon
-        nzType="delete"
-        (nzOnConfirm)="confirmDelete(game)"
-      ></i>
-    </ng-template>
+  <ng-container *ngIf="gamesList.length; else noList">
+    <ng-container *ngFor="let game of gamesList">
+      <nz-card
+        style="width: calc(25% - 15px); margin: 0 15px 15px 0"
+        [nzCover]="coverTemplate"
+        [nzActions]="[actionEdit, actionEllipsis]"
+      >
+        <nz-card-meta
+          [nzTitle]="game.title"
+          [nzDescription]="game.description"
+          [title]="game.title"
+        ></nz-card-meta>
+        <nz-divider></nz-divider>
+        <h3>Жанр</h3>
+        <p>{{ game.genre || '-' }}</p>
+        <h3>Описание</h3>
+        <p>{{ game.description || '-' }}</p>
+      </nz-card>
+      <ng-template #coverTemplate>
+        <img
+          *ngIf="game.main_image_url"
+          width="50"
+          alt="example"
+          [src]="'http://localhost:5000' + game.main_image_url"
+        />
+      </ng-template>
+      <ng-template #actionEdit>
+        <i nz-icon nzType="edit" (click)="showEditModal(game)"></i>
+      </ng-template>
+      <ng-template #actionEllipsis>
+        <i
+          nz-popconfirm
+          nzPopconfirmTitle="Вы уверены, что хотите удалить эту дисциплину (игру)?"
+          nzPopconfirmPlacement="bottom"
+          nz-icon
+          nzType="delete"
+          (nzOnConfirm)="confirmDelete(game)"
+        ></i>
+      </ng-template>
+    </ng-container>
   </ng-container>
+  <ng-template #noList> Нет дисциплин (игр) </ng-template>
 </div>
 
 <nz-modal
