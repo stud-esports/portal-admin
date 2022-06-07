@@ -23,8 +23,14 @@ export class NewsService {
       .pipe(catchError(this.handleError));
   }
 
-  getAllNews() {
-    return this.http.get<News[]>(`${this.apiUrl}`);
+  getAllNews(moderated_university_id?: number | null | undefined) {
+    if (moderated_university_id) {
+      return this.http.get<News[]>(
+        `${this.apiUrl}?university_id=${moderated_university_id}`
+      );
+    } else {
+      return this.http.get<News[]>(`${this.apiUrl}`);
+    }
   }
 
   updateNewsById(

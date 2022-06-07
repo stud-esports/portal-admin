@@ -1,4 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError, map, BehaviorSubject } from 'rxjs';
 import { User } from '../../models';
@@ -12,12 +16,22 @@ export class UsersService {
   isLoadingUser$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
   );
+  headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<User[]> {
     return this.http
       .get<User[]>(`${this.API_URL}/get-all`)
+      .pipe(catchError(this.handleError));
+  }
+
+  updateUser(userId: number | null | undefined, data: any) {
+    console.log(userId);
+    return this.http
+      .put(`${this.API_URL}/${userId}`, data, {
+        headers: this.headers,
+      })
       .pipe(catchError(this.handleError));
   }
 
@@ -77,6 +91,31 @@ export class UsersService {
     }
     return this.user.roles.some(
       (role: { name: string }) => role.name === 'admin'
+    );
+  }
+
+  isCurrentUserModerator(): boolean {
+    if (!this.user) {
+      return false;
+    }
+    return this.user.roles.some(
+      (role: { name: string }) => role.name === 'moderator'
+    );
+  }
+
+  isCurrentUserModeratorOfUniversity() {
+    return (
+      !this.isCurrentUserAdmin() &&
+      this.isCurrentUserModerator() &&
+      this.user?.moderated_university_id
+    );
+  }
+
+  isCurrentUserIsNotModeratorOfUniversity() {
+    return (
+      !this.isCurrentUserAdmin() &&
+      this.isCurrentUserModerator() &&
+      !this.user?.moderated_university_id
     );
   }
 }

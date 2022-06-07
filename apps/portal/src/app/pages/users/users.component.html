@@ -6,6 +6,7 @@
   [showCurrentPageReport]="true"
   [rowsPerPageOptions]="[10, 25, 50]"
   [paginator]="true"
+  responsiveLayout="scroll"
   currentPageReportTemplate="{first} по {last} из {totalRecords} пользователей"
   [globalFilterFields]="['first_name', 'last_name', 'patronymic', 'phone']"
 >
@@ -35,6 +36,7 @@
       <th>Образовательное учреждение</th>
       <th>Команды</th>
       <th>Роли</th>
+      <th>Привязанный университет</th>
       <th>
         <div class="flex justify-content-center align-items-center">
           Дата начала блокировки
@@ -71,10 +73,18 @@
           {{ role.name }}{{ last ? '' : ',' }}
         </span>
       </td>
+      <td>{{ user?.moderated_university?.title || '-' }}</td>
       <td>{{ (user.banned_from_date | date: 'medium') || '-' }}</td>
       <td>{{ (user.banned_to_date | date: 'medium') || '-' }}</td>
       <td>{{ user.block_reason || '-' }}</td>
       <td>
+        <a
+          (click)="showEditModal(user)"
+          *ngIf="isUserModerator(user)"
+          style="margin-right: 10px"
+        >
+          Привязать университет
+        </a>
         <a (click)="showChangeRoleModal(user)" style="margin-right: 10px"
           >Изменить права</a
         >
@@ -94,6 +104,32 @@
     </tr>
   </ng-template>
 </p-table>
+
+<nz-modal
+  [(nzVisible)]="isEditUser"
+  nzTitle="Привязка университета"
+  (nzOnCancel)="hideEditUser()"
+  (nzOnOk)="updateUser(selectedUniversity)"
+>
+  <ng-container *nzModalContent>
+    <!-- <form [formGroup]="rolesForm"> -->
+    <label for="choose-university">Университет</label>
+    <nz-select
+      style="width: 100%"
+      id="choose-university"
+      nzShowSearch
+      nzAllowClear
+      [(ngModel)]="selectedUniversity"
+    >
+      <nz-option
+        *ngFor="let uni of universities"
+        [nzLabel]="uni.title"
+        [nzValue]="uni._id"
+      ></nz-option>
+    </nz-select>
+    <!-- </form> -->
+  </ng-container>
+</nz-modal>
 
 <nz-modal
   [(nzVisible)]="isChangeRoleModalVisible"
