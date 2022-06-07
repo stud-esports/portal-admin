@@ -194,6 +194,7 @@
               ></p-columnFilter>
             </div>
           </th>
+          <th>Университет</th>
           <th>Действия</th>
         </tr>
       </ng-template>
@@ -219,7 +220,8 @@
               <small>Фото отсутствует</small>
             </ng-template>
           </td>
-          <td>{{ news.createdAt | date: 'medium' }}</td>
+           <td>{{ news.createdAt | date: 'medium' }}</td>
+          <td>{{ news?.university?.title || '-' }}</td>
           <td>
             <button
               nz-button

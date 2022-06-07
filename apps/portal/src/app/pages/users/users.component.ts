@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { map, Observable, switchMap } from 'rxjs';
 import { User } from '../../models';
@@ -7,6 +7,7 @@ import { UsersService } from './users.service';
 import * as FileSaver from 'file-saver';
 import { Table } from 'primeng/table';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { UniversitiesService } from '../universities/universities.service';
 
 @UntilDestroy()
 @Component({
@@ -25,12 +26,17 @@ export class UsersComponent implements OnInit {
   rolesForm: FormGroup;
   users: User[] = [];
 
+  selectedUniversity = null;
+  isEditUser = false;
+  universities: any[] = [];
+
   @ViewChild(Table) dt: Table | null = null;
 
   constructor(
     private fb: FormBuilder,
     private _usersService: UsersService,
-    private nzMessageService: NzMessageService
+    private nzMessageService: NzMessageService,
+    private _universitiesService: UniversitiesService
   ) {
     this.rolesForm = this.fb.group({
       user: false,
@@ -41,6 +47,12 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllUsers().subscribe();
+  }
+
+  isUserModerator(user: User): boolean {
+    return user.roles.some(
+      (role: { name: string }) => role.name === 'moderator'
+    );
   }
 
   getAllUsers(): Observable<any[]> {
@@ -145,5 +157,40 @@ export class UsersComponent implements OnInit {
 
   applyFilterGlobal($event: any, stringVal: string) {
     this.dt?.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
+  }
+
+  showEditModal(data: User): void {
+    this._universitiesService
+      .getAll()
+      .pipe(untilDestroyed(this))
+      .subscribe((universities) => {
+        this.universities = [
+          { _id: null, title: 'Не выбрано' },
+          ...universities,
+        ];
+        this.isEditUser = true;
+        this.selectedUser = data;
+        this.blockDates = null;
+      });
+  }
+
+  updateUser(updateData: any) {
+    console.log(updateData, this.selectedUniversity);
+    this._usersService
+      .updateUser(this.selectedUser?._id, {
+        // ...this.selectedUser,
+        moderated_university_id: updateData,
+      })
+      .pipe(
+        switchMap(() => this.getAllUsers()),
+        untilDestroyed(this)
+      )
+      .subscribe(() => this.hideEditUser());
+  }
+
+  hideEditUser() {
+    this.isEditUser = false;
+    this.selectedUser = null;
+    this.blockDates = null;
   }
 }

@@ -8,5 +8,7 @@ export interface User {
   photo_url: string;
   banned_from_date: any;
   banned_to_date: any;
-  roles: { name: 'user' | 'admin' | 'moderator' }[];
+  roles: { name: string }[];
+  moderated_university: any;
+  moderated_university_id: number;
 }

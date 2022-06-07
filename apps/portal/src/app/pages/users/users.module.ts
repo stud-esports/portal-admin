@@ -11,6 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 import { UsersRoutingModule } from './users-routing.module';
 import { UsersComponent } from './users.component';
@@ -31,6 +32,7 @@ import { UsersComponent } from './users.component';
     NzInputModule,
     NzPopconfirmModule,
     NzMessageModule,
+    NzSelectModule,
   ],
 })
 export class UsersModule {}

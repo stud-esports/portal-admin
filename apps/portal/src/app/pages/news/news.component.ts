@@ -6,7 +6,8 @@ import { Table } from 'primeng/table';
 
 import { map, Observable, switchMap, tap } from 'rxjs';
 
-import { News } from '../../models';
+import { News, User } from '../../models';
+import { UsersService } from '../users/users.service';
 import { NewsService } from './news.service';
 
 @UntilDestroy()
@@ -39,7 +40,8 @@ export class NewsComponent implements OnInit {
   constructor(
     private _formBuilder: FormBuilder,
     private _newsService: NewsService,
-    private _messageService: NzMessageService
+    private _messageService: NzMessageService,
+    private _userService: UsersService
   ) {
     this.newsForm = this._formBuilder.group({
       title: ['', Validators.required],
@@ -53,14 +55,27 @@ export class NewsComponent implements OnInit {
   }
 
   getNewsList(): Observable<News[]> {
-    return this._newsService.getAllNews().pipe(
-      map((news: News[]) => {
-        news.forEach(
-          (newsItem) => (newsItem.createdAt = new Date(newsItem.createdAt))
+    if (this._userService.isCurrentUserModeratorOfUniversity()) {
+      return this._newsService
+        .getAllNews(this._userService.user?.moderated_university_id)
+        .pipe(
+          map((news: News[]) => {
+            news.forEach(
+              (newsItem) => (newsItem.createdAt = new Date(newsItem.createdAt))
+            );
+            return (this.newsList = news);
+          })
         );
-        return (this.newsList = news);
-      })
-    );
+    } else {
+      return this._newsService.getAllNews().pipe(
+        map((news: News[]) => {
+          news.forEach(
+            (newsItem) => (newsItem.createdAt = new Date(newsItem.createdAt))
+          );
+          return (this.newsList = news);
+        })
+      );
+    }
   }
 
   showEditModal(news?: News | null | undefined): void {
