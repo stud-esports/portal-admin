@@ -7,4 +7,5 @@ export interface Contact {
   position: string;
   questions: string;
   contact_university_id: number | null;
+  university: any;
 }
