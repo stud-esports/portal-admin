@@ -39,7 +39,7 @@ import { UploadImageModule } from '../../shared/upload-image/upload-image.module
     NzCardModule,
     NzDividerModule,
     NzListModule,
-    NzPopoverModule
+    NzPopoverModule,
   ],
 })
 export class TeamModule {}

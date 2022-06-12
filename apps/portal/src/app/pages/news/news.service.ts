@@ -16,7 +16,11 @@ export class NewsService {
 
   constructor(private http: HttpClient) {}
 
-  createNews(data: { title: string; description: string }): Observable<News> {
+  createNews(data: {
+    title: string;
+    description: string;
+    university_id: number;
+  }): Observable<News> {
     const API_URL = `${this.apiUrl}`;
     return this.http
       .post<News>(API_URL, data)

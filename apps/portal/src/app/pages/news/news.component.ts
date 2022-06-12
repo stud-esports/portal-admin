@@ -7,6 +7,7 @@ import { Table } from 'primeng/table';
 import { map, Observable, switchMap, tap } from 'rxjs';
 
 import { News, User } from '../../models';
+import { UniversitiesService } from '../universities/universities.service';
 import { UsersService } from '../users/users.service';
 import { NewsService } from './news.service';
 
@@ -28,12 +29,14 @@ export class NewsComponent implements OnInit {
   isLoading = false;
 
   newsList: News[] = [];
+  isUserAdmin = false;
 
   modes = [
     { icon: 'pi pi-table', value: 'table' },
     { icon: 'pi pi-list', value: 'card' },
   ];
   selectedMode = { icon: 'pi pi-table', value: 'table' };
+  universities: any[] = [];
 
   @ViewChild(Table) dt: Table | null = null;
 
@@ -41,18 +44,31 @@ export class NewsComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _newsService: NewsService,
     private _messageService: NzMessageService,
-    private _userService: UsersService
+    private _userService: UsersService,
+    private _universitiesService: UniversitiesService
   ) {
     this.newsForm = this._formBuilder.group({
       title: ['', Validators.required],
       description: '',
+      university_id: null,
     });
   }
 
   ngOnInit(): void {
+    this.isUserAdmin = this._userService.isCurrentUserAdmin();
     //  здесь будем доставать новости из store
     this.getNewsList().pipe(untilDestroyed(this)).subscribe();
+    this.newsForm
+      .get('university_id')
+      ?.patchValue(this._userService.user?.moderated_university_id);
+    this._universitiesService.universities
+      .pipe(untilDestroyed(this))
+      .subscribe((universities) => {
+        this.universities = universities;
+      });
   }
+
+  nzFilterOption = (): boolean => true;
 
   getNewsList(): Observable<News[]> {
     if (this._userService.isCurrentUserModeratorOfUniversity()) {

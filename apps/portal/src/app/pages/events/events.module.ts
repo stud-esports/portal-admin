@@ -22,6 +22,7 @@ import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 import { EventsRoutingModule } from './events-routing.module';
 import { EventsComponent } from './events.component';
@@ -59,7 +60,8 @@ FullCalendarModule.registerPlugins([
     CheckboxModule,
     ButtonModule,
     TabViewModule,
-    SelectButtonModule
+    SelectButtonModule,
+    NzSelectModule,
   ],
 })
 export class EventsModule {}

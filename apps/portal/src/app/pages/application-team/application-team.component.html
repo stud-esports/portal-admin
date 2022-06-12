@@ -76,7 +76,7 @@
         {{ application.applicant.first_name }}
         {{ application.applicant.patronymic }}
       </td>
-      <td>-</td>
+      <td>{{ application.application_university?.title || '-' }}</td>
       <td>
         <span
           nz-popover

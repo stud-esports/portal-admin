@@ -71,10 +71,14 @@ export class TeamService {
       .pipe(catchError(this.handleError));
   }
 
-  getAll(): Observable<Team[]> {
-    return this.http
-      .get<Team[]>(this.API_URL)
-      .pipe(catchError(this.handleError));
+  getAll(moderated_university_id?: number | null | undefined) {
+    if (moderated_university_id) {
+      return this.http.get<Team[]>(
+        `${this.API_URL}?university_id=${moderated_university_id}`
+      );
+    } else {
+      return this.http.get<Team[]>(`${this.API_URL}`);
+    }
   }
 
   update(id: number | null | undefined, data: any) {

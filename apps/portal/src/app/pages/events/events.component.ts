@@ -11,6 +11,8 @@ import {
   EventApi,
 } from '@fullcalendar/angular';
 import ruLocale from '@fullcalendar/core/locales/ru';
+import { UsersService } from '../users/users.service';
+import { UniversitiesService } from '../universities/universities.service';
 
 @UntilDestroy()
 @Component({
@@ -18,7 +20,7 @@ import ruLocale from '@fullcalendar/core/locales/ru';
   templateUrl: './events.component.html',
   styleUrls: ['./events.component.scss'],
 })
-export class EventsComponent {
+export class EventsComponent implements OnInit {
   form: FormGroup;
   selectedItem: any | null | undefined = null;
   isEditVisible = false;
@@ -26,6 +28,7 @@ export class EventsComponent {
   uploadFormData: any;
   isDeleteFormData = false;
   isLoading = false;
+  isUserAdmin = false;
 
   eventList: any[] = [];
   modes = [
@@ -33,11 +36,14 @@ export class EventsComponent {
     { icon: 'pi pi-list', value: 'card' },
   ];
   selectedMode = { icon: 'pi pi-calendar', value: 'calendar' };
+  universities: any[] = [];
 
   constructor(
     private _formBuilder: FormBuilder,
     private _eventsService: EventsService,
-    private _messageService: NzMessageService
+    private _messageService: NzMessageService,
+    private _userService: UsersService,
+    private _universitiesService: UniversitiesService
   ) {
     this.form = this._formBuilder.group({
       title: ['', Validators.required],
@@ -45,6 +51,7 @@ export class EventsComponent {
       location: '',
       start: ['', Validators.required],
       end: ['', Validators.required],
+      event_university_id: null,
     });
   }
 
@@ -63,11 +70,29 @@ export class EventsComponent {
     selectable: true,
     dayMaxEvents: true,
     allDaySlot: false,
+    validRange: {
+      start: new Date(),
+    },
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
   };
   currentEvents: EventApi[] = [];
+
+  ngOnInit(): void {
+    this.isUserAdmin = this._userService.isCurrentUserAdmin();
+    this.getList().pipe(untilDestroyed(this)).subscribe();
+    this.form
+      .get('event_university_id')
+      ?.patchValue(this._userService.user?.moderated_university_id);
+    this._universitiesService.universities
+      .pipe(untilDestroyed(this))
+      .subscribe((universities) => {
+        this.universities = universities;
+      });
+  }
+
+  nzFilterOption = (): boolean => true;
 
   handleDateSelect(selectInfo: DateSelectArg) {
     const calendarApi = selectInfo.view.calendar;
@@ -91,12 +116,8 @@ export class EventsComponent {
     });
   }
 
-  handleEvents(events: EventApi[]) {
+  handleEvents(events: EventApi[]): void {
     this.currentEvents = this.eventList;
-  }
-
-  ngOnInit(): void {
-    this.getList().pipe(untilDestroyed(this)).subscribe();
   }
 
   showEditModal(item?: any): void {
@@ -181,6 +202,8 @@ export class EventsComponent {
           this._eventsService.create({
             ...this.form.value,
             main_image_url: image.path ?? null,
+            event_university_id:
+              this._userService.user?.moderated_university_id ?? null,
           })
         ),
         tap(() => {
@@ -199,12 +222,25 @@ export class EventsComponent {
   }
 
   getList(): Observable<any[]> {
-    return this._eventsService.getAll().pipe(
-      map((items: any[]) => {
-        this.calendarOptions.events = items;
-        return (this.eventList = items);
-      })
-    );
+    if (this._userService.isCurrentUserModeratorOfUniversity()) {
+      return this._eventsService
+        .getAll(this._userService.user?.moderated_university_id)
+        .pipe(
+          map((news: any[]) => {
+            news.forEach(
+              (newsItem) => (newsItem.createdAt = new Date(newsItem.createdAt))
+            );
+            return (this.eventList = news);
+          })
+        );
+    } else {
+      return this._eventsService.getAll().pipe(
+        map((items: any[]) => {
+          items.forEach((item) => (item.createdAt = new Date(item.createdAt)));
+          return (this.eventList = items);
+        })
+      );
+    }
   }
 
   onConstructFormData(event: any): void {

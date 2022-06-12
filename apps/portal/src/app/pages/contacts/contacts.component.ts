@@ -6,6 +6,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { tap, switchMap, map, Observable, catchError, EMPTY } from 'rxjs';
 
 import { Contact, User } from '../../models/index';
+import { UniversitiesService } from '../universities/universities.service';
+import { UsersService } from '../users/users.service';
 import { ContactsService } from './contacts.service';
 
 @UntilDestroy()
@@ -27,27 +29,57 @@ export class ContactsComponent implements OnInit {
   users: User[] = [];
   contacts: Contact[] = [];
   nzFilterOption = (): boolean => true;
+  isUserAdmin = false;
+  universities: any[] = [];
 
   constructor(
     private _formBuilder: FormBuilder,
     private _contactsService: ContactsService,
-    private _messageService: NzMessageService
+    private _messageService: NzMessageService,
+    private _userService: UsersService,
+    private _universitiesService: UniversitiesService
   ) {
     this.form = this._formBuilder.group({
       questions: ['', Validators.required],
       position: ['', Validators.required],
       userId: [{}, Validators.required],
+      contact_university_id: null,
     });
   }
 
   ngOnInit(): void {
+    this.isUserAdmin = this._userService.isCurrentUserAdmin();
     this.getContactsList().pipe(untilDestroyed(this)).subscribe();
+    this.form
+      .get('contact_university_id')
+      ?.patchValue(this._userService.user?.moderated_university_id);
+    this._universitiesService.universities
+      .pipe(untilDestroyed(this))
+      .subscribe((universities) => {
+        this.universities = universities;
+      });
   }
 
   getContactsList(): Observable<Contact[]> {
-    return this._contactsService
-      .getAllContacts()
-      .pipe(map((contacts: Contact[]) => (this.contacts = contacts)));
+    if (this._userService.isCurrentUserModeratorOfUniversity()) {
+      return this._contactsService
+        .getAllContacts(this._userService.user?.moderated_university_id)
+        .pipe(
+          map((items: Contact[]) => {
+            // items.forEach(
+            //   (item) => (item.createdAt = new Date(item.createdAt))
+            // );
+            return (this.contacts = items);
+          })
+        );
+    } else {
+      return this._contactsService.getAllContacts().pipe(
+        map((items: any[]) => {
+          items.forEach((item) => (item.createdAt = new Date(item.createdAt)));
+          return (this.contacts = items);
+        })
+      );
+    }
   }
 
   search(value: string): void {
@@ -65,8 +97,12 @@ export class ContactsComponent implements OnInit {
 
   create(): void {
     this.isLoading = true;
+    console.log(this._userService.user);
     this._contactsService
-      .create({ ...this.form.value, user_id: this.form.value.userId })
+      .create({
+        ...this.form.value,
+        user_id: this.form.value.userId,
+      })
       .pipe(
         tap(() => {
           this.isLoading = false;
@@ -76,7 +112,10 @@ export class ContactsComponent implements OnInit {
         }),
         switchMap(() => this.getContactsList()),
         catchError(() => {
-          this._messageService.create('error', `Контакт с этим пользователем уже существует`);
+          this._messageService.create(
+            'error',
+            `Контакт с этим пользователем уже существует`
+          );
           return EMPTY;
         }),
         untilDestroyed(this)
@@ -99,7 +138,10 @@ export class ContactsComponent implements OnInit {
           this._messageService.create('success', `Контакт успешно обновлен`);
         }),
         catchError(() => {
-          this._messageService.create('error', `Контакт с этим пользователем уже существует`);
+          this._messageService.create(
+            'error',
+            `Контакт с этим пользователем уже существует`
+          );
           return EMPTY;
         }),
         switchMap(() => this.getContactsList()),

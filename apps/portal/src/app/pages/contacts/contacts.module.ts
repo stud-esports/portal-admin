@@ -32,7 +32,7 @@ import { ContactsComponent } from './contacts.component';
     NzUploadModule,
     NzSelectModule,
     NzPopconfirmModule,
-    NzMessageModule
+    NzMessageModule,
   ],
 })
 export class ContactsModule {}

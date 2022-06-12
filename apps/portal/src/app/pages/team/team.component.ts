@@ -8,6 +8,8 @@ import { Game } from '../../models/Game';
 import { Team } from '../../models/Team';
 import { ContactsService } from '../contacts/contacts.service';
 import { GamesService } from '../games/games.service';
+import { UniversitiesService } from '../universities/universities.service';
+import { UsersService } from '../users/users.service';
 import { TeamService } from './team.service';
 
 @UntilDestroy()
@@ -22,6 +24,7 @@ export class TeamComponent implements OnInit {
   isEditVisible = false;
   isLoading = false;
   teamList: Team[] = [];
+  isUserAdmin = false;
 
   // teamTypes = [
   //   { name: 'Сборная', value: 'main' },
@@ -34,6 +37,7 @@ export class TeamComponent implements OnInit {
 
   users: User[] = [];
   games: Game[] = [];
+  universities: any[] = [];
   nzFilterOption = (): boolean => true;
 
   uploadFormData: any;
@@ -45,7 +49,9 @@ export class TeamComponent implements OnInit {
     private _contactsService: ContactsService,
     private _gamesService: GamesService,
     private _messageService: NzMessageService,
-    private _teamService: TeamService
+    private _teamService: TeamService,
+    private _userService: UsersService,
+    private _universitiesService: UniversitiesService
   ) {
     this.form = this._fb.group({
       title: ['', Validators.required],
@@ -55,12 +61,20 @@ export class TeamComponent implements OnInit {
       captain_id: {},
       main_image_url: '',
       members_count: ['', Validators.required],
-      // university_id: ''
+      team_university_id: null,
     });
   }
-
   ngOnInit(): void {
+    this.isUserAdmin = this._userService.isCurrentUserAdmin();
     this.getList().pipe(untilDestroyed(this)).subscribe();
+    this.form
+      .get('team_university_id')
+      ?.patchValue(this._userService.user?.moderated_university_id);
+    this._universitiesService.universities
+      .pipe(untilDestroyed(this))
+      .subscribe((universities) => {
+        this.universities = universities;
+      });
   }
 
   onConstructFormData(event: any): void {
@@ -95,6 +109,8 @@ export class TeamComponent implements OnInit {
             captain_id: this.form.value.captain_id,
             game_id: this.form.value.game_id,
             main_image_url: image.path ?? null,
+            team_university_id:
+              this._userService.user?.moderated_university_id ?? null,
           })
         ),
         tap(() => {
@@ -170,10 +186,26 @@ export class TeamComponent implements OnInit {
       .subscribe();
   }
 
-  getList(): Observable<Team[]> {
-    return this._teamService
-      .getAll()
-      .pipe(map((items: Team[]) => (this.teamList = items)));
+  getList(): Observable<any[]> {
+    if (this._userService.isCurrentUserModeratorOfUniversity()) {
+      return this._teamService
+        .getAll(this._userService.user?.moderated_university_id)
+        .pipe(
+          map((items: any[]) => {
+            items.forEach(
+              (item) => (item.createdAt = new Date(item.createdAt))
+            );
+            return (this.teamList = items);
+          })
+        );
+    } else {
+      return this._teamService.getAll().pipe(
+        map((items: any[]) => {
+          items.forEach((item) => (item.createdAt = new Date(item.createdAt)));
+          return (this.teamList = items);
+        })
+      );
+    }
   }
 
   handleCancel() {

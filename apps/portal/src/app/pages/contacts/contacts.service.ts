@@ -1,4 +1,8 @@
-import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpHeaders,
+  HttpClient,
+  HttpErrorResponse,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable, catchError, throwError } from 'rxjs';
@@ -25,9 +29,15 @@ export class ContactsService {
     return this._http.post(API_URL, data).pipe(catchError(this.handleError));
   }
 
-  getAllContacts(): Observable<Contact[]> {
+  getAllContacts(moderated_university_id?: number | null | undefined) {
     const API_URL = `${this.apiUrlContacts}`;
-    return this._http.get<Contact[]>(API_URL).pipe(catchError(this.handleError));
+    if (moderated_university_id) {
+      return this._http.get<Contact[]>(
+        `${API_URL}?university_id=${moderated_university_id}`
+      );
+    } else {
+      return this._http.get<Contact[]>(`${API_URL}`);
+    }
   }
 
   updateContact(id: number | null | undefined, data: any) {
@@ -42,7 +52,7 @@ export class ContactsService {
     return this._http.delete(API_URL).pipe(catchError(this.handleError));
   }
 
-   handleError(error: HttpErrorResponse) {
+  handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);
     } else {

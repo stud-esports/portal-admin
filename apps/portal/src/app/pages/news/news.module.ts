@@ -17,6 +17,7 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 import { NewsRoutingModule } from './news-routing.module';
 import { NewsComponent } from './news.component';
@@ -44,6 +45,7 @@ import { UploadImageModule } from '../../shared/upload-image/upload-image.module
     InputTextModule,
     ButtonModule,
     SelectButtonModule,
+    NzSelectModule,
   ],
   exports: [NewsComponent],
 })

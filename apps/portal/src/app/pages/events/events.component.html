@@ -21,50 +21,50 @@
   style="display: flex; flex-wrap: wrap; align-items: flex-start"
   *ngIf="selectedMode.value === 'card'; else calendarView"
 >
-<ng-container *ngIf="eventList.length; else noList">
-  <ng-container *ngFor="let event of eventList">
-    <nz-card
-      style="width: calc(25% - 15px); margin: 0 15px 15px 0"
-      [nzCover]="coverTemplate"
-      [nzActions]="[actionEdit, actionEllipsis]"
-    >
-      <nz-card-meta
-        [nzTitle]="event.title"
-        [nzDescription]="event.description"
-        [title]="event.title"
-      ></nz-card-meta>
-      <nz-divider></nz-divider>
-      <h3>Дата и время начала</h3>
-      <p>{{ event.start | date: 'yyyy-MM-dd HH:mm' }}</p>
-      <h3>Дата и время окончания</h3>
-      <p>{{ event.end | date: 'yyyy-MM-dd HH:mm' }}</p>
-      <h3>Описание</h3>
-      <p>{{ event.description || '-' }}</p>
-    </nz-card>
-    <ng-template #coverTemplate>
-      <img
-        *ngIf="event.main_image_url"
-        width="50"
-        alt="example"
-        [src]="'http://localhost:5000' + event.main_image_url"
-      />
-    </ng-template>
-    <ng-template #actionEdit>
-      <i nz-icon nzType="edit" (click)="showEditModal(event)"></i>
-    </ng-template>
-    <ng-template #actionEllipsis>
-      <i
-        nz-popconfirm
-        nzPopconfirmTitle="Вы уверены, что хотите удалить это событие?"
-        nzPopconfirmPlacement="bottom"
-        nz-icon
-        nzType="delete"
-        (nzOnConfirm)="confirmDelete(event)"
-      ></i>
-    </ng-template>
+  <ng-container *ngIf="eventList.length; else noList">
+    <ng-container *ngFor="let event of eventList">
+      <nz-card
+        style="width: calc(25% - 15px); margin: 0 15px 15px 0"
+        [nzCover]="coverTemplate"
+        [nzActions]="[actionEdit, actionEllipsis]"
+      >
+        <nz-card-meta
+          [nzTitle]="event.title"
+          [nzDescription]="event.description"
+          [title]="event.title"
+        ></nz-card-meta>
+        <nz-divider></nz-divider>
+        <h3>Дата и время начала</h3>
+        <p>{{ event.start | date: 'yyyy-MM-dd HH:mm' }}</p>
+        <h3>Дата и время окончания</h3>
+        <p>{{ event.end | date: 'yyyy-MM-dd HH:mm' }}</p>
+        <h3>Описание</h3>
+        <p>{{ event.description || '-' }}</p>
+      </nz-card>
+      <ng-template #coverTemplate>
+        <img
+          *ngIf="event.main_image_url"
+          width="50"
+          alt="example"
+          [src]="'http://localhost:5000' + event.main_image_url"
+        />
+      </ng-template>
+      <ng-template #actionEdit>
+        <i nz-icon nzType="edit" (click)="showEditModal(event)"></i>
+      </ng-template>
+      <ng-template #actionEllipsis>
+        <i
+          nz-popconfirm
+          nzPopconfirmTitle="Вы уверены, что хотите удалить это событие?"
+          nzPopconfirmPlacement="bottom"
+          nz-icon
+          nzType="delete"
+          (nzOnConfirm)="confirmDelete(event)"
+        ></i>
+      </ng-template>
+    </ng-container>
   </ng-container>
-</ng-container>
-<ng-template #noList> Нет матчей и турниров </ng-template>
+  <ng-template #noList> Нет матчей и турниров </ng-template>
 </div>
 
 <ng-template #calendarView>
@@ -116,6 +116,23 @@
         formControlName="end"
       >
       </nz-date-picker>
+
+      <ng-container *ngIf="isUserAdmin">
+        <label for="university"> Университет </label>
+        <nz-select
+          id="university"
+          style="display: block"
+          formControlName="university_id"
+          [nzShowArrow]="false"
+          [nzFilterOption]="nzFilterOption"
+        >
+          <nz-option
+            *ngFor="let uni of universities"
+            [nzLabel]="uni.title"
+            [nzValue]="uni._id"
+          ></nz-option>
+        </nz-select>
+      </ng-container>
 
       <portal-upload-image
         [selectedItem]="selectedItem"

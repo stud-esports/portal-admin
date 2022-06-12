@@ -12,6 +12,7 @@ import { UsersService } from '../users/users.service';
 export class WrapperComponent implements OnInit {
   isCollapsed = false;
   isUserAdmin = false;
+  isShowContacts = false;
   user: User | null = null;
   isLoadingUser$: any;
 
@@ -25,6 +26,14 @@ export class WrapperComponent implements OnInit {
       this.isUserAdmin = this._usersService.isCurrentUserAdmin();
       this.user = this._usersService.user;
       this.isLoadingUser$ = this._usersService.isLoadingUser$;
+
+      this.isShowContacts =
+        this._usersService.user?.roles.some(
+          (role) =>
+            role.name === 'admin' ||
+            (role.name === 'moderator' &&
+              this._usersService.user?.moderated_university_id)
+        ) || false;
     });
   }
 
