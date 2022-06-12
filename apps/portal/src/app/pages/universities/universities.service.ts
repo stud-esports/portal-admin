@@ -1,14 +1,28 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Injectable, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Observable, catchError, throwError, BehaviorSubject } from 'rxjs';
 
+@UntilDestroy()
 @Injectable({
   providedIn: 'root',
 })
-export class UniversitiesService {
+export class UniversitiesService implements OnInit {
   API_URL = 'http://localhost:5000/api/v1/universities';
+  universities: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
   constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.getAll()
+      .pipe(untilDestroyed(this))
+      .subscribe((universities: any[]) => {
+        this.universities.next([
+          { _id: null, title: 'Не выбрано' },
+          ...universities,
+        ]);
+      });
+  }
 
   getAll(): Observable<any[]> {
     return this.http

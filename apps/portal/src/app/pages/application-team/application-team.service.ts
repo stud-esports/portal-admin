@@ -15,12 +15,17 @@ export class ApplicationTeamService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(userId: number | undefined, teamType: string): Observable<any[]> {
+  getAll(
+    userId: number | undefined,
+    teamType: string,
+    moderated_university_id?: number | null | undefined
+  ): Observable<any[]> {
     return this.http
-      .get<any[]>(`${this.API_URL}?user_id=${userId}&team_type=${teamType}`)
+      .get<any[]>(
+        `${this.API_URL}?user_id=${userId}&team_type=${teamType}&university_id=${moderated_university_id}`
+      )
       .pipe(catchError(this.handleError));
   }
-
 
   approveApplication(id: number, data: any) {
     const API_URL = `${this.API_URL}/${id}/approve-application`;

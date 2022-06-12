@@ -5,7 +5,7 @@
   </button>
 </h1>
 
-<div style="display: flex; align-items: flex-start">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start">
   <ng-container *ngIf="contacts.length; else noList">
     <ng-container *ngFor="let contact of contacts">
       <nz-card
@@ -37,6 +37,8 @@
         <p>{{ contact.user.phone || '-' }}</p>
         <h3>Почта</h3>
         <p>{{ contact.user.email || '-' }}</p>
+        <h3>Университет</h3>
+        <p>{{ contact?.university?.title || '-' }}</p>
       </nz-card>
       <ng-template #coverTemplate>
         <img
@@ -100,6 +102,23 @@
         <textarea id="questions" rows="4" nz-input formControlName="questions">
         </textarea>
       </nz-textarea-count>
+
+      <ng-container *ngIf="isUserAdmin">
+        <label for="university"> Университет </label>
+        <nz-select
+          id="university"
+          style="display: block"
+          formControlName="university_id"
+          [nzShowArrow]="false"
+          [nzFilterOption]="nzFilterOption"
+        >
+          <nz-option
+            *ngFor="let uni of universities"
+            [nzLabel]="uni.title"
+            [nzValue]="uni._id"
+          ></nz-option>
+        </nz-select>
+      </ng-container>
       <!-- <div
         *ngIf="
           !selectedItem?._id ||

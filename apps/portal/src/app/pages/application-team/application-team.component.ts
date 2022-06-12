@@ -79,12 +79,36 @@ export class ApplicationTeamComponent implements OnInit {
   }
 
   getApplications() {
-    return this._applicationTeamService
-      .getAll(
-        this._userService.user?._id,
-        location.href.includes('main-team') ? 'main' : 'general'
-      )
-      .pipe(map((applications: any[]) => (this.applications = applications)));
+    if (this._userService.isCurrentUserModeratorOfUniversity()) {
+      return this._applicationTeamService
+        .getAll(
+          this._userService.user?._id,
+          location.href.includes('main-team') ? 'main' : 'general',
+          this._userService.user?.moderated_university_id
+        )
+        .pipe(
+          map((items: any[]) => {
+            items.forEach(
+              (item) => (item.createdAt = new Date(item.createdAt))
+            );
+            return (this.applications = items);
+          })
+        );
+    } else {
+      return this._applicationTeamService
+        .getAll(
+          this._userService.user?._id,
+          location.href.includes('main-team') ? 'main' : 'general'
+        )
+        .pipe(
+          map((items: any[]) => {
+            items.forEach(
+              (item) => (item.createdAt = new Date(item.createdAt))
+            );
+            return (this.applications = items);
+          })
+        );
+    }
   }
 
   onExpandChange(id: number, checked: boolean): void {

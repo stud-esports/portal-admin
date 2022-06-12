@@ -5,4 +5,5 @@ export interface News {
   main_image_url: string | null;
   createdAt: string | Date;
   updatedAt: string;
+  university_id: number | null;
 }

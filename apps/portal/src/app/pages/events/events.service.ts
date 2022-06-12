@@ -22,6 +22,7 @@ export class EventsService {
     start: Date;
     end: Date;
     location: string;
+    event_university_id: number;
   }): Observable<any> {
     return this.http
       .post<any>(this.API_URL, data)
@@ -72,10 +73,14 @@ export class EventsService {
       .pipe(catchError(this.handleError));
   }
 
-  getAll(): Observable<any[]> {
-    return this.http
-      .get<any[]>(this.API_URL)
-      .pipe(catchError(this.handleError));
+  getAll(moderated_university_id?: number | null | undefined) {
+    if (moderated_university_id) {
+      return this.http.get<any[]>(
+        `${this.API_URL}?university_id=${moderated_university_id}`
+      );
+    } else {
+      return this.http.get<any[]>(`${this.API_URL}`);
+    }
   }
 
   update(id: number | null | undefined, data: any) {

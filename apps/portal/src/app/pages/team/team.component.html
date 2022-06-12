@@ -192,6 +192,23 @@
         [nzStep]="1"
       ></nz-input-number>
 
+      <ng-container *ngIf="isUserAdmin">
+        <label for="university"> Университет </label>
+        <nz-select
+          id="university"
+          style="display: block"
+          formControlName="university_id"
+          [nzShowArrow]="false"
+          [nzFilterOption]="nzFilterOption"
+        >
+          <nz-option
+            *ngFor="let uni of universities"
+            [nzLabel]="uni.title"
+            [nzValue]="uni._id"
+          ></nz-option>
+        </nz-select>
+      </ng-container>
+
       <portal-upload-image
         [selectedItem]="selectedItem"
         [isClearFileList]="isClearFileList"

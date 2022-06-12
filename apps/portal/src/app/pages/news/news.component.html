@@ -115,6 +115,24 @@
         >
         </textarea>
       </nz-textarea-count>
+
+      <ng-container *ngIf="isUserAdmin">
+        <label for="university"> Университет </label>
+        <nz-select
+          id="university"
+          style="display: block"
+          formControlName="university_id"
+          [nzShowArrow]="false"
+          [nzFilterOption]="nzFilterOption"
+        >
+          <nz-option
+            *ngFor="let uni of universities"
+            [nzLabel]="uni.title"
+            [nzValue]="uni._id"
+          ></nz-option>
+        </nz-select>
+      </ng-container>
+
       <portal-upload-image
         [selectedItem]="selectedNews"
         [isClearFileList]="isClearFileList"
@@ -220,7 +238,7 @@
               <small>Фото отсутствует</small>
             </ng-template>
           </td>
-           <td>{{ news.createdAt | date: 'medium' }}</td>
+          <td>{{ news.createdAt | date: 'medium' }}</td>
           <td>{{ news?.university?.title || '-' }}</td>
           <td>
             <button

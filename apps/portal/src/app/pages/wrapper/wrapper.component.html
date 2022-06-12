@@ -34,7 +34,12 @@
             <li nz-menu-item nzMatchRouter [routerLink]="['games']">
               <a>Дисциплинами (играми)</a>
             </li>
-            <li nz-menu-item nzMatchRouter [routerLink]="['contacts']">
+            <li
+              *ngIf="isShowContacts"
+              nz-menu-item
+              nzMatchRouter
+              [routerLink]="['contacts']"
+            >
               <a>Контактами</a>
             </li>
             <li nz-menu-item nzMatchRouter [routerLink]="['teams']">
@@ -52,6 +57,7 @@
         <li nz-submenu nzTitle="Рассмотрение заявок" nzIcon="eye">
           <ul>
             <li
+              *ngIf="isShowContacts"
               nz-menu-item
               nzMatchRouter
               [routerLink]="['applications', 'main-team']"
@@ -84,6 +90,9 @@
               {{ user?.last_name }} {{ user?.first_name }}
               {{ user?.patronymic }}
             </span>
+            <small style="margin-right: 10px">
+              {{ user?.moderated_university?.title }}
+            </small>
             <nz-avatar
               class="header-avatar"
               nzSize="large"
