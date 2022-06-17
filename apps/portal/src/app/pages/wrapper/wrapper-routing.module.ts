@@ -63,6 +63,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('../team/team.module').then((m) => m.TeamModule),
       },
+      {
+        path: 'universities',
+        loadChildren: () =>
+          import('../universities/universities.module').then(
+            (m) => m.UniversitiesModule
+          ),
+      },
     ],
   },
 ];

@@ -85,7 +85,6 @@ export class TeamComponent implements OnInit {
   showEditModal(item?: Team): void {
     this.selectedItem = item;
     if (this.selectedItem) {
-      console.log(this.selectedItem);
       this.form.patchValue({
         ...this.selectedItem,
         game_id: this.selectedItem.game_id,

@@ -1,33 +1,46 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable, catchError, throwError, BehaviorSubject } from 'rxjs';
+import { University } from '../../models/University';
 
-@UntilDestroy()
 @Injectable({
   providedIn: 'root',
 })
 export class UniversitiesService implements OnInit {
   API_URL = 'http://localhost:5000/api/v1/universities';
   universities: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {
-    this.getAll()
-      .pipe(untilDestroyed(this))
-      .subscribe((universities: any[]) => {
-        this.universities.next([
-          { _id: null, title: 'Не выбрано' },
-          ...universities,
-        ]);
-      });
+  ngOnInit(): void {}
+
+  getAll(): Observable<University[]> {
+    return this.http
+      .get<University[]>(this.API_URL)
+      .pipe(catchError(this.handleError));
   }
 
-  getAll(): Observable<any[]> {
+  create(data: University): Observable<University> {
     return this.http
-      .get<any[]>(this.API_URL)
+      .post<University>(this.API_URL, data)
       .pipe(catchError(this.handleError));
+  }
+
+  update(id: number | null | undefined, data: University) {
+    const API_URL = `${this.API_URL}/${id}`;
+    return this.http
+      .patch(API_URL, data, { headers: this.headers })
+      .pipe(catchError(this.handleError));
+  }
+
+  remove(id: number) {
+    const API_URL = `${this.API_URL}/${id}`;
+    return this.http.delete(API_URL).pipe(catchError(this.handleError));
   }
 
   handleError(error: HttpErrorResponse) {
