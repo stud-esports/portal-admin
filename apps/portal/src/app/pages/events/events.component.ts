@@ -51,7 +51,7 @@ export class EventsComponent implements OnInit {
       location: '',
       start: ['', Validators.required],
       end: ['', Validators.required],
-      event_university_id: null,
+      university_id: null,
     });
   }
 
@@ -83,7 +83,7 @@ export class EventsComponent implements OnInit {
     this.isUserAdmin = this._userService.isCurrentUserAdmin();
     this.getList().pipe(untilDestroyed(this)).subscribe();
     this.form
-      .get('event_university_id')
+      .get('university_id')
       ?.patchValue(this._userService.user?.moderated_university_id);
     this._universitiesService.universities
       .pipe(untilDestroyed(this))
@@ -200,7 +200,7 @@ export class EventsComponent implements OnInit {
           this._eventsService.create({
             ...this.form.value,
             main_image_url: image.path ?? null,
-            event_university_id:
+            university_id:
               this._userService.user?.moderated_university_id ?? null,
           })
         ),

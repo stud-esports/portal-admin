@@ -59,7 +59,7 @@ export class TeamComponent implements OnInit {
       team_type: '',
       game_id: {},
       captain_id: {},
-      main_image_url: '',
+      logo_url: '',
       members_count: ['', Validators.required],
       team_university_id: null,
     });
@@ -107,7 +107,7 @@ export class TeamComponent implements OnInit {
             ...this.form.value,
             captain_id: this.form.value.captain_id,
             game_id: this.form.value.game_id,
-            main_image_url: image.path ?? null,
+            logo_url: image.path ?? null,
             team_university_id:
               this._userService.user?.moderated_university_id ?? null,
           })
@@ -132,7 +132,7 @@ export class TeamComponent implements OnInit {
     this._teamService
       .deleteImageByName(
         this.uploadFormData,
-        this.selectedItem?.main_image_url,
+        this.selectedItem?.logo_url,
         true,
         this.isDeleteFormData
       )
@@ -140,9 +140,9 @@ export class TeamComponent implements OnInit {
         switchMap((image) => {
           return this._teamService.update(this.selectedItem?._id, {
             ...this.form.value,
-            main_image_url:
+            logo_url:
               !this.uploadFormData && !this.isDeleteFormData
-                ? this.selectedItem?.main_image_url
+                ? this.selectedItem?.logo_url
                 : image.path,
           });
         }),
@@ -176,7 +176,7 @@ export class TeamComponent implements OnInit {
         switchMap(() =>
           this._teamService.deleteImageByName(
             this.uploadFormData,
-            team?.main_image_url,
+            team?.logo_url,
             false
           )
         ),

@@ -35,9 +35,9 @@ export class UniversitiesComponent implements OnInit {
   ) {
     this.form = this._fb.group({
       title: ['', Validators.required],
-      short_title: ['', Validators.required],
-      location: '',
-      number: '',
+      short_name: ['', Validators.required],
+      address: '',
+      phone: '',
       link: '',
       email: ['', [Validators.email]],
     });

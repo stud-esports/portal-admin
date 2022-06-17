@@ -13,8 +13,8 @@ import { User, Contact } from '../../models';
   providedIn: 'root',
 })
 export class ContactsService {
-  apiUrlUsers: string = 'http://localhost:5000/api/v1/users/search';
-  apiUrlContacts: string = 'http://localhost:5000/api/v1/contacts';
+  apiUrlUsers = 'http://localhost:5000/api/v1/users/search';
+  apiUrlContacts = 'http://localhost:5000/api/v1/contacts';
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private _http: HttpClient) {}

@@ -16,7 +16,7 @@
       >
         <nz-card-meta
           [nzTitle]="game.title"
-          [nzDescription]="game.description"
+          [nzDescription]="game.short_title"
           [title]="game.title"
         ></nz-card-meta>
         <nz-divider></nz-divider>
@@ -64,6 +64,9 @@
     <form nz-form [formGroup]="form" (ngSubmit)="create()" class="games__form">
       <label for="title"> Название </label>
       <input nz-input id="title" formControlName="title" />
+
+      <label for="short_title">Короткое название</label>
+      <input nz-input id="short_title" formControlName="short_title" />
 
       <label for="description"> Описание </label>
       <nz-textarea-count [nzMaxCharacterCount]="100">

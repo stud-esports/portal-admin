@@ -26,6 +26,7 @@ export class GamesService {
     title: string;
     description: string;
     genre: string;
+    short_title: string;
   }): Observable<any> {
     return this.http
       .post<any>(this.API_URL, data)

@@ -64,7 +64,7 @@
         <small>Фото отсутствует</small>
       </ng-template>
       <p-divider></p-divider>
-      <p>Дата создания: {{ news.createdAt | date: 'medium' }}</p>
+      <p>Дата создания: {{ news.created_at | date: 'medium' }}</p>
       <!-- <div class="news__article-image">
       <img
         *ngFor="let url of news.images"
@@ -112,6 +112,17 @@
           rows="4"
           nz-input
           formControlName="description"
+        >
+        </textarea>
+      </nz-textarea-count>
+
+      <label for="text"> Основной текст </label>
+      <nz-textarea-count [nzMaxCharacterCount]="500">
+        <textarea
+          id="text"
+          rows="5"
+          nz-input
+          formControlName="text"
         >
         </textarea>
       </nz-textarea-count>
@@ -201,13 +212,23 @@
               ></p-columnFilter>
             </div>
           </th>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              Основной текст
+              <p-columnFilter
+                type="text"
+                field="text"
+                display="menu"
+              ></p-columnFilter>
+            </div>
+          </th>
           <th>Заглавное фото</th>
           <th>
             <div class="flex justify-content-center align-items-center">
               Дата создания
               <p-columnFilter
                 type="date"
-                field="createdAt"
+                field="created_at"
                 display="menu"
               ></p-columnFilter>
             </div>
@@ -225,6 +246,9 @@
             {{ news.description }}
           </td>
           <td>
+            {{ news.text }}
+          </td>
+          <td>
             <img
               *ngIf="news.main_image_url; else noPhoto"
               [nzSrc]="'http://localhost:5000' + news.main_image_url"
@@ -238,8 +262,8 @@
               <small>Фото отсутствует</small>
             </ng-template>
           </td>
-          <td>{{ news.createdAt | date: 'medium' }}</td>
-          <td>{{ news?.university?.title || '-' }}</td>
+          <td>{{ news.created_at | date: 'medium' }}</td>
+          <td>{{ news?.university?.short_name || '-' }}</td>
           <td>
             <button
               nz-button

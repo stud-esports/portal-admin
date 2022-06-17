@@ -6,6 +6,6 @@ export interface Contact {
   user_id: string;
   position: string;
   questions: string;
-  contact_university_id: number | null;
+  university_id: number | null;
   university: any;
 }

@@ -30,7 +30,7 @@
         <nz-card-meta
           style="white-space: normal"
           [nzTitle]="uni.title"
-          [nzDescription]="uni.location"
+          [nzDescription]="uni.address"
           [title]="uni.title"
         ></nz-card-meta>
         <nz-divider></nz-divider>
@@ -38,7 +38,7 @@
         <p>{{ uni.email || '-' }}</p>
 
         <h3>Номер</h3>
-        <p>{{ uni.number || '-' }}</p>
+        <p>{{ uni.phone || '-' }}</p>
 
         <h3>Веб-сайт</h3>
         <a nz-button nzType="link" [href]="'mailto:' + uni.link">{{
@@ -78,10 +78,10 @@
       currentPageReportTemplate="{first} по {last} из {totalRecords} новостей"
       [globalFilterFields]="[
         'title',
-        'location',
-        'short_title',
+        'address',
+        'short_name',
         'email',
-        'number',
+        'phone',
         'link'
       ]"
     >
@@ -123,7 +123,7 @@
               Аббревиатура
               <p-columnFilter
                 type="text"
-                field="short_title"
+                field="short_name"
                 display="menu"
               ></p-columnFilter>
             </div>
@@ -133,7 +133,7 @@
               Расположение
               <p-columnFilter
                 type="text"
-                field="location"
+                field="address"
                 display="menu"
               ></p-columnFilter>
             </div>
@@ -153,7 +153,7 @@
               Номер
               <p-columnFilter
                 type="text"
-                field="number"
+                field="phone"
                 display="menu"
               ></p-columnFilter>
             </div>
@@ -177,12 +177,12 @@
             {{ item.title || '-' }}
           </td>
           <td>
-            {{ item.short_title || '-' }}
+            {{ item.short_name || '-' }}
           </td>
-          <td>{{ item?.location || '-' }}</td>
+          <td>{{ item?.address || '-' }}</td>
           <td>{{ item.email || '-' }}</td>
           <td>
-            {{ item.number || '-' }}
+            {{ item.phone || '-' }}
           </td>
           <td>
             <a target="_blank" href="{{ item.link }}">{{ item.link || '-' }}</a>
@@ -238,18 +238,18 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSpan]="6" for="short_title">
+        <nz-form-label [nzSpan]="6" for="short_name">
           Аббревиатура
         </nz-form-label>
         <nz-form-control>
-          <input nz-input id="short_title" formControlName="short_title" />
+          <input nz-input id="short_name" formControlName="short_name" />
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSpan]="6" for="location">Расположение</nz-form-label>
+        <nz-form-label [nzSpan]="6" for="address">Расположение</nz-form-label>
         <nz-form-control>
-          <input nz-input id="location" formControlName="location" />
+          <input nz-input id="address" formControlName="address" />
         </nz-form-control>
       </nz-form-item>
 
@@ -266,9 +266,9 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSpan]="6" for="number">Номер</nz-form-label>
+        <nz-form-label [nzSpan]="6" for="phone">Номер</nz-form-label>
         <nz-form-control>
-          <input nz-input id="number" formControlName="number" />
+          <input nz-input id="phone" formControlName="phone" />
         </nz-form-control>
       </nz-form-item>
 

@@ -89,7 +89,7 @@ export class ApplicationTeamComponent implements OnInit {
         .pipe(
           map((items: any[]) => {
             items.forEach(
-              (item) => (item.createdAt = new Date(item.createdAt))
+              (item) => (item.created_at = new Date(item.created_at))
             );
             return (this.applications = items);
           })
@@ -103,7 +103,7 @@ export class ApplicationTeamComponent implements OnInit {
         .pipe(
           map((items: any[]) => {
             items.forEach(
-              (item) => (item.createdAt = new Date(item.createdAt))
+              (item) => (item.created_at = new Date(item.created_at))
             );
             return (this.applications = items);
           })

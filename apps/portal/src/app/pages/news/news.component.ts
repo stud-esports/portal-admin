@@ -50,6 +50,7 @@ export class NewsComponent implements OnInit {
     this.newsForm = this._formBuilder.group({
       title: ['', Validators.required],
       description: '',
+      text: '',
       university_id: null,
     });
   }
@@ -77,7 +78,7 @@ export class NewsComponent implements OnInit {
         .pipe(
           map((news: News[]) => {
             news.forEach(
-              (newsItem) => (newsItem.createdAt = new Date(newsItem.createdAt))
+              (newsItem) => (newsItem.created_at = new Date(newsItem.created_at))
             );
             return (this.newsList = news);
           })
@@ -86,7 +87,7 @@ export class NewsComponent implements OnInit {
       return this._newsService.getAllNews().pipe(
         map((news: News[]) => {
           news.forEach(
-            (newsItem) => (newsItem.createdAt = new Date(newsItem.createdAt))
+            (newsItem) => (newsItem.created_at = new Date(newsItem.created_at))
           );
           return (this.newsList = news);
         })

@@ -22,7 +22,7 @@ export class EventsService {
     start: Date;
     end: Date;
     location: string;
-    event_university_id: number;
+    university_id: number;
   }): Observable<any> {
     return this.http
       .post<any>(this.API_URL, data)

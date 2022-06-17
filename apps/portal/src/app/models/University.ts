@@ -1,9 +1,9 @@
 export interface University {
   _id: number;
   title: string;
-  short_title: string;
-  location: string;
-  number: string;
+  short_name: string;
+  address: string;
+  phone: string;
   email: string;
   link: string;
 }

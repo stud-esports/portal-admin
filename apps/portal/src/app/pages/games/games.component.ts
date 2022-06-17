@@ -34,6 +34,7 @@ export class GamesComponent implements OnInit {
     this.form = this._formBuilder.group({
       title: ['', Validators.required],
       description: '',
+      short_title: '',
       genre: ['', Validators.required],
     });
   }

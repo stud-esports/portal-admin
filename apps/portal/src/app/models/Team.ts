@@ -8,8 +8,9 @@ export interface Team {
   team_type: string;
   game_id: string;
   captain_id: string;
-  main_image_url: string;
+  logo_url: string;
   members_count: string;
+  university_id?: number;
   game: Game;
   captain: User
   members: User[]

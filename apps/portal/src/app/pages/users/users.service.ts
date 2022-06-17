@@ -22,7 +22,7 @@ export class UsersService {
 
   getAll(): Observable<User[]> {
     return this.http
-      .get<User[]>(`${this.API_URL}/get-all`)
+      .get<User[]>(`${this.API_URL}/get-all-by-admin`)
       .pipe(catchError(this.handleError));
   }
 

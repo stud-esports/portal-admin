@@ -82,10 +82,10 @@
       </nz-card>
       <ng-template #coverTemplate>
         <img
-          *ngIf="team.main_image_url"
+          *ngIf="team.logo_url"
           width="50"
           alt="example"
-          [src]="'http://localhost:5000' + team.main_image_url"
+          [src]="'http://localhost:5000' + team.logo_url"
         />
       </ng-template>
       <ng-template #actionEdit>

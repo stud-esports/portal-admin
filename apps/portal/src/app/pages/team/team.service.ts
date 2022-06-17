@@ -23,7 +23,7 @@ export class TeamService {
     team_type: string;
     game_id: string;
     captain_id: string;
-    main_image_url: string;
+    logo_url: string;
     members_count: string;
   }): Observable<any> {
     return this.http

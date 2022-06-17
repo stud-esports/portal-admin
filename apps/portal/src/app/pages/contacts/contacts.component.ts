@@ -42,8 +42,8 @@ export class ContactsComponent implements OnInit {
     this.form = this._formBuilder.group({
       questions: ['', Validators.required],
       position: ['', Validators.required],
-      userId: [{}, Validators.required],
-      contact_university_id: null,
+      user_id: [{}, Validators.required],
+      university_id: null,
     });
   }
 
@@ -51,7 +51,7 @@ export class ContactsComponent implements OnInit {
     this.isUserAdmin = this._userService.isCurrentUserAdmin();
     this.getContactsList().pipe(untilDestroyed(this)).subscribe();
     this.form
-      .get('contact_university_id')
+      .get('university_id')
       ?.patchValue(this._userService.user?.moderated_university_id);
     this._universitiesService.universities
       .pipe(untilDestroyed(this))
@@ -101,7 +101,7 @@ export class ContactsComponent implements OnInit {
     this._contactsService
       .create({
         ...this.form.value,
-        user_id: this.form.value.userId,
+        user_id: this.form.value.user_id,
       })
       .pipe(
         tap(() => {
@@ -128,7 +128,7 @@ export class ContactsComponent implements OnInit {
     this._contactsService
       .updateContact(this.selectedItem?._id, {
         ...this.form.value,
-        user_id: this.form.value.userId,
+        user_id: this.form.value.user_id,
       })
       .pipe(
         tap(() => {
@@ -155,7 +155,7 @@ export class ContactsComponent implements OnInit {
     if (this.selectedItem) {
       this.form.patchValue({
         ...this.selectedItem,
-        userId: this.selectedItem.user_id,
+        user_id: this.selectedItem.user_id,
       });
       this.users.push(this.selectedItem.user);
     }

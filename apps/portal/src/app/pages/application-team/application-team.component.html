@@ -76,7 +76,7 @@
         {{ application.applicant.first_name }}
         {{ application.applicant.patronymic }}
       </td>
-      <td>{{ application.application_university?.title || '-' }}</td>
+      <td>{{ application.university?.title || '-' }}</td>
       <td>
         <span
           nz-popover
@@ -94,7 +94,7 @@
         <div>Максимум участников: {{ application.team.members_count }}</div>
         <div>Тип команды: {{ application.team.team_type }}</div>
       </ng-template>
-      <td>{{ application.createdAt | date: 'yyyy-MM-dd HH:mm' }}</td>
+      <td>{{ application.created_at | date: 'yyyy-MM-dd HH:mm' }}</td>
       <td>{{ application.status }}</td>
       <td *ngIf="selectedApplicationsType === 'archive'">
         {{ application.commentary }}

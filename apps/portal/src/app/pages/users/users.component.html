@@ -66,8 +66,8 @@
       <td>{{ user.last_name }} {{ user.first_name }} {{ user.patronymic }}</td>
       <td>{{ user.gender }}</td>
       <td>{{ user.phone }}</td>
-      <td>-</td>
-      <td>-</td>
+      <td>{{ user?.university?.title || '-' }}</td>
+      <td>{{ user?.university?.led_team || '-' }}</td>
       <td>
         <span *ngFor="let role of user.roles; let last = last">
           {{ role.name }}{{ last ? '' : ',' }}
