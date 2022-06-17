@@ -1,0 +1,5 @@
+nz-card::ng-deep {
+  &.ant-card-meta > .ant-card-meta-detail > .ant-card-meta-title {
+    white-space: normal;
+  }
+}

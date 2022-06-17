@@ -1,1 +1,283 @@
-<p>universities works!</p>
+<h1>Университеты</h1>
+<h2 class="flex" style="display: flex">
+  <div style="margin-right: auto">
+    Список университетов
+    <button nz-button nzType="primary" (click)="showEditModal()">
+      <i nz-icon nzType="plus"></i>
+    </button>
+  </div>
+  <p-selectButton
+    [options]="modes"
+    [(ngModel)]="selectedMode"
+    optionLabel="icon"
+  >
+    <ng-template let-item>
+      <i [class]="item.icon"></i>
+    </ng-template>
+  </p-selectButton>
+</h2>
+
+<section
+  *ngIf="selectedMode.value === 'card'; else tableView"
+  style="display: flex; flex-wrap: wrap; align-items: flex-start"
+>
+  <ng-container *ngIf="list.length; else noList">
+    <ng-container *ngFor="let uni of list">
+      <nz-card
+        style="width: calc(25% - 15px); margin: 0 15px 15px 0"
+        [nzActions]="[actionEdit, actionEllipsis]"
+      >
+        <nz-card-meta
+          style="white-space: normal"
+          [nzTitle]="uni.title"
+          [nzDescription]="uni.location"
+          [title]="uni.title"
+        ></nz-card-meta>
+        <nz-divider></nz-divider>
+        <h3>e-mail</h3>
+        <p>{{ uni.email || '-' }}</p>
+
+        <h3>Номер</h3>
+        <p>{{ uni.number || '-' }}</p>
+
+        <h3>Веб-сайт</h3>
+        <a nz-button nzType="link" [href]="'mailto:' + uni.link">{{
+          uni.link
+        }}</a>
+      </nz-card>
+      <ng-template #actionEdit>
+        <i (click)="showEditModal(uni)" nz-icon nzType="edit"></i>
+      </ng-template>
+      <ng-template #actionEllipsis>
+        <i
+          nz-popconfirm
+          nzPopconfirmTitle="Вы уверены, что хотите удалить этот университет?"
+          nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="confirmDelete(uni)"
+          nz-icon
+          nzType="delete"
+        ></i>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+  <ng-template #noList> Нет университетов</ng-template>
+</section>
+
+<ng-template #tableView>
+  <div class="card">
+    <p-table
+      #dt
+      [value]="list"
+      dataKey="id"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      styleClass="p-datatable-gridlines"
+      [paginator]="true"
+      responsiveLayout="scroll"
+      currentPageReportTemplate="{first} по {last} из {totalRecords} новостей"
+      [globalFilterFields]="[
+        'title',
+        'location',
+        'short_title',
+        'email',
+        'number',
+        'link'
+      ]"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex" style="display: flex; justify-content: space-between">
+          <button
+            pButton
+            label="Сбросить фильтры"
+            class="p-button-outlined"
+            icon="pi pi-filter-slash"
+            (click)="clear(dt)"
+          ></button>
+          <span class="p-input-icon-left ml-auto">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              type="text"
+              width="300px"
+              (input)="applyFilterGlobal($event, 'contains')"
+              placeholder="Поиск университета"
+            />
+          </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              Название
+              <p-columnFilter
+                type="text"
+                field="title"
+                display="menu"
+              ></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              Аббревиатура
+              <p-columnFilter
+                type="text"
+                field="short_title"
+                display="menu"
+              ></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              Расположение
+              <p-columnFilter
+                type="text"
+                field="location"
+                display="menu"
+              ></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              email
+              <p-columnFilter
+                type="text"
+                field="email"
+                display="menu"
+              ></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              Номер
+              <p-columnFilter
+                type="text"
+                field="number"
+                display="menu"
+              ></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              Веб-сайт
+              <p-columnFilter
+                type="text"
+                field="link"
+                display="menu"
+              ></p-columnFilter>
+            </div>
+          </th>
+          <th>Действия</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td>
+            {{ item.title || '-' }}
+          </td>
+          <td>
+            {{ item.short_title || '-' }}
+          </td>
+          <td>{{ item?.location || '-' }}</td>
+          <td>{{ item.email || '-' }}</td>
+          <td>
+            {{ item.number || '-' }}
+          </td>
+          <td>
+            <a target="_blank" href="{{ item.link }}">{{ item.link || '-' }}</a>
+          </td>
+          <td>
+            <button
+              nz-button
+              nzType="default"
+              nzShape="circle"
+              (click)="showEditModal(item)"
+            >
+              <i nz-icon nzType="edit"></i>
+            </button>
+            <button
+              nz-button
+              nzType="default"
+              nzShape="circle"
+              nz-popconfirm
+              nzPopconfirmTitle="Вы уверены, что хотите удалить этот университет?"
+              nzPopconfirmPlacement="bottom"
+              (nzOnConfirm)="confirmDelete(item)"
+            >
+              <i nz-icon nzType="delete"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">Новостей не найдено.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div></ng-template
+>
+
+<nz-modal
+  [(nzVisible)]="isEditVisible"
+  [nzTitle]="selectedItem?._id ? 'Редактирование' : 'Создание'"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="selectedItem?._id ? edit() : create()"
+  [nzOkDisabled]="form.invalid"
+  nzCancelText="Отмена"
+  nzOkText="Сохранить"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="create()" class="games__form">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" for="title">Название</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="title" formControlName="title" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" for="short_title">
+          Аббревиатура
+        </nz-form-label>
+        <nz-form-control>
+          <input nz-input id="short_title" formControlName="short_title" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" for="location">Расположение</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="location" formControlName="location" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" for="email">E-mail</nz-form-label>
+        <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl">
+          <input nz-input formControlName="email" type="email" />
+          <ng-template #emailErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('email')">
+              Некорректный email
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" for="number">Номер</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="number" formControlName="number" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" for="link">Веб-сайт</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="link" formControlName="link" />
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

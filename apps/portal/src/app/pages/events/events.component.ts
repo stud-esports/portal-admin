@@ -87,9 +87,7 @@ export class EventsComponent implements OnInit {
       ?.patchValue(this._userService.user?.moderated_university_id);
     this._universitiesService.universities
       .pipe(untilDestroyed(this))
-      .subscribe((universities) => {
-        this.universities = universities;
-      });
+      .subscribe((universities) => (this.universities = universities));
   }
 
   nzFilterOption = (): boolean => true;
@@ -226,17 +224,21 @@ export class EventsComponent implements OnInit {
       return this._eventsService
         .getAll(this._userService.user?.moderated_university_id)
         .pipe(
-          map((news: any[]) => {
-            news.forEach(
-              (newsItem) => (newsItem.createdAt = new Date(newsItem.createdAt))
-            );
-            return (this.eventList = news);
+          map((events: any[]) => {
+            events.forEach((event) => {
+              event.createdAt = new Date(event.createdAt);
+            });
+            this.calendarOptions.events = events;
+            return (this.eventList = events);
           })
         );
     } else {
       return this._eventsService.getAll().pipe(
         map((items: any[]) => {
-          items.forEach((item) => (item.createdAt = new Date(item.createdAt)));
+          items.forEach((item) => {
+            item.createdAt = new Date(item.createdAt);
+          });
+          this.calendarOptions.events = items;
           return (this.eventList = items);
         })
       );
