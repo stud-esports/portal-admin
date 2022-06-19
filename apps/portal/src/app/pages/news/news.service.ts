@@ -40,7 +40,12 @@ export class NewsService {
 
   updateNewsById(
     id: number | undefined,
-    data: { title: string; description: string; main_image_url: string }
+    data: {
+      title: string;
+      description: string;
+      text: string;
+      main_image_url: string;
+    }
   ): Observable<News> {
     const API_URL = `${this.apiUrl}/${id}`;
     return this.http

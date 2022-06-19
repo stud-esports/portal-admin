@@ -20,6 +20,10 @@ export class TokenInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const idToken = localStorage.getItem('refresh_token');
 
+    if (!idToken) {
+      return next.handle(req);
+    }
+
     const authReq = req.clone({
       headers: req.headers.set('Authorization', 'Bearer ' + idToken),
     });
