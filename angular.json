@@ -1,11 +1,11 @@
 {
   "version": 1,
   "projects": {
-    "portal":{
+    "portal": {
       "root": "./apps/portal",
       "sourceRoot": "./apps/portal/src",
       "projectType": "application",
-      "architect":{
+      "architect": {
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
@@ -72,6 +72,21 @@
                 }
               ]
             }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/app/shared/styles"]
+            },
+            "styles": ["src/styles.scss"],
+            "scripts": [],
+            "assets": ["src/favicon.ico", "src/assets", "src/manifest.json"]
           }
         }
       }

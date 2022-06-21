@@ -10,7 +10,7 @@ import { UniversitiesService } from './pages/universities/universities.service';
 @Component({
   selector: 'portal-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   isCollapsed = false;
@@ -24,11 +24,12 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this._universityService
       .getAll()
+
       .pipe(untilDestroyed(this))
       .subscribe((universities: any[]) => {
         this._universityService.universities.next([
           { _id: null, title: 'Не выбрано' },
-          ...universities,
+          ...universities
         ]);
       });
   }

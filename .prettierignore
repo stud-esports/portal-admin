@@ -2,3 +2,8 @@
 
 /dist
 /coverage
+/package.json
+/package-lock.json
+/yarn.lock
+/dist
+/node_modules
