@@ -16,7 +16,7 @@ import { TeamService } from './team.service';
 @Component({
   selector: 'team',
   templateUrl: './team.component.html',
-  styleUrls: ['./team.component.scss'],
+  styleUrls: ['./team.component.scss']
 })
 export class TeamComponent implements OnInit {
   form: FormGroup;
@@ -25,6 +25,7 @@ export class TeamComponent implements OnInit {
   isLoading = false;
   teamList: Team[] = [];
   isUserAdmin = false;
+  isCurrentUserIsNotModeratorOfUniversity = false;
 
   // teamTypes = [
   //   { name: 'Сборная', value: 'main' },
@@ -32,7 +33,7 @@ export class TeamComponent implements OnInit {
   // ];
   teamTypes = [
     { name: 'Сборная', value: 'main' },
-    { name: 'Обычная', value: 'general' },
+    { name: 'Обычная', value: 'general' }
   ];
 
   users: User[] = [];
@@ -61,11 +62,16 @@ export class TeamComponent implements OnInit {
       captain_id: {},
       logo_url: '',
       members_count: ['', Validators.required],
-      team_university_id: null,
+      team_university_id: null
     });
   }
   ngOnInit(): void {
     this.isUserAdmin = this._userService.isCurrentUserAdmin();
+    this.isCurrentUserIsNotModeratorOfUniversity =
+      this._userService.isCurrentUserIsNotModeratorOfUniversity();
+    if (this.isCurrentUserIsNotModeratorOfUniversity) {
+      this.form.get('team_type')?.patchValue('general');
+    }
     this.getList().pipe(untilDestroyed(this)).subscribe();
     this.form
       .get('team_university_id')
@@ -88,7 +94,7 @@ export class TeamComponent implements OnInit {
       this.form.patchValue({
         ...this.selectedItem,
         game_id: this.selectedItem.game_id,
-        captain_id: this.selectedItem.captain_id,
+        captain_id: this.selectedItem.captain_id
       });
       this.users.push(this.selectedItem.captain);
       this.games.push(this.selectedItem.game);
@@ -109,7 +115,7 @@ export class TeamComponent implements OnInit {
             game_id: this.form.value.game_id,
             logo_url: image.path ?? null,
             team_university_id:
-              this._userService.user?.moderated_university_id ?? null,
+              this._userService.user?.moderated_university_id ?? null
           })
         ),
         tap(() => {
@@ -143,7 +149,7 @@ export class TeamComponent implements OnInit {
             logo_url:
               !this.uploadFormData && !this.isDeleteFormData
                 ? this.selectedItem?.logo_url
-                : image.path,
+                : image.path
           });
         }),
         tap(() => {

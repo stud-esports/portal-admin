@@ -131,21 +131,23 @@
         </textarea>
       </nz-textarea-count>
 
-      <label for="team_type"> Тип команды </label>
-      <br />
-      <nz-select
-        style="width: 100%"
-        nzShowSearch
-        id="team_type"
-        nzAllowClear
-        formControlName="team_type"
-      >
-        <nz-option
-          *ngFor="let type of teamTypes"
-          [nzLabel]="type.name"
-          [nzValue]="type.value"
-        ></nz-option>
-      </nz-select>
+      <div *ngIf="!isCurrentUserIsNotModeratorOfUniversity">
+        <label for="team_type"> Тип команды </label>
+        <br />
+        <nz-select
+          style="width: 100%"
+          nzShowSearch
+          id="team_type"
+          nzAllowClear
+          formControlName="team_type"
+        >
+          <nz-option
+            *ngFor="let type of teamTypes"
+            [nzLabel]="type.name"
+            [nzValue]="type.value"
+          ></nz-option>
+        </nz-select>
+      </div>
 
       <label for="captain_id"> Капитан команды </label>
       <nz-select
