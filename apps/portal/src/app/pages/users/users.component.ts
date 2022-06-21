@@ -13,7 +13,7 @@ import { UniversitiesService } from '../universities/universities.service';
 @Component({
   selector: 'portal-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss'],
+  styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
   isChangeRoleModalVisible = false;
@@ -24,11 +24,18 @@ export class UsersComponent implements OnInit {
   block_reason = '';
 
   rolesForm: FormGroup;
+  userForm: FormGroup;
   users: User[] = [];
 
   selectedUniversity = null;
   isEditUser = false;
   universities: any[] = [];
+  isCreateUserModalVisible = false;
+
+  genders = [
+    { name: 'мужской', value: 'male' },
+    { name: 'женский', value: 'female' }
+  ];
 
   @ViewChild(Table) dt: Table | null = null;
 
@@ -41,12 +48,31 @@ export class UsersComponent implements OnInit {
     this.rolesForm = this.fb.group({
       user: false,
       moderator: false,
-      admin: false,
+      admin: false
+    });
+
+    this.userForm = this.fb.group({
+      first_name: ['', Validators.required],
+      last_name: ['', Validators.required],
+      patronymic: '',
+      email: ['', [Validators.email, Validators.required]],
+      login: ['', Validators.required],
+      phone: ['', Validators.required],
+      birth_date: ['', Validators.required],
+      password: '',
+      photo_url: '',
+      about_yourself: '',
+      gender: ['', Validators.required],
+      student_card: '',
+      university_id: ''
     });
   }
 
   ngOnInit(): void {
     this.getAllUsers().subscribe();
+    this._universitiesService.universities
+      .pipe(untilDestroyed(this))
+      .subscribe((universities) => (this.universities = universities));
   }
 
   isUserModerator(user: User): boolean {
@@ -136,7 +162,7 @@ export class UsersComponent implements OnInit {
       const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, {
         bookType: 'xlsx',
-        type: 'array',
+        type: 'array'
       });
       this.saveAsExcelFile(excelBuffer, 'products');
     });
@@ -147,7 +173,7 @@ export class UsersComponent implements OnInit {
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     let EXCEL_EXTENSION = '.xlsx';
     const data: Blob = new Blob([buffer], {
-      type: EXCEL_TYPE,
+      type: EXCEL_TYPE
     });
     FileSaver.saveAs(
       data,
@@ -166,7 +192,7 @@ export class UsersComponent implements OnInit {
       .subscribe((universities) => {
         this.universities = [
           { _id: null, title: 'Не выбрано' },
-          ...universities,
+          ...universities
         ];
         this.isEditUser = true;
         this.selectedUser = data;
@@ -175,11 +201,10 @@ export class UsersComponent implements OnInit {
   }
 
   updateUser(updateData: any) {
-    console.log(updateData, this.selectedUniversity);
     this._usersService
       .updateUser(this.selectedUser?._id, {
         // ...this.selectedUser,
-        moderated_university_id: updateData,
+        moderated_university_id: updateData
       })
       .pipe(
         switchMap(() => this.getAllUsers()),
@@ -192,5 +217,29 @@ export class UsersComponent implements OnInit {
     this.isEditUser = false;
     this.selectedUser = null;
     this.blockDates = null;
+  }
+
+  nzFilterOption = (): boolean => true;
+
+  showCreateUserModel() {
+    this.isCreateUserModalVisible = true;
+  }
+
+  hideCreateUserModal() {
+    this.isCreateUserModalVisible = false;
+    this.userForm.reset();
+  }
+
+  createUser() {
+    this._usersService
+      .createUser(this.userForm.value)
+      .pipe(
+        switchMap(() => {
+          this.hideCreateUserModal();
+          return this.getAllUsers();
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 }

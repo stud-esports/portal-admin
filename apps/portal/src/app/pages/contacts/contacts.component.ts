@@ -14,7 +14,7 @@ import { ContactsService } from './contacts.service';
 @Component({
   selector: 'portal-contacts',
   templateUrl: './contacts.component.html',
-  styleUrls: ['./contacts.component.scss'],
+  styleUrls: ['./contacts.component.scss']
 })
 export class ContactsComponent implements OnInit {
   form: FormGroup;
@@ -43,7 +43,7 @@ export class ContactsComponent implements OnInit {
       questions: ['', Validators.required],
       position: ['', Validators.required],
       user_id: [{}, Validators.required],
-      university_id: null,
+      university_id: null
     });
   }
 
@@ -97,11 +97,10 @@ export class ContactsComponent implements OnInit {
 
   create(): void {
     this.isLoading = true;
-    console.log(this._userService.user);
     this._contactsService
       .create({
         ...this.form.value,
-        user_id: this.form.value.user_id,
+        user_id: this.form.value.user_id
       })
       .pipe(
         tap(() => {
@@ -128,7 +127,7 @@ export class ContactsComponent implements OnInit {
     this._contactsService
       .updateContact(this.selectedItem?._id, {
         ...this.form.value,
-        user_id: this.form.value.user_id,
+        user_id: this.form.value.user_id
       })
       .pipe(
         tap(() => {
@@ -155,7 +154,7 @@ export class ContactsComponent implements OnInit {
     if (this.selectedItem) {
       this.form.patchValue({
         ...this.selectedItem,
-        user_id: this.selectedItem.user_id,
+        user_id: this.selectedItem.user_id
       });
       this.users.push(this.selectedItem.user);
     }

@@ -1,14 +1,14 @@
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpHeaders,
+  HttpHeaders
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError, map, BehaviorSubject } from 'rxjs';
 import { User } from '../../models';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class UsersService {
   API_URL = 'http://localhost:5000/api/v1/users';
@@ -27,10 +27,17 @@ export class UsersService {
   }
 
   updateUser(userId: number | null | undefined, data: any) {
-    console.log(userId);
     return this.http
       .put(`${this.API_URL}/${userId}`, data, {
-        headers: this.headers,
+        headers: this.headers
+      })
+      .pipe(catchError(this.handleError));
+  }
+
+  createUser(data: any) {
+    return this.http
+      .post(this.API_URL, data, {
+        headers: this.headers
       })
       .pipe(catchError(this.handleError));
   }
@@ -44,7 +51,7 @@ export class UsersService {
       .patch<number>(`${this.API_URL}/block/${userId}`, {
         banned_from_date: dates[0],
         banned_to_date: dates[1],
-        block_reason,
+        block_reason
       })
       .pipe(catchError(this.handleError));
   }
@@ -57,7 +64,7 @@ export class UsersService {
     return this.http
       .patch<number>(`${this.API_URL}/${userId}/update-roles`, {
         newRoles,
-        oldRoles,
+        oldRoles
       })
       .pipe(catchError(this.handleError));
   }

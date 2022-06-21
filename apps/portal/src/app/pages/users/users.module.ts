@@ -12,6 +12,8 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 import { UsersRoutingModule } from './users-routing.module';
 import { UsersComponent } from './users.component';
@@ -33,6 +35,8 @@ import { UsersComponent } from './users.component';
     NzPopconfirmModule,
     NzMessageModule,
     NzSelectModule,
-  ],
+    NzFormModule,
+    NzButtonModule
+  ]
 })
 export class UsersModule {}
