@@ -7,7 +7,7 @@ import { UsersService } from '../users/users.service';
 @Component({
   selector: 'wrapper',
   templateUrl: './wrapper.component.html',
-  styleUrls: ['./wrapper.component.scss'],
+  styleUrls: ['./wrapper.component.scss']
 })
 export class WrapperComponent implements OnInit {
   isCollapsed = false;
@@ -15,6 +15,7 @@ export class WrapperComponent implements OnInit {
   isShowContacts = false;
   user: User | null = null;
   isLoadingUser$: any;
+  isCurrentUserModeratorOfUniversity: any = false;
 
   constructor(
     private _authService: AuthService,
@@ -34,6 +35,11 @@ export class WrapperComponent implements OnInit {
             (role.name === 'moderator' &&
               this._usersService.user?.moderated_university_id)
         ) || false;
+
+      if (this._usersService.isCurrentUserModeratorOfUniversity()) {
+        this.isCurrentUserModeratorOfUniversity =
+          this._usersService.isCurrentUserModeratorOfUniversity();
+      }
     });
   }
 

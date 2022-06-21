@@ -11,7 +11,7 @@ import { UniversitiesService } from './universities.service';
 @Component({
   selector: 'universities',
   templateUrl: './universities.component.html',
-  styleUrls: ['./universities.component.scss'],
+  styleUrls: ['./universities.component.scss']
 })
 export class UniversitiesComponent implements OnInit {
   form: FormGroup;
@@ -22,7 +22,7 @@ export class UniversitiesComponent implements OnInit {
   isUserAdmin = false;
   modes = [
     { icon: 'pi pi-table', value: 'table' },
-    { icon: 'pi pi-list', value: 'card' },
+    { icon: 'pi pi-list', value: 'card' }
   ];
   selectedMode = { icon: 'pi pi-table', value: 'table' };
 
@@ -39,7 +39,7 @@ export class UniversitiesComponent implements OnInit {
       address: '',
       phone: '',
       link: '',
-      email: ['', [Validators.email]],
+      email: ['', [Validators.email]]
     });
   }
 
@@ -87,7 +87,8 @@ export class UniversitiesComponent implements OnInit {
             `Университет успешно обновлен`
           );
         }),
-        switchMap(() => this.getList())
+        switchMap(() => this.getList()),
+        untilDestroyed(this)
       )
       .subscribe();
   }

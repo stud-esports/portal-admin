@@ -35,13 +35,15 @@
         ></nz-card-meta>
         <nz-divider></nz-divider>
         <h3>e-mail</h3>
-        <p>{{ uni.email || '-' }}</p>
+        <a nz-button nzType="link" [href]="'mailto:' + uni.email">{{
+          uni.email
+        }}</a>
 
         <h3>Номер</h3>
         <p>{{ uni.phone || '-' }}</p>
 
         <h3>Веб-сайт</h3>
-        <a nz-button nzType="link" [href]="'mailto:' + uni.link">{{
+        <a nz-button target="”_blank”" nzType="link" [href]="uni.link">{{
           uni.link
         }}</a>
       </nz-card>

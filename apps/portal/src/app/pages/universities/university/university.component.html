@@ -1,1 +1,95 @@
-<p>university works!</p>
+<nz-card
+  style="width: calc(40% - 10px); margin: 0 15px 15px 0"
+  [nzActions]="[actionEdit]"
+>
+  <nz-card-meta
+    style="white-space: normal"
+    [nzTitle]="university?.title"
+    [nzDescription]="university?.address"
+    [title]="university?.title"
+  ></nz-card-meta>
+  <nz-divider></nz-divider>
+  <h3>e-mail</h3>
+  <a nz-button nzType="link" [href]="'mailto:' + university?.email">{{
+    university?.email
+  }}</a>
+
+  <h3>Номер</h3>
+  <p>{{ university?.phone || '-' }}</p>
+
+  <h3>Веб-сайт</h3>
+  <a nz-button nzType="link" [href]="university?.link" target="”_blank”">{{
+    university?.link
+  }}</a>
+  <ng-template #actionEdit>
+    <i (click)="showEditModal()" nz-icon nzType="edit"></i>
+  </ng-template>
+</nz-card>
+
+<nz-modal
+  [(nzVisible)]="isShowEditModal"
+  [nzTitle]="'Редактирование'"
+  (nzOnCancel)="hideEditModal()"
+  (nzOnOk)="updateUniversity()"
+  [nzOkDisabled]="form.invalid"
+  nzCancelText="Отмена"
+  nzOkText="Сохранить"
+>
+  <ng-container *nzModalContent>
+    <form
+      nz-form
+      [formGroup]="form"
+      (ngSubmit)="updateUniversity()"
+      class="games__form"
+    >
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" for="title">Название</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="title" formControlName="title" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" for="short_name">
+          Аббревиатура
+        </nz-form-label>
+        <nz-form-control>
+          <input nz-input id="short_name" formControlName="short_name" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" for="address">Расположение</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="address" formControlName="address" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" for="email">E-mail</nz-form-label>
+        <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl">
+          <input nz-input formControlName="email" type="email" />
+          <ng-template #emailErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('email')">
+              Некорректный email
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" for="phone">Номер</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="phone" formControlName="phone" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" for="link">Веб-сайт</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="link" formControlName="link" />
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

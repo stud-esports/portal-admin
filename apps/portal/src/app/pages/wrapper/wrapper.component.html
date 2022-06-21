@@ -16,7 +16,6 @@
           <h1>Админка</h1>
         </a>
       </div>
-      <!-- Дропдаун выбора университета с поиском -->
       <ul
         nz-menu
         nzTheme="light"
@@ -25,8 +24,17 @@
       >
         <li nz-submenu nzTitle="Управление" nzIcon="plus">
           <ul>
-            <li nz-menu-item nzMatchRouter [routerLink]="['universities']">
-              <a>Университетами</a>
+            <li
+              *ngIf="isUserAdmin || isCurrentUserModeratorOfUniversity"
+              nz-menu-item
+              nzMatchRouter
+              [routerLink]="
+                isUserAdmin
+                  ? ['universities']
+                  : ['universities', user?.moderated_university_id]
+              "
+            >
+              <a>{{ isUserAdmin ? 'Университетами' : 'Университетом' }}</a>
             </li>
             <li nz-menu-item nzMatchRouter [routerLink]="['news']">
               <a>Новостями</a>

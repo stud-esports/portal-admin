@@ -46,7 +46,7 @@ import { UniversityComponent } from './university/university.component';
     TableModule,
     SelectButtonModule,
     InputTextModule,
-    ButtonModule,
-  ],
+    ButtonModule
+  ]
 })
 export class UniversitiesModule {}
