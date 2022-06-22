@@ -157,14 +157,33 @@ export class UsersComponent implements OnInit {
   }
 
   exportExcel() {
+    const rows: any = this.users.map((row) => ({
+      ФИО: row?.patronymic
+        ? row?.last_name + ' ' + row?.first_name + ' ' + row?.patronymic || '-'
+        : row?.last_name + ' ' + row?.first_name || '-',
+      Пол: row?.gender || '-',
+      Роли: row?.roles,
+      email: row?.email || '-',
+      phone: row?.phone || '-',
+      'Начало блокировки': row?.banned_from_date || '-',
+      'Окончание блокировки': row?.banned_to_date || '-',
+      'id привязанного университета': row?.moderated_university_id || '-',
+      Университет: row?.university || '-',
+      Интро: row?.about_yourself || '-',
+      'День рождения': row?.birth_date || '-',
+      'Дата регистрации': row?.created_at || '-',
+      Логин: row?.login || '-',
+      'Карта студента': row?.student_card || '-'
+    }));
+
     import('xlsx').then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(this.users);
+      const worksheet = xlsx.utils.json_to_sheet(rows);
       const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, {
         bookType: 'xlsx',
         type: 'array'
       });
-      this.saveAsExcelFile(excelBuffer, 'products');
+      this.saveAsExcelFile(excelBuffer, 'Пользователи');
     });
   }
 

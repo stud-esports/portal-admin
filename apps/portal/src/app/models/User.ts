@@ -3,6 +3,7 @@ export interface User {
   first_name: string;
   last_name: string;
   patronymic: string;
+  gender: string;
   email: string;
   phone: string;
   photo_url: string;
@@ -11,4 +12,10 @@ export interface User {
   roles: { name: string }[];
   moderated_university: any;
   moderated_university_id: number;
+  university: any;
+  about_yourself: string;
+  birth_date: Date | string;
+  created_at: string | Date;
+  login: string;
+  student_card: string;
 }
