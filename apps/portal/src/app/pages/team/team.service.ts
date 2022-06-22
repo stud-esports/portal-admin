@@ -1,18 +1,19 @@
 import {
   HttpHeaders,
   HttpClient,
-  HttpErrorResponse,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'apps/portal/src/environments/environment';
 import { Observable, catchError, of, throwError } from 'rxjs';
 import { Team } from '../../models/Team';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class TeamService {
-  API_URL = 'http://localhost:5000/api/v1/teams';
-  FILES_API_URL = 'http://localhost:5000/api/v1/files';
+  API_URL = `${environment.apiUrl}teams`;
+  FILES_API_URL = `${environment.apiUrl}files`;
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private http: HttpClient) {}
@@ -66,7 +67,7 @@ export class TeamService {
     const name = fname.split('/')[fname.split('/').length - 1];
     return this.http
       .delete(this.FILES_API_URL, {
-        body: { fileName: name, folder: 'photos' },
+        body: { fileName: name, folder: 'photos' }
       })
       .pipe(catchError(this.handleError));
   }
@@ -108,7 +109,7 @@ export class TeamService {
     return this.http
       .post<any>(`${this.API_URL}/add-user-to-team`, {
         user_id: memberId,
-        team_id: teamId,
+        team_id: teamId
       })
       .pipe(catchError(this.handleError));
   }
@@ -117,7 +118,7 @@ export class TeamService {
     return this.http
       .post<any>(`${this.API_URL}/delete-user-from-team`, {
         user_id: memberId,
-        team_id: teamId,
+        team_id: teamId
       })
       .pipe(catchError(this.handleError));
   }

@@ -108,7 +108,7 @@
               class="header-avatar"
               nzSize="large"
               nzIcon="user"
-              [nzSrc]="'http://localhost:5000' + user?.photo_url"
+              [nzSrc]="apiUrl + user?.photo_url"
               [routerLink]="['profile']"
               nz-dropdown
               [nzDropdownMenu]="menu"

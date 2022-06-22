@@ -4,6 +4,7 @@ import {
   HttpHeaders
 } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
+import { environment } from 'apps/portal/src/environments/environment';
 import { Observable, catchError, throwError, BehaviorSubject } from 'rxjs';
 import { University } from '../../models/University';
 
@@ -11,7 +12,7 @@ import { University } from '../../models/University';
   providedIn: 'root'
 })
 export class UniversitiesService implements OnInit {
-  API_URL = 'http://localhost:5000/api/v1/universities';
+  API_URL = `${environment.apiUrl}universities`;
   universities: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 

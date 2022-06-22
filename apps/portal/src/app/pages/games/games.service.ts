@@ -1,18 +1,19 @@
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpHeaders,
+  HttpHeaders
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'apps/portal/src/environments/environment';
 import { Observable, catchError, of, throwError } from 'rxjs';
 import { Game } from '../../models/Game';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class GamesService {
-  API_URL = 'http://localhost:5000/api/v1/games';
-  FILES_API_URL = 'http://localhost:5000/api/v1/files';
+  API_URL = `${environment.apiUrl}games`;
+  FILES_API_URL = `${environment.apiUrl}files`;
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private http: HttpClient) {}
@@ -68,7 +69,7 @@ export class GamesService {
     const name = fname.split('/')[fname.split('/').length - 1];
     return this.http
       .delete(this.FILES_API_URL, {
-        body: { fileName: name, folder: 'photos' },
+        body: { fileName: name, folder: 'photos' }
       })
       .pipe(catchError(this.handleError));
   }

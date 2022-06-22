@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { environment } from 'apps/portal/src/environments/environment';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Table } from 'primeng/table';
 
@@ -15,7 +16,7 @@ import { NewsService } from './news.service';
 @Component({
   selector: 'portal-news',
   templateUrl: './news.component.html',
-  styleUrls: ['./news.component.scss'],
+  styleUrls: ['./news.component.scss']
 })
 export class NewsComponent implements OnInit {
   newsForm: FormGroup;
@@ -30,10 +31,11 @@ export class NewsComponent implements OnInit {
 
   newsList: News[] = [];
   isUserAdmin = false;
+  apiUrl = environment.apiUrl;
 
   modes = [
     { icon: 'pi pi-table', value: 'table' },
-    { icon: 'pi pi-list', value: 'card' },
+    { icon: 'pi pi-list', value: 'card' }
   ];
   selectedMode = { icon: 'pi pi-table', value: 'table' };
   universities: any[] = [];
@@ -51,7 +53,7 @@ export class NewsComponent implements OnInit {
       title: ['', Validators.required],
       description: '',
       text: '',
-      university_id: null,
+      university_id: null
     });
   }
 
@@ -78,7 +80,8 @@ export class NewsComponent implements OnInit {
         .pipe(
           map((news: News[]) => {
             news.forEach(
-              (newsItem) => (newsItem.created_at = new Date(newsItem.created_at))
+              (newsItem) =>
+                (newsItem.created_at = new Date(newsItem.created_at))
             );
             return (this.newsList = news);
           })
@@ -111,7 +114,7 @@ export class NewsComponent implements OnInit {
         switchMap((image) =>
           this._newsService.createNews({
             ...this.newsForm.value,
-            main_image_url: image.path ?? null,
+            main_image_url: image.path ?? null
           })
         ),
         tap(() => {
@@ -175,7 +178,7 @@ export class NewsComponent implements OnInit {
             main_image_url:
               !this.uploadFormData && !this.isDeleteFormData
                 ? this.selectedNews?.main_image_url
-                : image.path,
+                : image.path
           });
         }),
         tap(() => {
