@@ -12,7 +12,8 @@ import { News } from '../../models';
   providedIn: 'root'
 })
 export class NewsService {
-  apiUrl = `${environment.apiUrl}news`;
+  apiUrl = `http://localhost:5000/api/v1/news`;
+
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private http: HttpClient) {}
