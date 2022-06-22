@@ -1,17 +1,18 @@
 import {
   HttpHeaders,
   HttpClient,
-  HttpErrorResponse,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError, EMPTY, of } from 'rxjs';
+import { environment } from 'apps/portal/src/environments/environment';
+import { Observable, catchError, throwError, of } from 'rxjs';
 import { News } from '../../models';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class NewsService {
-  apiUrl = 'http://localhost:5000/api/v1/news';
+  apiUrl = `${environment.apiUrl}news`;
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private http: HttpClient) {}

@@ -102,9 +102,17 @@
           nzPopconfirmTitle="Вы уверены, что хотите разблокировать этого пользователя?"
           nzPopconfirmPlacement="bottom"
           (nzOnConfirm)="blockOrUnblockUser('unblock', user)"
-        >
-          Разблокировать
+          >  Разблокировать
         </a>
+        <!-- *ngIf="user?.banned_from_date && user?.banned_to_date" -->
+        <!-- <a
+          nz-popconfirm
+          nzPopconfirmTitle="Вы уверены, что хотите удалить этого пользователя?"
+          nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="deleteUser(user?._id)"
+        >
+          Удалить
+        </a> -->
       </td>
     </tr>
   </ng-template>

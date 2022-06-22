@@ -230,6 +230,19 @@ export class UsersComponent implements OnInit {
     this.userForm.reset();
   }
 
+  deleteUser(id: number | undefined) {
+    this._usersService
+      .deleteUser(id)
+      .pipe(
+        switchMap(() => {
+          this.hideCreateUserModal();
+          return this.getAllUsers();
+        }),
+        untilDestroyed(this)
+      )
+      .subscribe();
+  }
+
   createUser() {
     this._usersService
       .createUser(this.userForm.value)

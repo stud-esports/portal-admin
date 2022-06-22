@@ -42,6 +42,12 @@ export class UsersService {
       .pipe(catchError(this.handleError));
   }
 
+  deleteUser(id: number | undefined) {
+    return this.http
+      .delete<User[]>(`${this.API_URL}/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
   blockUser(
     userId: number | undefined,
     dates: any,

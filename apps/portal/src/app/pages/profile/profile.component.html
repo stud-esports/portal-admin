@@ -1,17 +1,202 @@
 <h1>Профиль</h1>
 
 <ng-container *ngIf="user as user">
-  <div>
-    <nz-avatar [nzSize]="64" nzIcon="user"></nz-avatar>
+  <div class="wrapper">
+    <div style="display: flex; justify-content: space-between">
+      <nz-avatar [nzSize]="64" nzIcon="user"></nz-avatar>
+      <a (click)="showEditModal()">Редактировать профиль</a>
+    </div>
+    <br />
+    <small>ФИО</small>
     <div>{{ user.last_name }} {{ user.first_name }} {{ user.patronymic }}</div>
+    <nz-divider></nz-divider>
+    <small>email</small>
+    <div>{{ user.email || '-' }}</div>
+    <nz-divider></nz-divider>
+    <small>День рождения</small>
+    <div>{{ user.birth_date || '-' }}</div>
+    <nz-divider></nz-divider>
+    <small>О себе</small>
+    <div>{{ user.about_yourself || '-' }}</div>
+    <nz-divider></nz-divider>
+    <small>Пол</small>
+    <div>{{ user.gender || '-' }}</div>
+    <nz-divider></nz-divider>
+    <small>Логин</small>
+    <div>{{ user.login || '-' }}</div>
+    <nz-divider></nz-divider>
+    <small>Привязанный университет</small>
+    <div>{{ user.moderated_university_id || '-' }}</div>
+    <nz-divider></nz-divider>
+    <small>Карточка студента</small>
+    <div>{{ user.student_card || '-' }}</div>
+    <nz-divider></nz-divider>
+    <small>Университет</small>
+    <div>{{ user.university_id || '-' }}</div>
+    <nz-divider></nz-divider>
+    <small>Телефон</small>
+    <div>{{ user.phone || '-' }}</div>
+    <nz-divider></nz-divider>
+    <small>Роли</small>
     <div>
-      {{ user.email }}
+      <span *ngFor="let role of user.roles; let last = last">
+        {{ role.name }}{{ last ? '' : ',' }}
+      </span>
     </div>
-    <div>
-      {{ user.phone }}
-    </div>
-    <span *ngFor="let role of user.roles; let last = last">
-      {{ role.name }}{{ last ? '' : ',' }}
-    </span>
   </div>
 </ng-container>
+
+<nz-modal
+  [(nzVisible)]="isShowEditModal"
+  [nzTitle]="'Редактирование'"
+  (nzOnCancel)="hideEditModal()"
+  (nzOnOk)="updateProfile()"
+  [nzOkDisabled]="form.invalid"
+  nzCancelText="Отмена"
+  nzOkText="Сохранить"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="form" (ngSubmit)="updateProfile()">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="last_name">Фамилия</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="last_name" formControlName="last_name" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="first_name"> Имя </nz-form-label>
+        <nz-form-control>
+          <input nz-input id="first_name" formControlName="first_name" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="patronymic">Отчество</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="patronymic" formControlName="patronymic" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="gender">Пол</nz-form-label>
+        <nz-form-control>
+          <nz-select
+            style="width: 100%"
+            nzShowSearch
+            id="gender"
+            nzAllowClear
+            formControlName="gender"
+          >
+            <nz-option
+              *ngFor="let gender of genders"
+              [nzLabel]="gender.name"
+              [nzValue]="gender.value"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="email">E-mail</nz-form-label>
+        <nz-form-control nzHasFeedback [nzErrorTip]="emailErrorTpl">
+          <input nz-input formControlName="email" type="email" />
+          <ng-template #emailErrorTpl let-control>
+            <ng-container *ngIf="control.hasError('email')">
+              Некорректный email
+            </ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="phone">Номер</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="phone" formControlName="phone" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="login">Логин</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="login" formControlName="login" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="password">Пароль</nz-form-label>
+        <nz-form-control>
+          <input nz-input id="password" formControlName="password" />
+        </nz-form-control>
+      </nz-form-item> -->
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="birth_date">
+          День рождения
+        </nz-form-label>
+        <nz-form-control>
+          <nz-date-picker
+            style="display: block"
+            nzShowTime
+            nzFormat="yyyy-MM-dd"
+            formControlName="birth_date"
+          >
+          </nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <!-- <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="photo_url">Фото профиля</nz-form-label>
+        <nz-form-control> -->
+      <!-- <input nz-input id="password" formControlName="password" /> -->
+      <!-- </nz-form-control>
+      </nz-form-item> -->
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="about_yourself">
+          Описание
+        </nz-form-label>
+        <nz-form-control>
+          <nz-textarea-count [nzMaxCharacterCount]="100">
+            <textarea
+              id="about_yourself"
+              rows="4"
+              nz-input
+              formControlName="about_yourself"
+            >
+            </textarea>
+          </nz-textarea-count>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="student_card"
+          >Карточка студента</nz-form-label
+        >
+        <nz-form-control>
+          <input nz-input id="student_card" formControlName="student_card" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="7" for="university_id"
+          >Университет</nz-form-label
+        >
+        <nz-form-control>
+          <nz-select
+            id="university"
+            formControlName="university_id"
+            [nzShowArrow]="false"
+            [nzFilterOption]="nzFilterOption"
+          >
+            <nz-option
+              *ngFor="let uni of universities"
+              [nzLabel]="uni.title"
+              [nzValue]="uni._id"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
