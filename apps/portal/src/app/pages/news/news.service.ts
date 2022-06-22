@@ -65,12 +65,12 @@ export class NewsService {
     if (!data) {
       return of({ path: null });
     }
-    const API_URL = `http://localhost:5000/api/v1/files`;
+    const API_URL = `${environment.apiUrl}files`;
     return this.http.post<{ path: string | null }>(API_URL, data, {});
   }
 
   saveImages(data: FormData): Observable<{ path: string }> {
-    const API_URL = 'http://localhost:5000/api/v1/files/multiple';
+    const API_URL = `${environment.apiUrl}files/multiple`;
     return this.http
       .post<{ path: string }>(API_URL, data, {})
       .pipe(catchError(this.handleError));
@@ -97,7 +97,7 @@ export class NewsService {
   }
 
   private _deleteImage(fname: string) {
-    const API_URL = `http://localhost:5000/api/v1/files`;
+    const API_URL = `${environment.apiUrl}files`;
     const name = fname.split('/')[fname.split('/').length - 1];
     return this.http
       .delete(API_URL, { body: { fileName: name, folder: 'photos' } })

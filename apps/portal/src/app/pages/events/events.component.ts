@@ -8,17 +8,18 @@ import {
   CalendarOptions,
   DateSelectArg,
   EventClickArg,
-  EventApi,
+  EventApi
 } from '@fullcalendar/angular';
 import ruLocale from '@fullcalendar/core/locales/ru';
 import { UsersService } from '../users/users.service';
 import { UniversitiesService } from '../universities/universities.service';
+import { environment } from 'apps/portal/src/environments/environment';
 
 @UntilDestroy()
 @Component({
   selector: 'portal-events',
   templateUrl: './events.component.html',
-  styleUrls: ['./events.component.scss'],
+  styleUrls: ['./events.component.scss']
 })
 export class EventsComponent implements OnInit {
   form: FormGroup;
@@ -29,11 +30,12 @@ export class EventsComponent implements OnInit {
   isDeleteFormData = false;
   isLoading = false;
   isUserAdmin = false;
+  apiUrl = environment.apiUrl;
 
   eventList: any[] = [];
   modes = [
     { icon: 'pi pi-calendar', value: 'calendar' },
-    { icon: 'pi pi-list', value: 'card' },
+    { icon: 'pi pi-list', value: 'card' }
   ];
   selectedMode = { icon: 'pi pi-calendar', value: 'calendar' };
   universities: any[] = [];
@@ -51,7 +53,7 @@ export class EventsComponent implements OnInit {
       location: '',
       start: ['', Validators.required],
       end: ['', Validators.required],
-      university_id: null,
+      university_id: null
     });
   }
 
@@ -61,7 +63,7 @@ export class EventsComponent implements OnInit {
     headerToolbar: {
       left: 'prev,next',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
     initialView: 'dayGridMonth',
     events: this.eventList,
@@ -71,11 +73,11 @@ export class EventsComponent implements OnInit {
     dayMaxEvents: true,
     allDaySlot: false,
     validRange: {
-      start: new Date(),
+      start: new Date()
     },
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
-    eventsSet: this.handleEvents.bind(this),
+    eventsSet: this.handleEvents.bind(this)
   };
   currentEvents: EventApi[] = [];
 
@@ -101,7 +103,7 @@ export class EventsComponent implements OnInit {
       start: selectInfo.startStr,
       end: new Date(selectInfo.startStr).setTime(
         new Date(selectInfo.startStr).getTime() + 30 * 60000
-      ),
+      )
     });
   }
 
@@ -110,7 +112,7 @@ export class EventsComponent implements OnInit {
       title: clickInfo.event.title,
       start: clickInfo.event.startStr,
       end: clickInfo.event.endStr,
-      ...clickInfo.event.extendedProps,
+      ...clickInfo.event.extendedProps
     });
   }
 
@@ -149,7 +151,7 @@ export class EventsComponent implements OnInit {
             main_image_url:
               !this.uploadFormData && !this.isDeleteFormData
                 ? this.selectedItem?.main_image_url
-                : image.path,
+                : image.path
           })
         ),
         tap(() => {
@@ -201,7 +203,7 @@ export class EventsComponent implements OnInit {
             ...this.form.value,
             main_image_url: image.path ?? null,
             university_id:
-              this._userService.user?.moderated_university_id ?? null,
+              this._userService.user?.moderated_university_id ?? null
           })
         ),
         tap(() => {

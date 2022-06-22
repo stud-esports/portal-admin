@@ -46,7 +46,7 @@
           *ngIf="event.main_image_url"
           width="50"
           alt="example"
-          [src]="'http://localhost:5000' + event.main_image_url"
+          [src]="apiUrl + event.main_image_url"
         />
       </ng-template>
       <ng-template #actionEdit>

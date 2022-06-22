@@ -4,8 +4,9 @@ import {
   Input,
   OnChanges,
   Output,
-  SimpleChanges,
+  SimpleChanges
 } from '@angular/core';
+import { environment } from 'apps/portal/src/environments/environment';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
@@ -19,7 +20,7 @@ const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
 @Component({
   selector: 'portal-upload-image',
   templateUrl: './upload-image.component.html',
-  styleUrls: ['./upload-image.component.scss'],
+  styleUrls: ['./upload-image.component.scss']
 })
 export class UploadImageComponent implements OnChanges {
   fileList: NzUploadFile[] = [];
@@ -27,6 +28,7 @@ export class UploadImageComponent implements OnChanges {
   previewVisible = false;
 
   isMarkMainImageForDelete = false;
+  apiUrl = environment.apiUrl;
 
   @Input() isClearFileList = false;
   @Input() selectedItem: any;

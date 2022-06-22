@@ -6,12 +6,13 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { genres } from 'apps/portal/src/assets/genres';
 import { Game } from '../../models/Game';
 import { GamesService } from './games.service';
+import { environment } from 'apps/portal/src/environments/environment';
 
 @UntilDestroy()
 @Component({
   selector: 'portal-games',
   templateUrl: './games.component.html',
-  styleUrls: ['./games.component.scss'],
+  styleUrls: ['./games.component.scss']
 })
 export class GamesComponent implements OnInit {
   form: FormGroup;
@@ -23,6 +24,7 @@ export class GamesComponent implements OnInit {
   uploadFormData: any;
   isClearFileList = false;
   isDeleteFormData = false;
+  apiUrl = environment.apiUrl;
 
   gamesList: Game[] = [];
 
@@ -35,7 +37,7 @@ export class GamesComponent implements OnInit {
       title: ['', Validators.required],
       description: '',
       short_title: '',
-      genre: ['', Validators.required],
+      genre: ['', Validators.required]
     });
   }
 
@@ -73,7 +75,7 @@ export class GamesComponent implements OnInit {
             main_image_url:
               !this.uploadFormData && !this.isDeleteFormData
                 ? this.selectedItem?.main_image_url
-                : image.path,
+                : image.path
           });
         }),
         tap(() => {
@@ -81,7 +83,10 @@ export class GamesComponent implements OnInit {
           this.isEditVisible = false;
           this.form.reset();
           this.isClearFileList = true;
-          this._messageService.create('success', `Дисциплина (игра) успешно обновлена`);
+          this._messageService.create(
+            'success',
+            `Дисциплина (игра) успешно обновлена`
+          );
         }),
         switchMap(() => this.getList()),
         untilDestroyed(this)
@@ -126,7 +131,7 @@ export class GamesComponent implements OnInit {
         switchMap((image) =>
           this._gamesService.create({
             ...this.form.value,
-            main_image_url: image.path ?? null,
+            main_image_url: image.path ?? null
           })
         ),
         tap(() => {

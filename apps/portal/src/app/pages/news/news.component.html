@@ -53,7 +53,7 @@
       <span>Заглавное фото:</span>
       <img
         *ngIf="news.main_image_url; else noPhoto"
-        [nzSrc]="'http://localhost:5000' + news.main_image_url"
+        [nzSrc]="apiUrl + news.main_image_url"
         nz-image
         width="100px"
         height="100px"
@@ -118,12 +118,7 @@
 
       <label for="text"> Основной текст </label>
       <nz-textarea-count [nzMaxCharacterCount]="500">
-        <textarea
-          id="text"
-          rows="5"
-          nz-input
-          formControlName="text"
-        >
+        <textarea id="text" rows="5" nz-input formControlName="text">
         </textarea>
       </nz-textarea-count>
 
@@ -251,7 +246,7 @@
           <td>
             <img
               *ngIf="news.main_image_url; else noPhoto"
-              [nzSrc]="'http://localhost:5000' + news.main_image_url"
+              [nzSrc]="apiUrl + news.main_image_url"
               nz-image
               width="100px"
               height="100px"

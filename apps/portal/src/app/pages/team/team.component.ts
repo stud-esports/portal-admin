@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { environment } from 'apps/portal/src/environments/environment';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { map, Observable, switchMap, tap } from 'rxjs';
 import { User } from '../../models';
@@ -26,6 +27,7 @@ export class TeamComponent implements OnInit {
   teamList: Team[] = [];
   isUserAdmin = false;
   isCurrentUserIsNotModeratorOfUniversity = false;
+  apiUrl = environment.apiUrl;
 
   // teamTypes = [
   //   { name: 'Сборная', value: 'main' },

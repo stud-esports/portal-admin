@@ -41,10 +41,7 @@
       style="display: flex; flex-direction: row; align-items: center"
     >
       <img
-        [nzSrc]="
-          'http://localhost:5000' +
-          (selectedItem?.main_image_url)
-        "
+        [nzSrc]="apiUrl + selectedItem?.main_image_url"
         nz-image
         width="100px"
         height="100px"

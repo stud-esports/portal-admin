@@ -4,6 +4,7 @@ import {
   HttpHeaders
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'apps/portal/src/environments/environment';
 import { Observable, catchError, throwError, map, BehaviorSubject } from 'rxjs';
 import { User } from '../../models';
 
@@ -11,7 +12,7 @@ import { User } from '../../models';
   providedIn: 'root'
 })
 export class UsersService {
-  API_URL = 'http://localhost:5000/api/v1/users';
+  API_URL = `${environment.apiUrl}users`;
   user: User | null = null;
   isLoadingUser$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
