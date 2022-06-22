@@ -1,13 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from 'apps/portal/src/environments/environment';
 import { Observable, catchError, throwError, map } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
-  API_URL = 'http://localhost:5000/api/v1/auth';
+  API_URL = `${environment.apiUrl}auth}`;
 
   constructor(private http: HttpClient, private _router: Router) {}
 
@@ -20,7 +21,7 @@ export class AuthService {
         );
 
         this._router.navigate(['']);
-      }),
+      })
       // catchError(this.handleError)
     );
   }

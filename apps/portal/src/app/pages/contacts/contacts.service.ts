@@ -1,20 +1,21 @@
 import {
   HttpHeaders,
   HttpClient,
-  HttpErrorResponse,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'apps/portal/src/environments/environment';
 
 import { Observable, catchError, throwError } from 'rxjs';
 
 import { User, Contact } from '../../models';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ContactsService {
-  apiUrlUsers = 'http://localhost:5000/api/v1/users/search';
-  apiUrlContacts = 'http://localhost:5000/api/v1/contacts';
+  apiUrlUsers = `${environment.apiUrl}users/search`;
+  apiUrlContacts = `${environment.apiUrl}contacts`;
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private _http: HttpClient) {}

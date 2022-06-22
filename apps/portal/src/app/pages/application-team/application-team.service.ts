@@ -1,16 +1,18 @@
 import {
   HttpClient,
   HttpErrorResponse,
-  HttpHeaders,
+  HttpHeaders
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'apps/portal/src/environments/environment';
 import { Observable, catchError, throwError } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ApplicationTeamService {
-  API_URL = 'http://localhost:5000/api/v1/applications';
+  API_URL = `${environment.apiUrl}applications`;
+
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private http: HttpClient) {}

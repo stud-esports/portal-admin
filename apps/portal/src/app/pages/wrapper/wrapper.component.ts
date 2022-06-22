@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { untilDestroyed } from '@ngneat/until-destroy';
+import { environment } from 'apps/portal/src/environments/environment';
 import { User } from '../../models';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
@@ -16,6 +17,7 @@ export class WrapperComponent implements OnInit {
   user: User | null = null;
   isLoadingUser$: any;
   isCurrentUserModeratorOfUniversity: any = false;
+  apiUrl = environment.apiUrl;
 
   constructor(
     private _authService: AuthService,

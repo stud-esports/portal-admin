@@ -43,7 +43,7 @@
             <ng-container>
               <nz-list-item-meta
                 nz-popover
-                [nzAvatar]="'https://localhost:5000' + member.photo_url"
+                [nzAvatar]="apiUrl + member.photo_url"
                 [nzPopoverTitle]="titleTemplate"
                 [nzPopoverContent]="contentTemplate"
                 style="cursor: help"
@@ -85,7 +85,7 @@
           *ngIf="team.logo_url"
           width="50"
           alt="example"
-          [src]="'http://localhost:5000' + team.logo_url"
+          [src]="apiUrl + team.logo_url"
         />
       </ng-template>
       <ng-template #actionEdit>

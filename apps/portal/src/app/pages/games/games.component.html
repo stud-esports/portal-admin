@@ -30,7 +30,7 @@
           *ngIf="game.main_image_url"
           width="50"
           alt="example"
-          [src]="'http://localhost:5000' + game.main_image_url"
+          [src]="apiUrl + game.main_image_url"
         />
       </ng-template>
       <ng-template #actionEdit>
