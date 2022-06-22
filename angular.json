@@ -26,6 +26,22 @@
                   "replace": "./apps/portal/src/environments/environment.ts",
                   "with": "./apps/portal/src/environments/environment.prod.ts"
                 }
+              ],
+              "styles": [
+                "./apps/portal/src/styles.scss",
+                "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+                "node_modules/primeng/resources/themes/saga-blue/theme.css",
+                "node_modules/primeng/resources/primeng.min.css",
+                "node_modules/primeicons/primeicons.css"
+              ],
+              "assets": [
+                "./apps/portal/src/favicon.ico",
+                "./apps/portal/src/assets",
+                {
+                  "glob": "**/*",
+                  "input": "node_modules/@ant-design/icons-angular/src/inline-svg/",
+                  "output": "/assets/"
+                }
               ]
             }
           }
