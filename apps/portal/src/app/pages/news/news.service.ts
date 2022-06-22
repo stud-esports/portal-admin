@@ -12,7 +12,7 @@ import { News } from '../../models';
   providedIn: 'root'
 })
 export class NewsService {
-  apiUrl = `http://localhost:5000/api/v1/news`;
+  apiUrl = `${environment.apiUrl}news`;
 
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
