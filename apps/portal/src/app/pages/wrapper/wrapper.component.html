@@ -12,7 +12,10 @@
     >
       <div class="sidebar-logo">
         <a href="#">
-          <img src="../assets/logo.svg" alt="logo" />
+          <img
+            [src]="isProd ? '../admin/assets/logo.svg' : '../assets/logo.svg'"
+            alt="logo"
+          />
           <h1>Админка</h1>
         </a>
       </div>
