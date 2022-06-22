@@ -28,7 +28,7 @@ export class UploadImageComponent implements OnChanges {
   previewVisible = false;
 
   isMarkMainImageForDelete = false;
-  apiUrl = environment.apiUrl;
+  apiUrl = environment.filesUrl;
 
   @Input() isClearFileList = false;
   @Input() selectedItem: any;

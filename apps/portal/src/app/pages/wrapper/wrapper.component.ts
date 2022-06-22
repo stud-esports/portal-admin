@@ -17,7 +17,7 @@ export class WrapperComponent implements OnInit {
   user: User | null = null;
   isLoadingUser$: any;
   isCurrentUserModeratorOfUniversity: any = false;
-  apiUrl = environment.apiUrl;
+  apiUrl = environment.filesUrl;
 
   constructor(
     private _authService: AuthService,

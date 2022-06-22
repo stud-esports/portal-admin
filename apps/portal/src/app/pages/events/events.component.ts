@@ -30,8 +30,7 @@ export class EventsComponent implements OnInit {
   isDeleteFormData = false;
   isLoading = false;
   isUserAdmin = false;
-  apiUrl = environment.apiUrl;
-
+  apiUrl = environment.filesUrl;
   eventList: any[] = [];
   modes = [
     { icon: 'pi pi-calendar', value: 'calendar' },

@@ -24,7 +24,7 @@ export class GamesComponent implements OnInit {
   uploadFormData: any;
   isClearFileList = false;
   isDeleteFormData = false;
-  apiUrl = environment.apiUrl;
+  apiUrl = environment.filesUrl;
 
   gamesList: Game[] = [];
 

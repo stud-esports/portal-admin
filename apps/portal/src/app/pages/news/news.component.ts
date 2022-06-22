@@ -31,7 +31,7 @@ export class NewsComponent implements OnInit {
 
   newsList: News[] = [];
   isUserAdmin = false;
-  apiUrl = environment.apiUrl;
+  apiUrl = environment.filesUrl;
 
   modes = [
     { icon: 'pi pi-table', value: 'table' },

@@ -27,7 +27,7 @@ export class TeamComponent implements OnInit {
   teamList: Team[] = [];
   isUserAdmin = false;
   isCurrentUserIsNotModeratorOfUniversity = false;
-  apiUrl = environment.apiUrl;
+  apiUrl = environment.filesUrl;
 
   // teamTypes = [
   //   { name: 'Сборная', value: 'main' },
