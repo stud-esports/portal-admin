@@ -20,7 +20,13 @@
           ],
           "configurations": {
             "production": {
-              "browserTarget": "portal:build:production"
+              "browserTarget": "portal:build:production",
+              "fileReplacements": [
+                {
+                  "replace": "./apps/portal/src/environments/environment.ts",
+                  "with": "./apps/portal/src/environments/environment.prod.ts"
+                }
+              ]
             }
           }
         },
@@ -51,6 +57,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "./apps/portal/src/environments/environment.ts",
+                  "with": "./apps/portal/src/environments/environment.prod.ts"
+                }
+              ],
               "buildOptimizer": true,
               "optimization": true,
               "budgets": [
@@ -63,12 +75,6 @@
                   "type": "anyComponentStyle",
                   "maximumWarning": "6kb",
                   "maximumError": "10kb"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "./apps/portal/src/environments/environment.ts",
-                  "with": "./apps/portal/src/environments/environment.prod.ts"
                 }
               ]
             }
