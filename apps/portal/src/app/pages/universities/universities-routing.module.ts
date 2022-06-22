@@ -6,16 +6,16 @@ import { UniversityComponent } from './university/university.component';
 const routes: Routes = [
   {
     path: '',
-    component: UniversitiesComponent,
+    component: UniversitiesComponent
   },
   {
     path: ':id',
-    component: UniversityComponent,
-  },
+    component: UniversityComponent
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class UniversitiesRoutingModule {}

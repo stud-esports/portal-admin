@@ -24,12 +24,12 @@ import { UniversityComponent } from './university/university.component';
 
 @NgModule({
   declarations: [UniversitiesComponent, UniversityComponent],
-  exports: [UniversitiesComponent],
+  exports: [UniversitiesComponent, UniversityComponent],
   imports: [
     CommonModule,
+    UniversitiesRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    UniversitiesRoutingModule,
     NzMessageModule,
     NzModalModule,
     NzFormModule,

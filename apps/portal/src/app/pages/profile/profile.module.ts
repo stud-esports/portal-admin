@@ -31,8 +31,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
     ProfileRoutingModule,
+    ReactiveFormsModule,
     NgxHumanizeDurationModule,
     NzFormModule,
     NzButtonModule,

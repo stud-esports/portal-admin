@@ -22,8 +22,8 @@ import { UsersComponent } from './users.component';
   declarations: [UsersComponent],
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     UsersRoutingModule,
+    ReactiveFormsModule,
     FormsModule,
     NzModalModule,
     TableModule,

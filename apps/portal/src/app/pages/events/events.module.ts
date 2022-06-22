@@ -33,15 +33,15 @@ FullCalendarModule.registerPlugins([
   // register FullCalendar plugins
   dayGridPlugin,
   interactionPlugin,
-  timeGridPlugin,
+  timeGridPlugin
 ]);
 
 @NgModule({
   declarations: [EventsComponent],
   imports: [
     CommonModule,
-    FormsModule,
     EventsRoutingModule,
+    FormsModule,
     ReactiveFormsModule,
     NzModalModule,
     UploadImageModule,
@@ -61,7 +61,7 @@ FullCalendarModule.registerPlugins([
     ButtonModule,
     TabViewModule,
     SelectButtonModule,
-    NzSelectModule,
-  ],
+    NzSelectModule
+  ]
 })
 export class EventsModule {}

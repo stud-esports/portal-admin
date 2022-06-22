@@ -27,9 +27,9 @@ import { UploadImageModule } from '../../shared/upload-image/upload-image.module
   declarations: [NewsComponent],
   imports: [
     CommonModule,
+    NewsRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NewsRoutingModule,
     NzInputModule,
     NzFormModule,
     NzButtonModule,
@@ -45,8 +45,8 @@ import { UploadImageModule } from '../../shared/upload-image/upload-image.module
     InputTextModule,
     ButtonModule,
     SelectButtonModule,
-    NzSelectModule,
+    NzSelectModule
   ],
-  exports: [NewsComponent],
+  exports: [NewsComponent]
 })
 export class NewsModule {}

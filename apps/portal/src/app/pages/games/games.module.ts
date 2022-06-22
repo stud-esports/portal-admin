@@ -20,8 +20,8 @@ import { UploadImageModule } from '../../shared/upload-image/upload-image.module
   declarations: [GamesComponent],
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     GamesRoutingModule,
+    ReactiveFormsModule,
     NzIconModule,
     NzModalModule,
     NzInputModule,
@@ -31,7 +31,7 @@ import { UploadImageModule } from '../../shared/upload-image/upload-image.module
     NzCardModule,
     NzDividerModule,
     NzButtonModule,
-    NzPopconfirmModule,
-  ],
+    NzPopconfirmModule
+  ]
 })
 export class GamesModule {}
