@@ -42,7 +42,7 @@ export class UsersComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private _usersService: UsersService,
-    private nzMessageService: NzMessageService,
+    private _messageService: NzMessageService,
     private _universitiesService: UniversitiesService
   ) {
     this.rolesForm = this.fb.group({
@@ -122,7 +122,10 @@ export class UsersComponent implements OnInit {
         switchMap(() => this.getAllUsers()),
         untilDestroyed(this)
       )
-      .subscribe(() => this.handleBlockCancel());
+      .subscribe(() => {
+        this._messageService.create('success', `Действие прошло успешно`);
+        this.handleBlockCancel();
+      });
   }
 
   handleBlockCancel(): void {
@@ -153,7 +156,10 @@ export class UsersComponent implements OnInit {
         switchMap(() => this.getAllUsers()),
         untilDestroyed(this)
       )
-      .subscribe(() => this.handleRolesCancel());
+      .subscribe(() => {
+        this.handleRolesCancel();
+        this._messageService.create('success', `Права успешно изменены`);
+      });
   }
 
   exportExcel() {
@@ -229,7 +235,10 @@ export class UsersComponent implements OnInit {
         switchMap(() => this.getAllUsers()),
         untilDestroyed(this)
       )
-      .subscribe(() => this.hideEditUser());
+      .subscribe(() => {
+        this.hideEditUser();
+        this._messageService.create('success', `Пользователь успешно изменен`);
+      });
   }
 
   hideEditUser() {
@@ -259,7 +268,9 @@ export class UsersComponent implements OnInit {
         }),
         untilDestroyed(this)
       )
-      .subscribe();
+      .subscribe(() => {
+        this._messageService.create('success', `Пользователь успешно удален`);
+      });
   }
 
   createUser() {
@@ -272,6 +283,8 @@ export class UsersComponent implements OnInit {
         }),
         untilDestroyed(this)
       )
-      .subscribe();
+      .subscribe(() => {
+        this._messageService.create('success', `Пользователь успешно создан`);
+      });
   }
 }
