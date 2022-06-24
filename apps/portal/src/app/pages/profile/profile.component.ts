@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { User } from '../../models';
 import { UniversitiesService } from '../universities/universities.service';
 import { UsersService } from '../users/users.service';
@@ -49,8 +48,13 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.user = this._usersService.user;
-    this._usersService.getUserByToken().subscribe();
+    if (this._usersService.user) {
+      this.user = this._usersService.user;
+    } else {
+      this._usersService
+        .getUserByToken()
+        .subscribe((user) => (this.user = user));
+    }
     this._universitiesService.universities
       .pipe(untilDestroyed(this))
       .subscribe((universities: any) => (this.universities = universities));
