@@ -89,10 +89,14 @@ export class UsersService {
 
   getUserByToken(): Observable<User> {
     this.isLoadingUser$.next(true);
+    // if (localStorage.getItem('user')) {
+    //   return localStorage.getItem('user')
+    // }
     return this.http.get<User>(`${this.API_URL}/by-token`).pipe(
       map((user) => {
         this.user = user;
         this.isLoadingUser$.next(false);
+        localStorage.setItem('user', JSON.stringify(user));
         return user;
       }),
       catchError(this.handleError)
