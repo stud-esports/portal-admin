@@ -10,6 +10,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { NzMessageModule } from 'ng-zorro-antd/message';
 
 import { ApplicationTeamRoutingModule } from './application-team-routing.module';
 import { ApplicationTeamComponent } from './application-team.component';
@@ -28,8 +29,9 @@ import { FormatTablePipe } from './format-table.pipe';
     SelectButtonModule,
     TableModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    NzMessageModule
   ],
-  exports: [ApplicationTeamComponent],
+  exports: [ApplicationTeamComponent]
 })
 export class ApplicationTeamModule {}

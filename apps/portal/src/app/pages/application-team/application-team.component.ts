@@ -3,11 +3,12 @@ import {
   state,
   style,
   transition,
-  animate,
+  animate
 } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { Table } from 'primeng/table';
 import { map, switchMap, tap } from 'rxjs';
 import { UsersService } from '../users/users.service';
@@ -24,19 +25,19 @@ import { ApplicationTeamService } from './application-team.service';
         'void',
         style({
           transform: 'translateX(-10%)',
-          opacity: 0,
+          opacity: 0
         })
       ),
       state(
         'active',
         style({
           transform: 'translateX(0)',
-          opacity: 1,
+          opacity: 1
         })
       ),
-      transition('* <=> *', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)')),
-    ]),
-  ],
+      transition('* <=> *', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)'))
+    ])
+  ]
 })
 export class ApplicationTeamComponent implements OnInit {
   isDeclineModalVisible = false;
@@ -52,7 +53,7 @@ export class ApplicationTeamComponent implements OnInit {
 
   applicationsTypes = [
     { name: 'Активные', value: 'active' },
-    { name: 'Архивные', value: 'archive' },
+    { name: 'Архивные', value: 'archive' }
   ];
   selectedApplicationsType = 'active';
 
@@ -61,7 +62,8 @@ export class ApplicationTeamComponent implements OnInit {
   constructor(
     private _applicationTeamService: ApplicationTeamService,
     private _route: ActivatedRoute,
-    private _userService: UsersService
+    private _userService: UsersService,
+    private _messageService: NzMessageService
   ) {}
 
   ngOnInit(): void {
@@ -147,14 +149,17 @@ export class ApplicationTeamComponent implements OnInit {
       .approveApplication(this.selectedApplication._id, {
         user_id: this.selectedApplication.applicant._id,
         team_id: this.selectedApplication.team._id,
-        commentary: this.commentToConfirm,
+        commentary: this.commentToConfirm
       })
       .pipe(
         switchMap(() => this.getApplications()),
         tap(() => this.handleCancel()),
         untilDestroyed(this)
       )
-      .subscribe(() => this.handleCancel());
+      .subscribe(() => {
+        this.handleCancel();
+        this._messageService.create('success', `Заявка успешно принята`);
+      });
   }
 
   declineApplication(): void {
@@ -162,13 +167,15 @@ export class ApplicationTeamComponent implements OnInit {
       .declineApplication(this.selectedApplication._id, {
         user_id: this.selectedApplication.applicant._id,
         team_id: this.selectedApplication.team._id,
-        commentary: this.reasonOfDecline,
+        commentary: this.reasonOfDecline
       })
       .pipe(
         switchMap(() => this.getApplications()),
         tap(() => this.handleCancel()),
         untilDestroyed(this)
       )
-      .subscribe();
+      .subscribe(() => {
+        this._messageService.create('success', `Заявка отклонена`);
+      });
   }
 }
