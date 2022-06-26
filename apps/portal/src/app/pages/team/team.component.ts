@@ -59,12 +59,12 @@ export class TeamComponent implements OnInit {
     this.form = this._fb.group({
       title: ['', Validators.required],
       description: '',
-      team_type: '',
-      game_id: {},
-      captain_id: {},
+      team_type: ['', Validators.required],
+      game_id: [{}, Validators.required],
+      captain_id: [{}, Validators.required],
       logo_url: '',
       members_count: ['', Validators.required],
-      team_university_id: null
+      university_id: null
     });
   }
   ngOnInit(): void {
@@ -76,7 +76,7 @@ export class TeamComponent implements OnInit {
     }
     this.getList().pipe(untilDestroyed(this)).subscribe();
     this.form
-      .get('team_university_id')
+      .get('university_id')
       ?.patchValue(this._userService.user?.moderated_university_id);
     this._universitiesService.universities
       .pipe(untilDestroyed(this))
@@ -116,7 +116,7 @@ export class TeamComponent implements OnInit {
             captain_id: this.form.value.captain_id,
             game_id: this.form.value.game_id,
             logo_url: image.path ?? null,
-            team_university_id:
+            university_id:
               this._userService.user?.moderated_university_id ?? null
           })
         ),

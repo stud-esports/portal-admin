@@ -51,15 +51,15 @@
                 <nz-list-item-meta-title>
                   <div>
                     {{ member.last_name }} {{ member.first_name }}
-                    {{ member.patronymic }}
+                    {{ member.patronymic || '' }}
                   </div>
                 </nz-list-item-meta-title>
                 <ng-template #titleTemplate>
                   {{ member.last_name }} {{ member.first_name }}
-                  {{ member.patronymic }}
+                  {{ member.patronymic || '' }}
                 </ng-template>
                 <ng-template #contentTemplate>
-                  {{ member.phone }}
+                  {{ member.phone || '-' }}
                 </ng-template>
               </nz-list-item-meta>
               <ul nz-list-item-actions>
