@@ -7,7 +7,7 @@ import { Table } from 'primeng/table';
 
 import { map, Observable, switchMap, tap } from 'rxjs';
 
-import { News, User } from '../../models';
+import { News } from '../../models';
 import { UniversitiesService } from '../universities/universities.service';
 import { UsersService } from '../users/users.service';
 import { NewsService } from './news.service';

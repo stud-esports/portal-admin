@@ -3,4 +3,4 @@
 
 npx pretty-quick --staged
 echo \"[Husky] pre-commit\"
-npx eslint
+npx eslint "./apps/portal/src/app/**"

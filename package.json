@@ -9,6 +9,7 @@
     "build": "nx build --configuration production",
     "test": "nx test",
     "prepare": "husky install",
+    "eslint": "npx eslint",
     "generateApi": "java -jar /Users/dariapopova/Desktop/portal-admin/apps/portal/swagger-codegen-cli-3.0.20.jar generate -c swagger-codegen.options -i http://127.0.0.1:5000/api/swagger-json -l typescript-angular -o apps/portal/src/api -Dio.swagger.parser.util.RemoteUrl.trustAll=true -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true"
   },
   "husky": {

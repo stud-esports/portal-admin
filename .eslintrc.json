@@ -81,7 +81,7 @@
     "no-sparse-arrays": "off",
     "no-template-curly-in-string": "off",
     "no-unexpected-multiline": "off",
-    "no-unreachable": "true",
+    // "no-unreachable": 1,
     "no-unreachable-loop": "off",
     "no-unsafe-finally": "off",
     "no-unsafe-negation": "off",

@@ -4,8 +4,7 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpErrorResponse,
-  HttpResponse,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { AuthService } from './pages/auth/auth.service';
@@ -25,12 +24,12 @@ export class TokenInterceptor implements HttpInterceptor {
     }
 
     const authReq = req.clone({
-      headers: req.headers.set('Authorization', 'Bearer ' + idToken),
+      headers: req.headers.set('Authorization', 'Bearer ' + idToken)
     });
 
     return next.handle(authReq).pipe(
       tap(
-        (event) => {
+        () => {
           // if (event instanceof HttpResponse) console.log('Server response');
         },
         (err) => {
