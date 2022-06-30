@@ -205,14 +205,16 @@ export class TeamComponent implements OnInit {
             );
             return (this.teamList = items);
           }),
-          tap(() => (this.isLoading = true))
+          tap(() => (this.isLoading = false))
         );
     } else {
+      this.isLoading = true;
       return this._teamService.getAll().pipe(
         map((items: any[]) => {
           items.forEach((item) => (item.createdAt = new Date(item.createdAt)));
           return (this.teamList = items);
-        })
+        }),
+        tap(() => (this.isLoading = false))
       );
     }
   }
