@@ -24,6 +24,8 @@
         <p>{{ game.genre || '-' }}</p>
         <h3>Описание</h3>
         <p>{{ game.description || '-' }}</p>
+        <h3>Ссылка на покупку</h3>
+        <a [href]="game?.store_url" target="_blank">Купить</a>
       </nz-card>
       <ng-template #coverTemplate>
         <img

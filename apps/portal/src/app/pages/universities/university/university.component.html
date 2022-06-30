@@ -21,6 +21,29 @@
   <a nz-button nzType="link" [href]="university?.link" target="”_blank”">{{
     university?.link
   }}</a>
+
+  <h3>Команды университета</h3>
+  <ng-container *ngIf="university?.teams?.length; else noTeams">
+    <span *ngFor="let team of university?.teams; let isLast = last">
+      {{ team.title }}{{ isLast ? '' : ',' }}
+    </span>
+  </ng-container>
+  <ng-template #noTeams>-</ng-template>
+
+  <h3>Дисциплины университета</h3>
+  <ng-container *ngIf="getGames(university).length; else noGames">
+    {{ getGames(university) }}
+  </ng-container>
+  <ng-template #noGames>-</ng-template>
+
+  <h3>Контакты</h3>
+  <ng-container *ngIf="university?.contacts.length; else noContacts">
+    <span *ngFor="let contact of university?.contacts; let isLast = last">
+      {{ contact.user.last_name }} {{ contact.user.first_name }}
+      {{ contact.user?.patronymic ?? '' }} {{ isLast ? '' : ',' }}
+    </span>
+  </ng-container>
+  <ng-template #noContacts>-</ng-template>
   <ng-template #actionEdit>
     <i (click)="showEditModal()" nz-icon nzType="edit"></i>
   </ng-template>

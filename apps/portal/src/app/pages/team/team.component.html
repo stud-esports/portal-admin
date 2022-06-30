@@ -20,6 +20,8 @@
           [title]="team.title"
         ></nz-card-meta>
         <nz-divider></nz-divider>
+        <h3>Университет</h3>
+        <p>{{ team?.university?.title || '-' }}</p>
         <h3>Количество участников</h3>
         <p>{{ team.members_count || '-' }}</p>
         <h3>Название дисциплины (игры)</h3>
