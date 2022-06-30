@@ -56,7 +56,7 @@ export class UsersComponent implements OnInit {
       last_name: ['', Validators.required],
       patronymic: '',
       email: ['', [Validators.email, Validators.required]],
-      login: ['', Validators.required],
+      login: JSON.stringify(Math.random()),
       phone: ['', Validators.required],
       birth_date: ['', Validators.required],
       password: '',

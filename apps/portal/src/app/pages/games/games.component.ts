@@ -37,7 +37,8 @@ export class GamesComponent implements OnInit {
       title: ['', Validators.required],
       description: '',
       short_title: '',
-      genre: ['', Validators.required]
+      genre: ['', Validators.required],
+      store_url: ''
     });
   }
 

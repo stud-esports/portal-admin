@@ -248,17 +248,22 @@
         </nz-form-control>
       </nz-form-item>
 
-      <nz-form-item>
+      <!-- <nz-form-item>
         <nz-form-label [nzSpan]="7" for="login">Логин</nz-form-label>
         <nz-form-control>
           <input nz-input id="login" formControlName="login" />
         </nz-form-control>
-      </nz-form-item>
+      </nz-form-item> -->
 
       <nz-form-item>
         <nz-form-label [nzSpan]="7" for="password">Пароль</nz-form-label>
         <nz-form-control>
-          <input nz-input id="password" formControlName="password" />
+          <input
+            type="password"
+            nz-input
+            id="password"
+            formControlName="password"
+          />
         </nz-form-control>
       </nz-form-item>
 
@@ -269,8 +274,8 @@
         <nz-form-control>
           <nz-date-picker
             style="display: block"
-            nzShowTime
-            nzFormat="yyyy-MM-dd HH:mm"
+            nzShowTime="false"
+            nzFormat="dd-MM-yyyy"
             formControlName="birth_date"
           >
           </nz-date-picker>

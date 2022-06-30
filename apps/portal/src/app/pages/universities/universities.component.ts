@@ -117,7 +117,10 @@ export class UniversitiesComponent implements OnInit {
 
   getList(): Observable<any> {
     return this._universityService.getAll().pipe(
-      switchMap((list: University[]) => (this.list = list)),
+      map((list: University[]) => {
+        this.list = list;
+        this._universityService.universities.next(list);
+      }),
       untilDestroyed(this)
     );
   }
