@@ -116,10 +116,12 @@ export class UniversitiesComponent implements OnInit {
   }
 
   getList(): Observable<any> {
+    this.isLoading = true;
     return this._universityService.getAll().pipe(
       map((list: University[]) => {
         this.list = list;
         this._universityService.universities.next(list);
+        this.isLoading = false;
       }),
       untilDestroyed(this)
     );

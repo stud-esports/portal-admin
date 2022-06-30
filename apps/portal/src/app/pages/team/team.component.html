@@ -6,107 +6,111 @@
   </button>
 </h2>
 
-<div style="display: flex; flex-wrap: wrap; align-items: flex-start">
-  <ng-container *ngIf="teamList.length; else noList">
-    <ng-container *ngFor="let team of teamList">
-      <nz-card
-        style="width: calc(25% - 15px); margin: 0 15px 15px 0"
-        [nzCover]="coverTemplate"
-        [nzActions]="[actionEdit, actionEllipsis]"
-      >
-        <nz-card-meta
-          [nzTitle]="team.title"
-          [nzDescription]="team.description"
-          [title]="team.title"
-        ></nz-card-meta>
-        <nz-divider></nz-divider>
-        <h3>Университет</h3>
-        <p>{{ team?.university?.title || '-' }}</p>
-        <h3>Количество участников</h3>
-        <p>{{ team.members_count || '-' }}</p>
-        <h3>Название дисциплины (игры)</h3>
-        <p>{{ team.game.title || '-' }}</p>
-        <h3>Капитан команды</h3>
-        <p>
-          {{
-            team.captain.last_name +
-              ' ' +
-              team.captain.first_name +
-              ' ' +
-              team.captain.patronymic || '-'
-          }}
-        </p>
-        <h3>Тип команды</h3>
-        <p>{{ team.team_type || '' }}</p>
+<div *ngIf="isLoading; else content">Загрузка...</div>
 
-        <h3>Участники</h3>
-        <nz-list *ngIf="team.members.length; else noMembers">
-          <nz-list-item *ngFor="let member of team.members">
-            <ng-container>
-              <nz-list-item-meta
-                nz-popover
-                [nzAvatar]="apiUrl + member.photo_url"
-                [nzPopoverTitle]="titleTemplate"
-                [nzPopoverContent]="contentTemplate"
-                style="cursor: help"
-              >
-                <nz-list-item-meta-title>
-                  <div>
+<ng-template #content>
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-start">
+    <ng-container *ngIf="teamList.length; else noList">
+      <ng-container *ngFor="let team of teamList">
+        <nz-card
+          style="width: calc(25% - 15px); margin: 0 15px 15px 0"
+          [nzCover]="coverTemplate"
+          [nzActions]="[actionEdit, actionEllipsis]"
+        >
+          <nz-card-meta
+            [nzTitle]="team.title"
+            [nzDescription]="team.description"
+            [title]="team.title"
+          ></nz-card-meta>
+          <nz-divider></nz-divider>
+          <h3>Университет</h3>
+          <p>{{ team?.university?.title || '-' }}</p>
+          <h3>Количество участников</h3>
+          <p>{{ team.members_count || '-' }}</p>
+          <h3>Название дисциплины (игры)</h3>
+          <p>{{ team.game.title || '-' }}</p>
+          <h3>Капитан команды</h3>
+          <p>
+            {{
+              team.captain.last_name +
+                ' ' +
+                team.captain.first_name +
+                ' ' +
+                team.captain.patronymic || '-'
+            }}
+          </p>
+          <h3>Тип команды</h3>
+          <p>{{ team.team_type || '' }}</p>
+
+          <h3>Участники</h3>
+          <nz-list *ngIf="team.members.length; else noMembers">
+            <nz-list-item *ngFor="let member of team.members">
+              <ng-container>
+                <nz-list-item-meta
+                  nz-popover
+                  [nzAvatar]="apiUrl + member.photo_url"
+                  [nzPopoverTitle]="titleTemplate"
+                  [nzPopoverContent]="contentTemplate"
+                  style="cursor: help"
+                >
+                  <nz-list-item-meta-title>
+                    <div>
+                      {{ member.last_name }} {{ member.first_name }}
+                      {{ member.patronymic || '' }}
+                    </div>
+                  </nz-list-item-meta-title>
+                  <ng-template #titleTemplate>
                     {{ member.last_name }} {{ member.first_name }}
                     {{ member.patronymic || '' }}
-                  </div>
-                </nz-list-item-meta-title>
-                <ng-template #titleTemplate>
-                  {{ member.last_name }} {{ member.first_name }}
-                  {{ member.patronymic || '' }}
-                </ng-template>
-                <ng-template #contentTemplate>
-                  {{ member.phone || '-' }}
-                </ng-template>
-              </nz-list-item-meta>
-              <ul nz-list-item-actions>
-                <nz-list-item-action>
-                  <i
-                    style="cursor: pointer"
-                    nz-popconfirm
-                    nzPopconfirmTitle="Вы уверены, что хотите удалить этого участника из команды?"
-                    nzPopconfirmPlacement="bottom"
-                    (nzOnConfirm)="deleteMemberFromTeam(team._id, member._id)"
-                    nz-icon
-                    nzType="delete"
-                  ></i>
-                </nz-list-item-action>
-              </ul>
-            </ng-container>
-          </nz-list-item>
-        </nz-list>
-        <ng-template #noMembers>Нет участников</ng-template>
-      </nz-card>
-      <ng-template #coverTemplate>
-        <img
-          *ngIf="team.logo_url"
-          width="50"
-          alt="example"
-          [src]="apiUrl + team.logo_url"
-        />
-      </ng-template>
-      <ng-template #actionEdit>
-        <i (click)="showEditModal(team)" nz-icon nzType="edit"></i>
-      </ng-template>
-      <ng-template #actionEllipsis>
-        <i
-          nz-popconfirm
-          nzPopconfirmTitle="Вы уверены, что хотите удалить эту команду?"
-          nzPopconfirmPlacement="bottom"
-          (nzOnConfirm)="confirmDelete(team)"
-          nz-icon
-          nzType="delete"
-        ></i>
-      </ng-template>
+                  </ng-template>
+                  <ng-template #contentTemplate>
+                    {{ member.phone || '-' }}
+                  </ng-template>
+                </nz-list-item-meta>
+                <ul nz-list-item-actions>
+                  <nz-list-item-action>
+                    <i
+                      style="cursor: pointer"
+                      nz-popconfirm
+                      nzPopconfirmTitle="Вы уверены, что хотите удалить этого участника из команды?"
+                      nzPopconfirmPlacement="bottom"
+                      (nzOnConfirm)="deleteMemberFromTeam(team._id, member._id)"
+                      nz-icon
+                      nzType="delete"
+                    ></i>
+                  </nz-list-item-action>
+                </ul>
+              </ng-container>
+            </nz-list-item>
+          </nz-list>
+          <ng-template #noMembers>Нет участников</ng-template>
+        </nz-card>
+        <ng-template #coverTemplate>
+          <img
+            *ngIf="team.logo_url"
+            width="50"
+            alt="example"
+            [src]="apiUrl + team.logo_url"
+          />
+        </ng-template>
+        <ng-template #actionEdit>
+          <i (click)="showEditModal(team)" nz-icon nzType="edit"></i>
+        </ng-template>
+        <ng-template #actionEllipsis>
+          <i
+            nz-popconfirm
+            nzPopconfirmTitle="Вы уверены, что хотите удалить эту команду?"
+            nzPopconfirmPlacement="bottom"
+            (nzOnConfirm)="confirmDelete(team)"
+            nz-icon
+            nzType="delete"
+          ></i>
+        </ng-template>
+      </ng-container>
     </ng-container>
-  </ng-container>
-  <ng-template #noList> Нет команд </ng-template>
-</div>
+    <ng-template #noList> Нет команд </ng-template>
+  </div>
+</ng-template>
 
 <nz-modal
   [(nzVisible)]="isEditVisible"

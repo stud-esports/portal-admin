@@ -195,6 +195,7 @@ export class TeamComponent implements OnInit {
 
   getList(): Observable<any[]> {
     if (this._userService.isCurrentUserModeratorOfUniversity()) {
+      this.isLoading = true;
       return this._teamService
         .getAll(this._userService.user?.moderated_university_id)
         .pipe(
@@ -203,7 +204,8 @@ export class TeamComponent implements OnInit {
               (item) => (item.createdAt = new Date(item.createdAt))
             );
             return (this.teamList = items);
-          })
+          }),
+          tap(() => (this.isLoading = true))
         );
     } else {
       return this._teamService.getAll().pipe(

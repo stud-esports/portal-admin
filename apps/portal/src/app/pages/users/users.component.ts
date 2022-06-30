@@ -22,6 +22,7 @@ export class UsersComponent implements OnInit {
 
   blockDates: any = null;
   block_reason = '';
+  isLoading = false;
 
   rolesForm: FormGroup;
   userForm: FormGroup;
@@ -56,7 +57,7 @@ export class UsersComponent implements OnInit {
       last_name: ['', Validators.required],
       patronymic: '',
       email: ['', [Validators.email, Validators.required]],
-      login: JSON.stringify(Math.random()),
+      login: ['', Validators.required],
       phone: ['', Validators.required],
       birth_date: ['', Validators.required],
       password: '',
@@ -82,9 +83,13 @@ export class UsersComponent implements OnInit {
   }
 
   getAllUsers(): Observable<any[]> {
-    return this._usersService
-      .getAll()
-      .pipe(map((users) => (this.users = users)));
+    this.isLoading = true;
+    return this._usersService.getAll().pipe(
+      map((users) => {
+        this.isLoading = false;
+        return (this.users = users);
+      })
+    );
   }
 
   showChangeRoleModal(user: User): void {

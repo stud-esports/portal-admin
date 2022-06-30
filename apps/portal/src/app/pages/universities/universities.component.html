@@ -17,76 +17,80 @@
   </p-selectButton>
 </h2>
 
-<section
-  *ngIf="selectedMode.value === 'card'; else tableView"
-  style="display: flex; flex-wrap: wrap; align-items: flex-start"
->
-  <ng-container *ngIf="list.length; else noList">
-    <ng-container *ngFor="let uni of list">
-      <nz-card
-        style="width: calc(25% - 15px); margin: 0 15px 15px 0"
-        [nzActions]="[actionEdit, actionEllipsis]"
-      >
-        <nz-card-meta
-          style="white-space: normal"
-          [nzTitle]="uni.title"
-          [nzDescription]="uni.address"
-          [title]="uni.title"
-        ></nz-card-meta>
-        <nz-divider></nz-divider>
-        <h3>e-mail</h3>
-        <a nz-button nzType="link" [href]="'mailto:' + uni.email">{{
-          uni.email
-        }}</a>
+<div *ngIf="isLoading; else content">Загрузка...</div>
 
-        <h3>Номер</h3>
-        <p>{{ uni.phone || '-' }}</p>
+<ng-template #content>
+  <section
+    *ngIf="selectedMode.value === 'card'; else tableView"
+    style="display: flex; flex-wrap: wrap; align-items: flex-start"
+  >
+    <ng-container *ngIf="list.length; else noList">
+      <ng-container *ngFor="let uni of list">
+        <nz-card
+          style="width: calc(25% - 15px); margin: 0 15px 15px 0"
+          [nzActions]="[actionEdit, actionEllipsis]"
+        >
+          <nz-card-meta
+            style="white-space: normal"
+            [nzTitle]="uni.title"
+            [nzDescription]="uni.address"
+            [title]="uni.title"
+          ></nz-card-meta>
+          <nz-divider></nz-divider>
+          <h3>e-mail</h3>
+          <a nz-button nzType="link" [href]="'mailto:' + uni.email">{{
+            uni.email
+          }}</a>
 
-        <h3>Веб-сайт</h3>
-        <a nz-button target="”_blank”" nzType="link" [href]="uni.link">{{
-          uni.link
-        }}</a>
+          <h3>Номер</h3>
+          <p>{{ uni.phone || '-' }}</p>
 
-        <h3>Команды университета</h3>
-        <ng-container *ngIf="uni?.teams?.length; else noTeams">
-          <span *ngFor="let team of uni?.teams; let isLast = last">
-            {{ team.title }}{{ isLast ? '' : ',' }}
-          </span>
-        </ng-container>
-        <ng-template #noTeams>-</ng-template>
+          <h3>Веб-сайт</h3>
+          <a nz-button target="”_blank”" nzType="link" [href]="uni.link">{{
+            uni.link
+          }}</a>
 
-        <h3>Дисциплины</h3>
-        <ng-container *ngIf="getGames(uni).length; else noGames">
-          {{ getGames(uni) }}
-        </ng-container>
-        <ng-template #noGames>-</ng-template>
+          <h3>Команды университета</h3>
+          <ng-container *ngIf="uni?.teams?.length; else noTeams">
+            <span *ngFor="let team of uni?.teams; let isLast = last">
+              {{ team.title }}{{ isLast ? '' : ',' }}
+            </span>
+          </ng-container>
+          <ng-template #noTeams>-</ng-template>
 
-        <h3>Контакты</h3>
-        <ng-container *ngIf="uni?.contacts?.length; else noContacts">
-          <span *ngFor="let contact of uni?.contacts; let isLast = last">
-            {{ contact.user.last_name }} {{ contact.user.first_name }}
-            {{ contact.user?.patronymic ?? '' }} {{ isLast ? '' : ',' }}
-          </span>
-        </ng-container>
-        <ng-template #noContacts>-</ng-template>
-      </nz-card>
-      <ng-template #actionEdit>
-        <i (click)="showEditModal(uni)" nz-icon nzType="edit"></i>
-      </ng-template>
-      <ng-template #actionEllipsis>
-        <i
-          nz-popconfirm
-          nzPopconfirmTitle="Вы уверены, что хотите удалить этот университет?"
-          nzPopconfirmPlacement="bottom"
-          (nzOnConfirm)="confirmDelete(uni)"
-          nz-icon
-          nzType="delete"
-        ></i>
-      </ng-template>
+          <h3>Дисциплины</h3>
+          <ng-container *ngIf="getGames(uni).length; else noGames">
+            {{ getGames(uni) }}
+          </ng-container>
+          <ng-template #noGames>-</ng-template>
+
+          <h3>Контакты</h3>
+          <ng-container *ngIf="uni?.contacts?.length; else noContacts">
+            <span *ngFor="let contact of uni?.contacts; let isLast = last">
+              {{ contact.user.last_name }} {{ contact.user.first_name }}
+              {{ contact.user?.patronymic ?? '' }} {{ isLast ? '' : ',' }}
+            </span>
+          </ng-container>
+          <ng-template #noContacts>-</ng-template>
+        </nz-card>
+        <ng-template #actionEdit>
+          <i (click)="showEditModal(uni)" nz-icon nzType="edit"></i>
+        </ng-template>
+        <ng-template #actionEllipsis>
+          <i
+            nz-popconfirm
+            nzPopconfirmTitle="Вы уверены, что хотите удалить этот университет?"
+            nzPopconfirmPlacement="bottom"
+            (nzOnConfirm)="confirmDelete(uni)"
+            nz-icon
+            nzType="delete"
+          ></i>
+        </ng-template>
+      </ng-container>
     </ng-container>
-  </ng-container>
-  <ng-template #noList> Нет университетов</ng-template>
-</section>
+    <ng-template #noList> Нет университетов</ng-template>
+  </section>
+</ng-template>
 
 <ng-template #tableView>
   <div class="card">
