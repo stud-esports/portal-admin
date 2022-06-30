@@ -1,116 +1,115 @@
-<div *ngIf="isLoading; else content">Загрузка...</div>
+<!-- <div *ngIf="isLoading; else content">Загрузка...</div>
 
-<ng-template #content>
-  <p-table
-    #dt
-    [value]="users"
-    [rowHover]="true"
-    [rows]="10"
-    [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[10, 25, 50]"
-    [paginator]="true"
-    responsiveLayout="scroll"
-    currentPageReportTemplate="{first} по {last} из {totalRecords} пользователей"
-    [globalFilterFields]="['first_name', 'last_name', 'patronymic', 'phone']"
-  >
-    <ng-template pTemplate="caption">
-      <div
-        class="table-header flex"
-        style="display: flex; justify-content: space-between"
-      >
-        <h2>Список всех пользователей</h2>
-        <span style="margin-left: auto" class="p-input-icon-left">
-          <i class="pi pi-search"></i>
-          <input
-            pInputText
-            type="text"
-            (input)="applyFilterGlobal($event, 'contains')"
-            placeholder="Поиск"
-          />
+<ng-template #content> -->
+<p-table
+  #dt
+  [value]="users"
+  [rowHover]="true"
+  [rows]="10"
+  [loading]="isLoading"
+  [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  [paginator]="true"
+  responsiveLayout="scroll"
+  currentPageReportTemplate="{first} по {last} из {totalRecords} пользователей"
+  [globalFilterFields]="['first_name', 'last_name', 'patronymic', 'phone']"
+>
+  <ng-template pTemplate="caption">
+    <div
+      class="table-header flex"
+      style="display: flex; justify-content: space-between"
+    >
+      <h2>Список всех пользователей</h2>
+      <span style="margin-left: auto" class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          (input)="applyFilterGlobal($event, 'contains')"
+          placeholder="Поиск"
+        />
+      </span>
+    </div>
+    <div>
+      <a (click)="exportExcel()">Выгрузить XLS </a>
+    </div>
+    <div>
+      <a (click)="showCreateUserModel()">Создать пользователя </a>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>ФИО</th>
+      <th>Пол</th>
+      <th>Телефон</th>
+      <th>Образовательное учреждение</th>
+      <th>Команды</th>
+      <th>Роли</th>
+      <th>Привязанный университет</th>
+      <th>
+        <div class="flex justify-content-center align-items-center">
+          Дата начала блокировки
+          <p-columnFilter
+            type="date"
+            field="banned_from_date"
+            display="menu"
+          ></p-columnFilter>
+        </div>
+      </th>
+      <th>
+        <div class="flex justify-content-center align-items-center">
+          Дата окончания блокировки
+          <p-columnFilter
+            type="date"
+            field="banned_to_date"
+            display="menu"
+          ></p-columnFilter>
+        </div>
+      </th>
+      <th>Причина блокировки</th>
+      <th>Действия</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-user>
+    <tr>
+      <td>{{ user.last_name }} {{ user.first_name }} {{ user.patronymic }}</td>
+      <td>{{ user.gender }}</td>
+      <td>{{ user.phone }}</td>
+      <td>{{ user?.university?.title || '-' }}</td>
+      <td>{{ user?.university?.led_team || '-' }}</td>
+      <td>
+        <span *ngFor="let role of user.roles; let last = last">
+          {{ role.name }}{{ last ? '' : ',' }}
         </span>
-      </div>
-      <div>
-        <a (click)="exportExcel()">Выгрузить XLS </a>
-      </div>
-      <div>
-        <a (click)="showCreateUserModel()">Создать пользователя </a>
-      </div>
-    </ng-template>
-    <ng-template pTemplate="header">
-      <tr>
-        <th>ФИО</th>
-        <th>Пол</th>
-        <th>Телефон</th>
-        <th>Образовательное учреждение</th>
-        <th>Команды</th>
-        <th>Роли</th>
-        <th>Привязанный университет</th>
-        <th>
-          <div class="flex justify-content-center align-items-center">
-            Дата начала блокировки
-            <p-columnFilter
-              type="date"
-              field="banned_from_date"
-              display="menu"
-            ></p-columnFilter>
-          </div>
-        </th>
-        <th>
-          <div class="flex justify-content-center align-items-center">
-            Дата окончания блокировки
-            <p-columnFilter
-              type="date"
-              field="banned_to_date"
-              display="menu"
-            ></p-columnFilter>
-          </div>
-        </th>
-        <th>Причина блокировки</th>
-        <th>Действия</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-user>
-      <tr>
-        <td>
-          {{ user.last_name }} {{ user.first_name }} {{ user.patronymic }}
-        </td>
-        <td>{{ user.gender }}</td>
-        <td>{{ user.phone }}</td>
-        <td>{{ user?.university?.title || '-' }}</td>
-        <td>{{ user?.university?.led_team || '-' }}</td>
-        <td>
-          <span *ngFor="let role of user.roles; let last = last">
-            {{ role.name }}{{ last ? '' : ',' }}
-          </span>
-        </td>
-        <td>{{ user?.moderated_university?.title || '-' }}</td>
-        <td>{{ (user.banned_from_date | date: 'medium') || '-' }}</td>
-        <td>{{ (user.banned_to_date | date: 'medium') || '-' }}</td>
-        <td>{{ user.block_reason || '-' }}</td>
-        <td>
-          <a
-            (click)="showEditModal(user)"
-            *ngIf="isUserModerator(user)"
-            style="margin-right: 10px"
-          >
-            Привязать университет
-          </a>
-          <a (click)="showChangeRoleModal(user)" style="margin-right: 10px"
-            >Изменить права</a
-          >
-          <a (click)="showBlockModal(user)" style="margin-right: 10px">
-            Заблокировать
-          </a>
-          <a
-            *ngIf="user?.banned_from_date && user?.banned_to_date"
-            nz-popconfirm
-            nzPopconfirmTitle="Вы уверены, что хотите разблокировать этого пользователя?"
-            nzPopconfirmPlacement="bottom"
-            (nzOnConfirm)="blockOrUnblockUser('unblock', user)"
-            >  Разблокировать
-          </a>
-          <!-- *ngIf="user?.banned_from_date && user?.banned_to_date" -->
-          <!-- <a
+      </td>
+      <td>{{ user?.moderated_university?.title || '-' }}</td>
+      <td>{{ (user.banned_from_date | date: 'medium') || '-' }}</td>
+      <td>{{ (user.banned_to_date | date: 'medium') || '-' }}</td>
+      <td>{{ user.block_reason || '-' }}</td>
+      <td>
+        <a
+          (click)="showEditModal(user)"
+          *ngIf="isUserModerator(user)"
+          style="margin-right: 10px"
+        >
+          Привязать университет
+        </a>
+        <a (click)="showChangeRoleModal(user)" style="margin-right: 10px"
+          >Изменить права</a
+        >
+        <a (click)="showBlockModal(user)" style="margin-right: 10px">
+          Заблокировать
+        </a>
+        <a
+          *ngIf="user?.banned_from_date && user?.banned_to_date"
+          nz-popconfirm
+          nzPopconfirmTitle="Вы уверены, что хотите разблокировать этого пользователя?"
+          nzPopconfirmPlacement="bottom"
+          (nzOnConfirm)="blockOrUnblockUser('unblock', user)"
+          >  Разблокировать
+        </a>
+        <!-- *ngIf="user?.banned_from_date && user?.banned_to_date" -->
+        <!-- <a
           nz-popconfirm
           nzPopconfirmTitle="Вы уверены, что хотите удалить этого пользователя?"
           nzPopconfirmPlacement="bottom"
@@ -118,11 +117,11 @@
         >
           Удалить
         </a> -->
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-</ng-template>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+<!-- </ng-template> -->
 
 <nz-modal
   [(nzVisible)]="isEditUser"
