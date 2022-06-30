@@ -46,6 +46,29 @@
         <a nz-button target="”_blank”" nzType="link" [href]="uni.link">{{
           uni.link
         }}</a>
+
+        <h3>Команды университета</h3>
+        <ng-container *ngIf="uni?.teams?.length; else noTeams">
+          <span *ngFor="let team of uni?.teams; let isLast = last">
+            {{ team.title }}{{ isLast ? '' : ',' }}
+          </span>
+        </ng-container>
+        <ng-template #noTeams>-</ng-template>
+
+        <h3>Дисциплины</h3>
+        <ng-container *ngIf="getGames(uni).length; else noGames">
+          {{ getGames(uni) }}
+        </ng-container>
+        <ng-template #noGames>-</ng-template>
+
+        <h3>Контакты</h3>
+        <ng-container *ngIf="uni?.contacts?.length; else noContacts">
+          <span *ngFor="let contact of uni?.contacts; let isLast = last">
+            {{ contact.user.last_name }} {{ contact.user.first_name }}
+            {{ contact.user?.patronymic ?? '' }} {{ isLast ? '' : ',' }}
+          </span>
+        </ng-container>
+        <ng-template #noContacts>-</ng-template>
       </nz-card>
       <ng-template #actionEdit>
         <i (click)="showEditModal(uni)" nz-icon nzType="edit"></i>
@@ -170,6 +193,21 @@
               ></p-columnFilter>
             </div>
           </th>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              Команды
+            </div>
+          </th>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              Дисциплины
+            </div>
+          </th>
+          <th>
+            <div class="flex justify-content-center align-items-center">
+              Контакты
+            </div>
+          </th>
           <th>Действия</th>
         </tr>
       </ng-template>
@@ -188,6 +226,29 @@
           </td>
           <td>
             <a target="_blank" href="{{ item.link }}">{{ item.link || '-' }}</a>
+          </td>
+          <td>
+            <ng-container *ngIf="item?.teams?.length; else noTeams">
+              <span *ngFor="let team of item?.teams; let isLast = last">
+                {{ team.title }}{{ isLast ? '' : ',' }}
+              </span>
+            </ng-container>
+            <ng-template #noTeams>-</ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="getGames(item).length; else noGames">
+              {{ getGames(item) }}
+            </ng-container>
+            <ng-template #noGames>-</ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="item?.contacts.length; else noContacts">
+              <span *ngFor="let contact of item?.contacts; let isLast = last">
+                {{ contact.user.last_name }} {{ contact.user.first_name }}
+                {{ contact.user?.patronymic ?? '' }} {{ isLast ? '' : ',' }}
+              </span>
+            </ng-container>
+            <ng-template #noContacts>-</ng-template>
           </td>
           <td>
             <button

@@ -1,5 +1,5 @@
-import { Game } from "./Game";
-import { User } from "./User";
+import { Game } from './Game';
+import { User } from './User';
 
 export interface Team {
   _id: number;
@@ -12,6 +12,7 @@ export interface Team {
   members_count: string;
   university_id?: number;
   game: Game;
-  captain: User
-  members: User[]
+  captain: User;
+  members: User[];
+  university: any;
 }

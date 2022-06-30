@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Table } from 'primeng/table';
-import { Observable, switchMap, tap } from 'rxjs';
+import { map, Observable, switchMap, tap } from 'rxjs';
+import { Game } from '../../models/Game';
 import { University } from '../../models/University';
 import { UniversitiesService } from './universities.service';
 
@@ -45,6 +46,12 @@ export class UniversitiesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getList().pipe(untilDestroyed(this)).subscribe();
+  }
+
+  getGames(uni: University) {
+    const games = new Set();
+    uni?.teams.forEach((team) => games.add(team.game.title));
+    return Array.from(games);
   }
 
   showEditModal(item?: University): void {

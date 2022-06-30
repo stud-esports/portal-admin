@@ -168,14 +168,20 @@ export class UsersComponent implements OnInit {
         ? row?.last_name + ' ' + row?.first_name + ' ' + row?.patronymic || '-'
         : row?.last_name + ' ' + row?.first_name || '-',
       Пол: row?.gender || '-',
-      Роли: row?.roles,
+      Роли: row?.roles?.length
+        ? row?.roles?.map((r) => r.name).join(', ')
+        : '-',
       email: row?.email || '-',
       phone: row?.phone || '-',
+      Интро: row?.about_yourself || '-',
       'Начало блокировки': row?.banned_from_date || '-',
       'Окончание блокировки': row?.banned_to_date || '-',
-      'id привязанного университета': row?.moderated_university_id || '-',
-      Университет: row?.university || '-',
-      Интро: row?.about_yourself || '-',
+      'Привязанный университета': row?.moderated_university?.title || '-',
+      'Участник команд': row?.teams?.length
+        ? row?.teams?.map((r) => r.title).join(', ')
+        : '-',
+      'Является капитаном': row?.led_team?.title || '-',
+      Университет: row?.university?.title || '-',
       'День рождения': row?.birth_date || '-',
       'Дата регистрации': row?.created_at || '-',
       Логин: row?.login || '-',

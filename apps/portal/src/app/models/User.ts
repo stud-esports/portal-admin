@@ -18,4 +18,6 @@ export interface User {
   created_at: string | Date;
   login: string;
   student_card: string;
+  led_team?: any;
+  teams: any[];
 }

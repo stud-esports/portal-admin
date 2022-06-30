@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { map, switchMap } from 'rxjs';
+import { University } from '../../../models/University';
 import { UsersService } from '../../users/users.service';
 import { UniversitiesService } from '../universities.service';
 
@@ -39,6 +40,12 @@ export class UniversityComponent implements OnInit {
     return this._universitiesService
       .getById(this._userService.user?.moderated_university_id)
       .pipe(map((uni: any) => (this.university = uni)));
+  }
+
+  getGames(uni: University) {
+    const games = new Set();
+    uni?.teams.forEach((team) => games.add(team.game.title));
+    return Array.from(games);
   }
 
   showEditModal() {

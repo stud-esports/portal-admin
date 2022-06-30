@@ -6,4 +6,6 @@ export interface University {
   phone: string;
   email: string;
   link: string;
+  teams: any[];
+  contacts: any[];
 }
