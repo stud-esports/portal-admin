@@ -117,7 +117,8 @@ export class TeamComponent implements OnInit {
             game_id: this.form.value.game_id,
             logo_url: image.path ?? null,
             university_id:
-              this._userService.user?.moderated_university_id ?? null
+              this._userService.user?.moderated_university_id ??
+              this.form.value?.university_id
           })
         ),
         tap(() => {
